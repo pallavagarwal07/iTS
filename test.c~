@@ -1,0 +1,25 @@
+#include     <stdio.h>
+#include <stdlib.h>
+
+int        a = 5, b=13, h=  145 ;
+long    long k=1;
+int func();  
+
+int main(   )    
+{
+    printf   ("Hello World!!\n"    );      func(); //This is a comment
+    return 0;
+}
+
+int func()/*This is 
+a 
+multiline
+comment*/{
+
+    int r=   8*a;
+    int b=a = 14.3; //Sorry another comment
+    DEBUGMODE
+    a=6;
+    double k=30*45;
+    printf("I'm here!\n");
+}
