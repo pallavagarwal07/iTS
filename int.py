@@ -7,7 +7,7 @@ inp = sys.stdin.read()
 
 def handleOutput(line, scope):
     line = line.decode('string_escape')
-    sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"(,.+)*\s*\)', line)
+    sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
     formatString = sep[0][0]
     if sep[0][1] is '':
         printString = formatString
