@@ -20,12 +20,16 @@ int main()
 {
 
 
-    scanf("%d", &b)
+    scanf("%d", &b);
+
 
     printf("%d : %.3Lf\n", a, b);
 
 
     int a=10;
+
+
+    scanf("%d %d", &a, &b);
 
 
     b = b+3+(10==10)+ (a=6) + (3|   4);

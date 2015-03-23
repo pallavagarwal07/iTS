@@ -25,6 +25,32 @@ ops = (
         '+=', ',', '>','|', '^', '!', '%', '&', '+', '#','_', '*', '-', '/',  '=',
         '<', '~', '(', ')'
       )
+def chkDecl(line, scope):
+    r = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+((\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*,)*((\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*;)', line)
+    if r != []:
+        r = r[0]
+        cast = r[0]
+        a = re.sub(cast, '', line)
+        a = re.sub(';', '', a)
+        a = a.split(',')
+        a = [k.strip().split('=') for k in a]
+        for vars in a:
+            if len(vars)==1:
+                decl(vars[0], '', cast, scope)
+            else:
+                decl(vars[0], handleNum(vars[1]), cast, scope)
+        return True
+    else:
+        return False
+
+
+def handleNum(s):
+    try:
+        m = float(s)
+        return eval(str(s))
+    except ValueError:
+        return s
+
 
 def isNum(s):
     try:
@@ -302,7 +328,8 @@ def handleOutput(line, scope):
     #print("I am printing :")
     sys.stdout.write(printString)
 
-def handleInput(statement, inp, scope):
+def handleInput(statement, scope):
+    global inp
     statement = statement.decode('string_escape')
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
     types = re.findall(r'%(lld|Lf|lf|ld|d|c|s|f)', sep[0][0])
@@ -330,6 +357,7 @@ def handleInput(statement, inp, scope):
         for i in range(0, len(vars)):
             v = vars[i].strip()
             vals = (eval(values[0][i]) if isNum(values[0][i]) != 'Error' else values[0][i])
+            print(v, vals, " ".join(Access))
             update(v, vals, " ".join(Access))
 
 def pow(a, b):
@@ -451,31 +479,33 @@ for i in range(0, len(code)):
     if '#include' in line and Access == 'global':
         imp = line.replace(' ', '').replace('<', ' ').replace('>', ' ').replace('.', ' ').split(' ')[1]
         allow(imp)
-    if Access == 'global' and line[-1] == ';':
-        print(Access+' definition')
+        continue
     if '{' in line:
         Access.append("%d"%i)
+        continue
     if '}' in line:
         Access.pop()
-    k=checkDecl(line)
-    if 'scanf' in line:
-        handleInput(line, inp, " ".join(Access))
-        #print(varTable)
-    if k:
-        packs = line.replace(k, ' ').replace(';', ' ').strip()
-        packs = packs.split(',');
-        for dec in packs:
-            dec = dec.strip().split('=')
-            ran = range(-len(dec), -1)
-            list(ran).reverse()
-            for j in ran:
-                if j == -len(dec):
-                    decl(dec[j].strip(), calculate(dec[-1], " ".join(Access)), k, " ".join(Access))
-                else:
-                    update(dec[j].strip(), calculate(dec[-1], " ".join(Access)), " ".join(Access))
         continue
+    if chkDecl(line, " ".join(Access)):
+        continue
+    if 'scanf' in line:
+        handleInput(line, " ".join(Access))
+        continue
+        #print(varTable)
+    #if k:
+        #packs = line.replace(k, ' ').replace(';', ' ').strip()
+        #packs = packs.split(',');
+        #for dec in packs:
+            #dec = dec.strip().split('=')
+            #ran = range(-len(dec), -1)
+            #list(ran).reverse()
+            #for j in ran:
+                #if j == -len(dec):
+                    #decl(dec[j].strip(), calculate(dec[-1], " ".join(Access)), k, " ".join(Access))
+                #else:
+                    #update(dec[j].strip(), calculate(dec[-1], " ".join(Access)), " ".join(Access))
+        #continue
     if isUpdation(line):
-        #print("Going to update")
         calculate(line, " ".join(Access))
     if re.match(r'(?s)printf\s*\(\s*\"(.*)\"(,.+)*\s*\)', line):
         handleOutput(line, " ".join(Access))
