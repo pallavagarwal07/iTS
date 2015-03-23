@@ -7,9 +7,10 @@ long double b=7;
 
 int main()
 {
-    printf("%d : %Lf \n", a, b);
+    scanf("%d", &b)
+    printf("%d : %.3Lf\n", a, b);
     int a=10;
-    b = b+3;
+    b = b+3+(10==10)+ (a=6) + (3|   4);
     printf("%d : %LF \n", a, b);
     return 0;
 }

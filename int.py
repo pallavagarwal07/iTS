@@ -4,23 +4,303 @@ from tabulate import tabulate
 import sys
 import re
 inp = sys.stdin.read()
+priority = {
+        '->':100, '++':100, '--':100, 
+        '+++':91, '---':91, '#':91, '_':91, '!':91, '~':91, '#type#':91,  
+        '*': 80, '/':80, '%':80,
+        '+':78, '-':78,
+        '>>':76, '<<':76,
+        '<=':70, '>=':70, '>':70, '<':70, 
+        '==':66, '!=':66,
+        '&':58, '^':56, '|':54, '&&':52, '||':50,
+        '? :':45, 
+        '=':41, '+=':41, '-=':41, '*=':41, '/=':41,
+        '%=':41, '&=':41, '^=':41, '|=':41, 
+        '>>=':41, '<<=':41,
+        ',':10
+      }
+ops = (
+        '#type#', '---', '? :', '+++', '<<=', '>>=', '*=', '|=', '>=', '>>', '==', '<<',
+        '<=', '&=', '!=', '&&', '||', '^=', '++', '--', '/=', '%=', '-=', '->',
+        '+=', ',', '>','|', '^', '!', '%', '&', '+', '#','_', '*', '-', '/',  '=',
+        '<', '~', '(', ')'
+      )
+
+def isNum(s):
+    try:
+        m = float(s)
+        return eval(str(s))
+    except ValueError:
+        return 'Error'
+   
+def calculate(expr, scope):
+    postfix = []
+    token=""
+    stack = []
+    i = 0
+    expr = expr.strip()
+    while i < len(expr) and expr[i]!=';':
+        while i<len(expr) and expr[i] == ' ':
+            i += 1
+        for ex in ops:
+            if expr.startswith(ex, i):
+                if ex != '(':
+                    postfix.append(token)
+                    token = ""
+                #print("length of stack == : %d"%len(stack))
+                if ex == '(':
+                    if token == "":
+                        stack.append(ex)
+                    else:
+                        j=i+1;
+                        str="("
+                        bracks = 1
+                        while bracks>0:
+                            str+=expr[j]
+                            if expr[j]=='(':
+                                bracks += 1
+                            if expr[j]==')':
+                                bracks -= 1
+                            j += 1
+                        i += len(str)-1
+                        token += str
+                elif ex == ')':
+                    while stack[len(stack)-1] != '(':
+                        postfix.append(stack.pop())
+                    stack.pop()
+                elif len(stack) == 0 or stack[len(stack)-1] == '(':
+                    stack.append(ex)
+                else:
+                    if priority[ex] < priority[stack[len(stack)-1]]:
+                        postfix.append(stack.pop())
+                        i-=1
+                        break;
+                    if priority[ex] > priority[stack[len(stack)-1]]:
+                        stack.append(ex)
+                    elif priority[ex] == priority[stack[len(stack)-1]]:
+                        if priority[ex]%2==0:
+                            postfix.append(stack.pop())
+                            stack.append(ex)
+                        else:
+                            stack.append(ex)
+                i+=len(ex)-1
+                break
+        else:
+            token+=expr[i]
+        #print("--------")
+        #print(stack)
+        #print(postfix)
+        #print(expr)
+        #print(token)
+        #print(i)
+        #print("########")
+        i+=1
+    if len(token)>0:
+        postfix.append(token)
+    while len(stack)>0:
+        postfix.append(stack.pop())
+    postfix = (" ".join(postfix)).split()
+    #print("final stack: ", stack)
+    stack=[]
+    for k in postfix:
+        if 'Error' == isNum(k):
+            stack.append(k)
+        else:
+            m = isNum(k)
+            stack.append(m)
+    postfix = stack
+    #print(expr)
+    #print("final postfix", postfix)
+
+    stack = []
+    varStack = []
+    l = lambda : len(stack)-1
+    for token in postfix:
+        if token not in ops:
+            n = isNum(token)
+            if 'Error' == n:
+                t = inVarTable(token, scope)
+                val = varTable[t][0]
+                stack.append(val)
+                varStack.append(token)
+            else:
+                stack.append(token)
+                varStack.append(token)
+        else:
+            if token == '---':
+                varTable[inVarTable(varStack[l()],scope)][0] -= 1
+                stack[l()] -= 1
+            elif token == '+++':
+                varTable[inVarTable(varStack[l()],scope)][0] += 1
+                stack[l()] += 1
+            elif token == '<<=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] <<= stack[l()]
+                stack[l()-1] <<= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '>>=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] >>= stack[l()]
+                stack[l()-1] >>= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '*=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] *= stack[l()]
+                stack[l()-1] *= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '|=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] |= stack[l()]
+                stack[l()-1] |= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '>=':
+                stack[l()-1] = (1 if stack[l()-1] >= stack[l()] else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '>>':
+                stack[l()-1] = (stack[l()-1]>>stack[l()])
+                stack.pop()
+                varStack.pop()
+            elif token == '==':
+                stack[l()-1] = (1 if (stack[l()-1] == stack[l()]) else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '<<':
+                stack[l()-1] = (stack[l()-1]<<stack[l()])
+                stack.pop()
+                varStack.pop()
+            elif token == '<=':
+                stack[l()-1] = (1 if stack[l()-1] <= stack[l()] else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '&=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] &= stack[l()]
+                stack[l()-1] &= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '!=':
+                stack[l()-1] = (1 if stack[l()-1] != stack[l()] else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '&&':
+                stack[l()-1] = (1 if stack[l()-1] and stack[l()] else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '||':
+                stack[l()-1] = (1 if stack[l()-1] or stack[l()] else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '^=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] ^= stack[l()]
+                stack[l()-1] ^= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '++':
+                varTable[inVarTable(varStack[l()],scope)][0] += 1
+            elif token == '--':
+                varTable[inVarTable(varStack[l()],scope)][0] -= 1
+            elif token == '/=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] /= stack[l()]
+                stack[l()-1] /= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '%=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] %= stack[l()]
+                stack[l()-1] %= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '-=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] -= stack[l()]
+                stack[l()-1] -= stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '+=':
+                varTable[inVarTable(varStack[l()-1],scope)][0] += stack[l()]
+                stack[l()-1] += stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == ',':
+                stack[l()-1] = stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '>':
+                stack[l()-1] = (1 if stack[l()-1] > stack[l()] else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '|':
+                stack[l()-1] = (stack[l()-1]) | (stack[l()])
+                stack.pop()
+                varStack.pop()
+            elif token == '^':
+                stack[l()-1] = (stack[l()-1]) ^ (stack[l()])
+                stack.pop()
+                varStack.pop()
+            elif token == '!':
+                stack[l()] = (0 if (stack[l()]) else 1)
+            elif token == '%':
+                stack[l()-1] = stack[l()-1] % stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '&':
+                stack[l()-1] = (stack[l()-1]) & (stack[l()])
+                stack.pop()
+                varStack.pop()
+            elif token == '+':
+                stack[l()-1] = stack[l()-1] + stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '*':
+                stack[l()-1] = stack[l()-1] * stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '-':
+                stack[l()-1] = stack[l()-1] - stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '/':
+                stack[l()-1] = stack[l()-1] / stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '#':
+                stack[l()] = stack[l()]
+            elif token == '_':
+                stack[l()] = -stack[l()]
+            elif token == '=':
+                #print(varStack, stack)
+                varTable[inVarTable(varStack[l()-1],scope)][0] = stack[l()]
+                stack[l()-1] = stack[l()]
+                stack.pop()
+                varStack.pop()
+            elif token == '<':
+                stack[l()-1] = (1 if stack[l()-1] < stack[l()] else 0)
+                stack.pop()
+                varStack.pop()
+            elif token == '~':
+                stack[l()] = ~stack[l()]
+            else:
+                print("WTF") if '==' == token else print("Token is:%s:"%token)
+    #print(stack)
+    return stack.pop()
 
 def handleOutput(line, scope):
+    #print("Passed args : ",line,scope)
     line = line.decode('string_escape')
     sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
     formatString = sep[0][0]
-    if sep[0][1] is '':
+    if sep[0][1] == '':
         printString = formatString
     formatVars = sep[0][1][1:].split(',')
     for i in range(0, len(formatVars)):
-        if formatVars[i] is not '':
+        if formatVars[i] != '':
             formatVars[i] = calculate(formatVars[i].strip(), scope)
+            #print(type(formatVars[i]))
     formatString = re.sub(r'%(lld|ld|d)', '%d', formatString)
     formatString = re.sub(r'%(Lf|lf|f)', '%f', formatString)
-    if sep[0][1] is not '':
+    if sep[0][1] != '':
         printString = formatString % tuple(formatVars)
 
-    print ("I am printing :\n"+printString)
+    #print("I am printing :")
+    sys.stdout.write(printString)
 
 def handleInput(statement, inp, scope):
     statement = statement.decode('string_escape')
@@ -41,15 +321,15 @@ def handleInput(statement, inp, scope):
     reg = '^'+reg
     values = re.findall(reg, inp)
     inp = re.sub(reg, '', inp)
-    print(values)
-    print(vars)
-    print(inp)
-    if len(values[0]) is not len(vars):
+    #print(values)
+    #print(vars)
+    #print(inp)
+    if len(values[0]) != len(vars):
         print("Incorrect number of arguments or bug in my interpreter")
     else:
         for i in range(0, len(vars)):
             v = vars[i].strip()
-            vals = values[0][i]
+            vals = (eval(values[0][i]) if isNum(values[0][i]) != 'Error' else values[0][i])
             update(v, vals, " ".join(Access))
 
 def pow(a, b):
@@ -63,11 +343,11 @@ def split(exp):
     br = 0
     for i in range(0, len(line)):
         ch = line[i]
-        if br is 0 and isSymbol(ch):
+        if br == 0 and isSymbol(ch):
             line[i]=';;-;;'+line[i]+';;-;;'
-        if ch is '(':
+        if ch == '(':
             br+=1
-        if ch is ')':
+        if ch == ')':
             br-=1
     tokens = "".join(line).split(';;-;;')
     return tokens
@@ -87,59 +367,15 @@ def inVarTable(var, scope):
         scope.pop()
     return 0
 
-
-def isUpdation(line, scope):
-    if line.count('==')==2*line.count('='):
-        return 0
-    line = line.replace('=', ' = ').replace(';', ' ').split()
-    if '=' in line[1]:
-        update(line[0], calculate(" ".join(line[2:]), " ".join(Access)), " ".join(Access))
-        return 1
-    return 0
-
-
-def calculate(exp, scope):
-    if isUpdation(exp, scope):
-        return
-    tokens = split(exp)
-    for i in range(0, len(tokens)):
-        tk = tokens[i]
-        if isSymbol(tk):
-            continue
-        if 'Error' not in isNum(tk):
-            continue
-        t = inVarTable(tk, scope)
-        print(varTable)
-        if t:
-            tokens[i] = str(varTable[t][0])
-            continue
-        if tk.strip()[0]=='(':
-            word = list(tk.strip())
-            word[0]=''
-            if word[-1]==')':
-                word[-1]=''
-            else:
-                print("Error")
-                return
-            tokens[i]=str(calculate(''.join(word), scope))
-    return eval("".join(tokens))
-
-
-
+def isUpdation(exp):
+    k = re.match(r'^(?s)\s*[a-zA-Z_]+[a-zA-Z0-9_]*\s*=.*;', exp)
+    return (1 if k else 0)
 
 def checkDecl(line):
     if re.match('^\s*(long double|long long int|long long|int|float|double|char)\s+(.*?);', line):
         a = re.findall('^\s*(long double|long long int|long long|int|float|double|char)\s+(.*?);', line)
         return a[0][0]
     return 0
-
-def isNum(s):
-    try:
-        float(s)
-        return s
-    except ValueError:
-        return 'Error'
-
 
 def val(token):
     k = isNum(token)
@@ -212,37 +448,34 @@ for i in range(0, len(code)):
     line = code[i]
     if len(line)<1:
         continue
-    if '#include' in line and Access is 'global':
+    if '#include' in line and Access == 'global':
         imp = line.replace(' ', '').replace('<', ' ').replace('>', ' ').replace('.', ' ').split(' ')[1]
         allow(imp)
-    if Access is 'global' and line[-1] is ';':
+    if Access == 'global' and line[-1] == ';':
         print(Access+' definition')
     if '{' in line:
         Access.append("%d"%i)
     if '}' in line:
         Access.pop()
     k=checkDecl(line)
-    if line == 'DEBUGMODE':
-        handleInput('scanf("%d %d %f", &a, &b, &k);', inp, " ".join(Access))
-        print(varTable)
+    if 'scanf' in line:
+        handleInput(line, inp, " ".join(Access))
+        #print(varTable)
     if k:
         packs = line.replace(k, ' ').replace(';', ' ').strip()
         packs = packs.split(',');
         for dec in packs:
             dec = dec.strip().split('=')
             ran = range(-len(dec), -1)
-            ran.reverse()
+            list(ran).reverse()
             for j in ran:
-                if j is -len(dec):
+                if j == -len(dec):
                     decl(dec[j].strip(), calculate(dec[-1], " ".join(Access)), k, " ".join(Access))
                 else:
                     update(dec[j].strip(), calculate(dec[-1], " ".join(Access)), " ".join(Access))
         continue
-    if '=' in line and '==' not in line:
-        dec = line.replace(';', ' ').strip().split('=')
-        ran = range(-len(dec), -1)
-        ran.reverse()
-        for j in ran:
-            update(dec[j].strip(), calculate(dec[-1], " ".join(Access)), " ".join(Access))
+    if isUpdation(line):
+        #print("Going to update")
+        calculate(line, " ".join(Access))
     if re.match(r'(?s)printf\s*\(\s*\"(.*)\"(,.+)*\s*\)', line):
         handleOutput(line, " ".join(Access))
