@@ -32,6 +32,15 @@ int main()
     scanf("%d %d", &a, &b);
 
 
+    printf("I hope this breaks :P\n");
+
+
+    printf("Yes! a nested brace\n");
+
+
+    printf("May this not be printed\n");
+
+
     b = b+3+(10==10)+ (a=6) + (3|   4);
 
 

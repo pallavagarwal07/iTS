@@ -309,9 +309,10 @@ def calculate(expr, scope):
     return stack.pop()
 
 def handleOutput(line, scope):
-    #print("Passed args : ",line,scope)
     line = line.decode('string_escape')
     sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
+    if len(sep)==0:
+        return False
     formatString = sep[0][0]
     if sep[0][1] == '':
         printString = formatString
@@ -324,14 +325,15 @@ def handleOutput(line, scope):
     formatString = re.sub(r'%(Lf|lf|f)', '%f', formatString)
     if sep[0][1] != '':
         printString = formatString % tuple(formatVars)
-
-    #print("I am printing :")
     sys.stdout.write(printString)
+    return True
 
 def handleInput(statement, scope):
     global inp
     statement = statement.decode('string_escape')
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
+    if len(sep)==0:
+        return False
     types = re.findall(r'%(lld|Lf|lf|ld|d|c|s|f)', sep[0][0])
     vars = sep[0][1].replace('&', '').split(',')
     vars.append(sep[0][2].replace('&', ''))
@@ -359,6 +361,7 @@ def handleInput(statement, scope):
             vals = (eval(values[0][i]) if isNum(values[0][i]) != 'Error' else values[0][i])
             print(v, vals, " ".join(Access))
             update(v, vals, " ".join(Access))
+    return True
 
 def pow(a, b):
     return a**b
@@ -509,3 +512,12 @@ for i in range(0, len(code)):
         calculate(line, " ".join(Access))
     if re.match(r'(?s)printf\s*\(\s*\"(.*)\"(,.+)*\s*\)', line):
         handleOutput(line, " ".join(Access))
+
+
+
+
+
+
+
+
+
