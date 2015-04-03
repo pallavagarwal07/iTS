@@ -27,9 +27,9 @@ def chk_decl(line, scope):
         a = [k.strip().split('=') for k in a]
         for variables in a:
             if len(variables) == 1:
-                decl(variables[0], '', cast, scope)
+                decl(variables[0].strip(), '', cast, scope)
             else:
-                decl(variables[0], Utils.handle_num(variables[1]), cast, scope)
+                decl(variables[0].strip(), Utils.handle_num(variables[1]), cast, scope)
         return True
     else:
         return False
@@ -50,14 +50,13 @@ def is_updation(exp):
 
 
 def execute(code, scope):
-
-    print(code)
     if type(code) is str:
         exec ([code], scope)
         return
     for i in range(0, len(code)):
-        print(globals.var_table)
         line = code[i]
+        if line == 'int':
+            continue
         if type(line) is list:
             execute(line, scope + [str(i)])
             continue

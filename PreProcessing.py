@@ -1,4 +1,6 @@
 import re
+import os
+from subprocess import PIPE, Popen, check_output
 
 
 def get_code(code_file):
@@ -26,6 +28,33 @@ def get_code(code_file):
     for line in str1:
         code_buffer.append(line.strip())
     return code_buffer
+
+
+def use_c_preprocessor(filename):
+    content = os.popen('gcc -E ' + filename)
+    content = list(content.readlines())
+    code = []
+    flag = False
+    for line in content:
+        if flag and not line.startswith('#'):
+            code.append(line)
+        elif line.startswith('#'):
+            if filename in line:
+                flag = True
+            else:
+                flag = False
+    code = "\n".join(code)
+    a = Popen(['echo', code], stdout=PIPE)
+    a = Popen(
+        ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs'], stdin=a.stdout,
+        stdout=PIPE)
+    code = a.stdout.read().split('\n')
+    code = [line.strip() for line in code]
+    content = []
+    for line in code:
+        if len(line) > 0:
+            content.append(line)
+    return content
 
 
 def nest(code):

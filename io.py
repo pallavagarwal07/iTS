@@ -6,7 +6,6 @@ import Calc
 
 
 def handle_input(statement, scope):
-    global inp
     statement = statement.decode('string_escape')
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
     if len(sep) == 0:
@@ -34,7 +33,6 @@ def handle_input(statement, scope):
         for i in range(0, len(variables)):
             v = variables[i].strip()
             vals = (eval(values[0][i]) if Utils.is_num(values[0][i]) != 'Error' else values[0][i])
-            print(v, vals, scope)
             from Runtime import update
             update(v, vals, scope)
     return True
@@ -53,7 +51,6 @@ def handle_output(line, scope):
         for i in range(0, len(format_vars)):
             if format_vars[i] != '':
                 format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)
-                # print(type(format_vars[i]))
         format_string = re.sub(r'%(lld|ld|d)', '%d', format_string)
         format_string = re.sub(r'%(Lf|lf|f)', '%f', format_string)
         format_string = format_string % tuple(format_vars)

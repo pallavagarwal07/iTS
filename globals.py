@@ -1,8 +1,7 @@
 global var_table
-var_table = {}
-
-
 global inp
+inp = ''
+var_table = {}
 
 
 priority = {

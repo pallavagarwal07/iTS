@@ -3,6 +3,9 @@ import globals
 import PreProcessing
 import Runtime
 
+
+filename = 'newTest.c'
+
 # inp variable stores user input.
 globals.inp = sys.stdin.read()
 
@@ -13,10 +16,12 @@ priority = globals.priority
 ops = globals.ops
 
 # CodeFile stores a reference to the c file that has to be parsed.
-CodeFile = open('newTest.c')
+CodeFile = open(filename)
 
 # Preprocessor does some work here
-code = PreProcessing.get_code(CodeFile)
+code = PreProcessing.use_c_preprocessor(filename)
+
+# code = PreProcessing.get_code(CodeFile)
 code = PreProcessing.nest(code)
 
 # Access is used to keep track of current scope
