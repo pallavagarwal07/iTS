@@ -10,7 +10,6 @@ def handle_input(statement, scope):
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
     if len(sep) == 0:
         return False
-    # types = re.findall(r'%(lld|Lf|lf|ld|d|c|s|f)', sep[0][0])
     variables = sep[0][1].replace('&', '').split(',')
     variables.append(sep[0][2].replace('&', ''))
     variables.remove('')

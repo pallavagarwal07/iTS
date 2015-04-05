@@ -1,6 +1,6 @@
 import re
 import os
-from subprocess import PIPE, Popen, check_output
+from subprocess import PIPE, Popen
 
 
 def get_code(code_file):
@@ -46,15 +46,61 @@ def use_c_preprocessor(filename):
     code = "\n".join(code)
     a = Popen(['echo', code], stdout=PIPE)
     a = Popen(
-        ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs'], stdin=a.stdout,
-        stdout=PIPE)
-    code = a.stdout.read().split('\n')
+        ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs'],
+        stdin=a.stdout, stdout=PIPE)
+    code = a.stdout.read()
+    code = re.sub(r'else\s*if', 'else\nif', code)
+    code = code.split('\n')
     code = [line.strip() for line in code]
     content = []
     for line in code:
         if len(line) > 0:
             content.append(line)
+    print content
     return content
+
+
+def group_if(code, n):
+    print "Group if got: ", code, n
+    i = n + 1
+    line = code[i]
+    if type(line) is str:
+        k = re.findall(r'^(?s)if\s*\((.*)\)', line)
+    else:
+        if type(line) is list:
+            code[i] = nest_conditionals(line)
+        k = False
+    if k:
+        code = group_if(code, i)
+    i += 1
+    if i >= len(code) or code[i].strip() != 'else':
+        code = code[:n] + [code[n:n + 2]] + code[n + 2:]
+    else:
+        i += 1
+        line = code[i]
+        if type(line) is str:
+            k = re.findall(r'^(?s)if\s*\((.*)\)', line)
+        else:
+            k = False
+        if k:
+            code = group_if(code, i)
+        code = code[:n] + [code[n:n + 4]] + code[n + 4:]
+    print 'group if returned :', code, n
+    return code
+
+
+def nest_conditionals(code):
+    i = 0
+    while i < len(code):
+        line = code[i]
+        if type(line) is list:
+            code[i] = nest_conditionals(line)
+        else:
+            k = re.findall(r'^(?s)if\s*\(.+\)', line)
+            if k:
+                code = group_if(code, i)
+        i += 1
+    return code
 
 
 def nest(code):
@@ -68,5 +114,7 @@ def nest(code):
             code = code[:match] + [code[match + 1:i]] + code[i + 1:]
             i = match + 1
         i += 1
-    return code
+    print code
+    code = nest_conditionals(code)
 
+    return code
