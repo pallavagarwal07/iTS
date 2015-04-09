@@ -1,7 +1,7 @@
 import sys
 import globals
 import PreProcessing
-
+import Gui
 
 filename = 'newTest.c'
 
@@ -23,6 +23,8 @@ code = PreProcessing.use_c_preprocessor(filename)
 # code = PreProcessing.get_code(CodeFile)
 code = PreProcessing.nest(code)
 print code
+Gui.make_ui(code)
+
 # Access is used to keep track of current scope
 Access = ['global']
 
