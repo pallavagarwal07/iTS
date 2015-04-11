@@ -3,6 +3,7 @@ import globals
 import Utils
 import Calc
 import io
+import groups
 
 
 def decl(var, val, cast, scope):
@@ -50,15 +51,18 @@ def is_updation(exp):
 
 
 def execute(code, scope):
+    print "abc", code
     if type(code) is str:
-        exec ([code], scope)
+        execute([code], scope)
         return
-    for i in range(0, len(code)):
+    i = 0
+    while i < len(code):
         line = code[i]
+        i += 1
         if line == 'int':
             continue
         if type(line) is list:
-            execute(line, scope + [str(i)])
+            execute(line, scope + [str(i-1)])
             continue
         if len(line) < 1:
             continue
@@ -68,6 +72,8 @@ def execute(code, scope):
             continue
         if io.handle_output(line, " ".join(scope)):
             continue
+        print "Here1"
+        i += groups.if_conditional(code, scope[:])
         if is_updation(line):
             Calc.calculate(line, " ".join(scope), globals.var_table)
             continue

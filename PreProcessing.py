@@ -110,9 +110,10 @@ def nest(code):
         if code[i] == '{':
             bracks.append(i)
         elif code[i] == '}':
+            print bracks
             match = bracks.pop()
             code = code[:match] + [code[match + 1:i]] + code[i + 1:]
-            i = match + 1
+            i = match
         i += 1
     print code
     code = nest_conditionals(code)

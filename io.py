@@ -44,7 +44,7 @@ def handle_output(line, scope):
         return False
     format_string = sep[0][0]
     if sep[0][1] == '':
-        sys.stdout.write(format_string)
+        sys.stderr.write(format_string)
     else:
         format_vars = sep[0][1][1:].split(',')
         for i in range(0, len(format_vars)):
@@ -53,6 +53,6 @@ def handle_output(line, scope):
         format_string = re.sub(r'%(lld|ld|d)', '%d', format_string)
         format_string = re.sub(r'%(Lf|lf|f)', '%f', format_string)
         format_string = format_string % tuple(format_vars)
-        sys.stdout.write(format_string)
+        sys.stderr.write(format_string)
     return True
 
