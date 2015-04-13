@@ -16,10 +16,18 @@ int main() {
         }
     }
     else if(k==a)
-        printf("YO\n");
+    {
+        int c = 32;
+        printf("YO %d\n", c);
+        {
+            printf("YO2 %d\n", a);
+        }
+    }
     else printf("Cool\n");
-    float fah,cel=13;
-    fah=(9.0/5.0)*cel+32-a;
-    printf("%.1f\n",fah);
+    {
+        float fah,cel=13;
+        fah=(9.0/5.0)*cel+32-a;
+        printf("%.1f\n",fah);
+    }
     return 0;
 }

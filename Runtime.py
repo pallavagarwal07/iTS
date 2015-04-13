@@ -50,8 +50,20 @@ def is_updation(exp):
     return 1 if k else 0
 
 
+def garbage_collector(scope):
+    keys = globals.var_table.keys()
+    print "Collecting Garbage for Scope :", scope, keys
+    scope = " ".join(scope)
+    for key in keys:
+        if key[1] == scope:
+            print "Found garbage with Key :", key
+            del globals.var_table[key]
+    return
+
+
 def execute(code, scope):
     print "abc", code
+    print globals.var_table
     if type(code) is str:
         execute([code], scope)
         return
@@ -62,7 +74,7 @@ def execute(code, scope):
         if line == 'int':
             continue
         if type(line) is list:
-            execute(line, scope + [str(i-1)])
+            execute(line, scope + [str(i - 1)])
             continue
         if len(line) < 1:
             continue
@@ -77,3 +89,5 @@ def execute(code, scope):
         if is_updation(line):
             Calc.calculate(line, " ".join(scope), globals.var_table)
             continue
+
+    garbage_collector(scope)

@@ -6,13 +6,10 @@ import Runtime
 
 # if condition
 def if_conditional(code, scope):
-    print "Here"
     line = code[0]
-    print code[0], "wohoo"
     expr = re.findall(r'^(?s)if\s*\((.*)\)', line)
     if len(expr) != 0:
         flag = Calc.calculate(expr[0], scope, globals.var_table)
-        print flag, "I am the FLAGGGGGG!"
         if flag:
             Runtime.execute(code[1], scope + ['1'])
         elif len(code) > 2:
