@@ -46,7 +46,7 @@ def use_c_preprocessor(filename):
     code = "\n".join(code)
     a = Popen(['echo', code], stdout=PIPE)
     a = Popen(
-        ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs'],
+        ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs', '-l100000'],
         stdin=a.stdout, stdout=PIPE)
     code = a.stdout.read()
     code = re.sub(r'else\s*if', 'else\nif', code)
@@ -56,49 +56,38 @@ def use_c_preprocessor(filename):
     for line in code:
         if len(line) > 0:
             content.append(line)
-    print content
     return content
 
 
-def group_if(code, n):
-    print "Group if got: ", code, n
-    i = n + 1
-    line = code[i]
-    if type(line) is str:
-        k = re.findall(r'^(?s)if\s*\((.*)\)', line)
-    else:
-        if type(line) is list:
-            code[i] = nest_conditionals(line)
-        k = False
-    if k:
-        code = group_if(code, i)
-    i += 1
-    if i >= len(code) or code[i].strip() != 'else':
-        code = code[:n] + [code[n:n + 2]] + code[n + 2:]
-    else:
-        i += 1
-        line = code[i]
-        if type(line) is str:
-            k = re.findall(r'^(?s)if\s*\((.*)\)', line)
-        else:
-            k = False
-        if k:
-            code = group_if(code, i)
-        code = code[:n] + [code[n:n + 4]] + code[n + 4:]
-    print 'group if returned :', code, n
-    return code
-
-
-def nest_conditionals(code):
-    i = 0
+def nest_groups(code, i, make_list):
     while i < len(code):
         line = code[i]
         if type(line) is list:
-            code[i] = nest_conditionals(line)
+            code[i] = nest_groups(line, 0, 0)
+            if make_list:
+                return code
         else:
-            k = re.findall(r'^(?s)if\s*\(.+\)', line)
-            if k:
-                code = group_if(code, i)
+            k = re.findall(r'^(?s)while\s*\(.+\)\s*(?!(\s*;))', line)
+            k1 = re.findall(r'^(?s)for\s*\(.*;.*;.*\)', line)
+            if k or k1:
+                code = nest_groups(code, i + 1, 1)
+                code = code[:i] + [code[i:i + 2]] + code[i + 2:]
+            k2 = re.findall(r'^(?s)do', line)
+            if k2:
+                code = nest_groups(code, i + 1, 1)
+                code = code[:i] + [code[i:i + 3]] + code[i + 3:]
+            k3 = re.findall(r'^(?s)if\s*\(.+\)', line)
+            if k3:
+                code = nest_groups(code, i + 1, 1)
+                if i + 2 < len(code) and (type(code[i + 2]) is not list) and re.findall(r'^(?s)\s*else', code[i + 2]):
+                    code = nest_groups(code, i + 3, 1)
+                    code = code[:i] + [code[i:i + 4]] + code[i + 4:]
+                else:
+                    code = code[:i] + [code[i:i + 2]] + code[i + 2:]
+            if make_list:
+                if type(code[i]) is not list:
+                    code[i] = [code[i]]
+                return code
         i += 1
     return code
 
@@ -110,12 +99,10 @@ def nest(code):
         if code[i] == '{':
             bracks.append(i)
         elif code[i] == '}':
-            print bracks
             match = bracks.pop()
             code = code[:match] + [code[match + 1:i]] + code[i + 1:]
             i = match
         i += 1
-    print code
-    code = nest_conditionals(code)
+    code = nest_groups(code, 0, 0)
 
     return code

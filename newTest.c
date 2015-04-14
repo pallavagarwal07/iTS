@@ -2,32 +2,14 @@
 #include <stdlib.h>
 #define s(n) scanf("%d",&n)
 int main() {
-    // Fill this area with your code.
-    int a, k;
-    s(a);
-    s(k);
-    //a=9;
-    //k=4;
-    if(a==9)
+    int i, j;
+    for(i=0;i<=5;i=i+1)
     {
-        if(2==2)
-        {
-            printf("haha\n");
-        }
-    }
-    else if(k==a)
-    {
-        int c = 32;
-        printf("YO %d\n", c);
-        {
-            printf("YO2 %d\n", a);
-        }
-    }
-    else printf("Cool\n");
-    {
-        float fah,cel=13;
-        fah=(9.0/5.0)*cel+32-a;
-        printf("%.1f\n",fah);
+    for(j=0;j<5-i;j=j+1)
+    printf(" ");
+    for(j=0;j<2*i+1;j=j+1)
+    printf("*");
+    printf("\n");
     }
     return 0;
 }
