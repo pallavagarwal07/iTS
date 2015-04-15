@@ -73,6 +73,7 @@ def calculate(expr, scope, vartable):
     stack = []
     var_stack = []
     l = lambda: len(stack) - 1
+    # print "Postfix is:", postfix
     for token in postfix:
         if token not in globals.ops:
             n = is_num(token)

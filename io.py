@@ -25,9 +25,11 @@ def handle_input(statement, scope):
     reg = '^{0}'.format(reg)
     values = re.findall(reg, globals.inp)
     globals.inp = re.sub(reg, '', globals.inp)
+    if type(values[0]) is str:
+        values = [[values[0]]]
 
     if len(values[0]) != len(variables):
-        print("Incorrect number of arguments or bug in my interpreter")
+        print("Incorrect number of arguments or bug in my interpreter", values, variables)
     else:
         for i in range(0, len(variables)):
             v = variables[i].strip()
@@ -42,6 +44,8 @@ def handle_output(line, scope):
     sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
     if len(sep) == 0:
         return False
+    if type(sep[0]) is str:
+        sep = [[sep[0]]]
     format_string = sep[0][0]
     if sep[0][1] == '':
         sys.stderr.write(format_string)
