@@ -1,5 +1,9 @@
 import globals
+import re
 from Utils import is_num
+
+
+# starting of the expression, after '(', after some other operator
 
 
 def calculate(expr, scope, vartable):
@@ -8,6 +12,17 @@ def calculate(expr, scope, vartable):
     stack = []
     i = 0
     expr = expr.strip()
+    k = re.findall(r'--\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)
+    k2 = []
+    for i in range(0, len(k)):
+        k2.append(k[i].replace('--', '---'))
+        expr = expr.replace(k[i], k2[i])
+    k = re.findall(r'\+\+\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)
+    k2 = []
+    for i in range(0, len(k)):
+        k2.append(k[i].replace('++', '+++'))
+        expr = expr.replace(k[i], k2[i])
+    # print expr
     while i < len(expr) and expr[i] != ';':
         while i < len(expr) and expr[i] == ' ':
             i += 1

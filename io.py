@@ -25,6 +25,8 @@ def handle_input(statement, scope):
     reg = '^{0}'.format(reg)
     values = re.findall(reg, globals.inp)
     globals.inp = re.sub(reg, '', globals.inp)
+    if len(values) == 0:
+        return False
     if type(values[0]) is str:
         values = [[values[0]]]
 
