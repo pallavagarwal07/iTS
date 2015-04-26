@@ -1,28 +1,65 @@
 import globals
 import re
 from Utils import is_num
+import sys
 
 
 # starting of the expression, after '(', after some other operator
 
 
+def sep(expr):
+    expr = expr.split()
+    tokens = []
+    for token in expr:
+        tk = ''
+        i = 0
+        while i < len(token) and token[i] != ';':
+            for ex in globals.ops:
+                if token.startswith(ex, i):
+                    if tk.strip():
+                        tokens.append(tk)
+                    tk = ''
+                    tokens.append(ex)
+                    i += len(ex) - 1
+                    break
+            else:
+                tk += token[i]
+            i += 1
+        if tk.strip():
+            tokens.append(tk)
+    print tokens
+    return tokens
+
+
 def calculate(expr, scope, vartable):
     postfix = []
-    token = ""
+    print vartable
     stack = []
-    i = 0
     expr = expr.strip()
-    k = re.findall(r'--\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)
+    k = list(set(re.findall(r'--\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)))
     k2 = []
     for i in range(0, len(k)):
         k2.append(k[i].replace('--', '---'))
         expr = expr.replace(k[i], k2[i])
-    k = re.findall(r'\+\+\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)
+    k = list(set(re.findall(r'\+\+\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)))
     k2 = []
     for i in range(0, len(k)):
         k2.append(k[i].replace('++', '+++'))
         expr = expr.replace(k[i], k2[i])
-    # print expr
+    print expr
+    seperated_tokens = sep(expr)
+    flag = 0
+    for i, token in enumerate(seperated_tokens):
+        if token in globals.unary_ops and flag:
+            seperated_tokens[i] = globals.unary_ops[token]
+            continue
+        if token in globals.bin_ops or token == '(':
+            flag = 1
+            continue
+        flag = 0
+    expr = " ".join(seperated_tokens)
+    token = ''
+    i = 0
     while i < len(expr) and expr[i] != ';':
         while i < len(expr) and expr[i] == ' ':
             i += 1
@@ -30,7 +67,7 @@ def calculate(expr, scope, vartable):
             if expr.startswith(ex, i):
                 if ex != '(':
                     postfix.append(token)
-                    token = ""
+                    token = ''
                 if ex == '(':
                     if token == "":
                         stack.append(ex)
@@ -70,6 +107,11 @@ def calculate(expr, scope, vartable):
                 break
         else:
             token += expr[i]
+            print 'Debug : ', token, postfix
+            if token not in expr:
+                print('Error 102: Did you miss the operator between'
+                      ' two values/variables?\n' + token + '\n' + expr + '\n')
+                exit(0)
         i += 1
     if len(token) > 0:
         postfix.append(token)
@@ -88,7 +130,7 @@ def calculate(expr, scope, vartable):
     stack = []
     var_stack = []
     l = lambda: len(stack) - 1
-    # print "Postfix is:", postfix
+    print "Postfix is:", postfix
     for token in postfix:
         if token not in globals.ops:
             n = is_num(token)
@@ -250,4 +292,6 @@ def calculate(expr, scope, vartable):
                 var_stack.pop()
             elif token == '~':
                 stack[l()] = ~stack[l()]
-    return stack.pop()
+    r = stack.pop()
+    print 'Return value is :', r
+    return r
