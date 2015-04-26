@@ -9,7 +9,7 @@ import groups
 def decl(var, val, cast, scope):
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
-        print("Error")
+        print("Error 101: Multiple declaration of variable " + var + "\n")
         return
     globals.var_table[(var, scope)] = [val, cast, scope]
 
@@ -41,7 +41,7 @@ def update(var, val, scope):
     if key:
         globals.var_table[key][0] = val
     else:
-        print('Error')
+        print('Error 103: ' + var + "not declared \n")
         return
 
 
@@ -52,19 +52,14 @@ def is_updation(exp):
 
 def garbage_collector(scope):
     keys = globals.var_table.keys()
-    # print "Collecting Garbage for Scope :", scope, keys
     scope = " ".join(scope)
     for key in keys:
         if key[1] == scope:
-            # print "Found garbage with Key :", key
             del globals.var_table[key]
     return
 
 
 def execute(code, scope):
-    # print "abc", code
-    # print "abc", code
-    # print globals.var_table
     if type(code) is str:
         execute([code], scope)
         return
