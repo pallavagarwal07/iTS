@@ -5,6 +5,7 @@ def match_brack(code, num):
         line = code[k]
         if line == '{':
             start += 1
+            start += 1
         if line == '}':
             start -= 1
         if start == 0:
@@ -20,9 +21,13 @@ def is_num(s):
         return 'Error'
 
 
+'''
+
 def handle_num(s):
     try:
         float(s)
         return eval(str(s))
     except ValueError:
         return s
+
+'''

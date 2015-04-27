@@ -11,7 +11,9 @@ def decl(var, val, cast, scope):
     if key and key[1] == scope:
         print("Error 101: Multiple declaration of variable " + var + "\n")
         return
-    globals.var_table[(var, scope)] = [val, cast, scope]
+    globals.var_table[(var, scope)] = [val, cast, scope, globals.curr_mem]
+    globals.mem_space[globals.curr_mem] = (var, scope)
+    globals.curr_mem += globals.size_of[cast]
 
 
 def chk_decl(line, scope):
@@ -30,7 +32,7 @@ def chk_decl(line, scope):
             if len(variables) == 1:
                 decl(variables[0].strip(), '', cast, scope)
             else:
-                decl(variables[0].strip(), Utils.handle_num(variables[1]), cast, scope)
+                decl(variables[0].strip(), Calc.calculate(variables[1], scope, globals.var_table), cast, scope)
         return True
     else:
         return False
@@ -92,5 +94,8 @@ def execute(code, scope):
         if is_updation(line):
             Calc.calculate(line, " ".join(scope), globals.var_table)
             continue
-
+        try:
+            Calc.calculate(line, scope, globals.var_table)
+        except Exception:
+            pass
     garbage_collector(scope)

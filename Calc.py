@@ -32,6 +32,7 @@ def sep(expr):
 
 
 def calculate(expr, scope, vartable):
+    # print "lol ", expr
     postfix = []
     print vartable
     stack = []
@@ -48,7 +49,7 @@ def calculate(expr, scope, vartable):
         expr = expr.replace(k[i], k2[i])
     print expr
     seperated_tokens = sep(expr)
-    flag = 0
+    flag = 1
     for i, token in enumerate(seperated_tokens):
         if token in globals.unary_ops and flag:
             seperated_tokens[i] = globals.unary_ops[token]
@@ -149,6 +150,10 @@ def calculate(expr, scope, vartable):
             elif token == '+++':
                 vartable[globals.in_var_table(var_stack[l()], scope)][0] += 1
                 stack[l()] += 1
+            elif token == '`*`':
+                stack[l()] = globals.var_table[globals.mem_space[stack[l()]]][0]
+            elif token == '`&`':
+                stack[l()] = vartable[globals.in_var_table(var_stack[l()], scope)][3]
             elif token == '<<=':
                 vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] <<= stack[l()]
                 stack[l() - 1] <<= stack[l()]

@@ -4,9 +4,9 @@
 int main()
 {
     int i=0;
-    int k= 4;
-    k = - --i + - --i;
-    printf("%d %d\n", i, k);
+    int k= +4 + -9 ;
+i++;
+    printf("%d %d\n", &i, *&k);
 }
 
 // Bug 1 --i + --i
