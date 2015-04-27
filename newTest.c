@@ -4,9 +4,16 @@
 int main()
 {
     int i=0;
-    int k= +4 + -9 ;
-i++;
-    printf("%d %d\n", &i, *&k);
+    int k=3;
+    int j = &k;
+    for(i=0; i<10; i++)
+    {
+        int k = 4;
+        printf("%d %d\n", k, *j);
+        *j += 1;
+
+    }
+    printf("%d\n", k);
 }
 
 // Bug 1 --i + --i

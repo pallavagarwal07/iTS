@@ -32,7 +32,6 @@ def sep(expr):
 
 
 def calculate(expr, scope, vartable):
-    # print "lol ", expr
     postfix = []
     print vartable
     stack = []
@@ -139,38 +138,39 @@ def calculate(expr, scope, vartable):
                 t = globals.in_var_table(token, scope)
                 val = vartable[t][0]
                 stack.append(val)
-                var_stack.append(token)
+                var_stack.append(globals.in_var_table(token, scope))
             else:
                 stack.append(token)
-                var_stack.append(token)
+                var_stack.append(globals.in_var_table(token, scope))
         else:
             if token == '---':
-                vartable[globals.in_var_table(var_stack[l()], scope)][0] -= 1
+                vartable[var_stack[l()]][0] -= 1
                 stack[l()] -= 1
             elif token == '+++':
-                vartable[globals.in_var_table(var_stack[l()], scope)][0] += 1
+                vartable[var_stack[l()]][0] += 1
                 stack[l()] += 1
             elif token == '`*`':
+                var_stack[l()] = globals.mem_space[stack[l()]]
                 stack[l()] = globals.var_table[globals.mem_space[stack[l()]]][0]
             elif token == '`&`':
-                stack[l()] = vartable[globals.in_var_table(var_stack[l()], scope)][3]
+                stack[l()] = vartable[var_stack[l()]][3]
             elif token == '<<=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] <<= stack[l()]
+                vartable[var_stack[l() - 1]][0] <<= stack[l()]
                 stack[l() - 1] <<= stack[l()]
                 stack.pop()
                 var_stack.pop()
             elif token == '>>=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] >>= stack[l()]
+                vartable[var_stack[l() - 1]][0] >>= stack[l()]
                 stack[l() - 1] >>= stack[l()]
                 stack.pop()
                 var_stack.pop()
             elif token == '*=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] *= stack[l()]
+                vartable[var_stack[l() - 1]][0] *= stack[l()]
                 stack[l() - 1] *= stack[l()]
                 stack.pop()
                 var_stack.pop()
             elif token == '|=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] |= stack[l()]
+                vartable[var_stack[l() - 1]][0] |= stack[l()]
                 stack[l() - 1] |= stack[l()]
                 stack.pop()
                 var_stack.pop()
@@ -195,7 +195,7 @@ def calculate(expr, scope, vartable):
                 stack.pop()
                 var_stack.pop()
             elif token == '&=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] &= stack[l()]
+                vartable[var_stack[l() - 1]][0] &= stack[l()]
                 stack[l() - 1] &= stack[l()]
                 stack.pop()
                 var_stack.pop()
@@ -212,31 +212,31 @@ def calculate(expr, scope, vartable):
                 stack.pop()
                 var_stack.pop()
             elif token == '^=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] ^= stack[l()]
+                vartable[var_stack[l() - 1]][0] ^= stack[l()]
                 stack[l() - 1] ^= stack[l()]
                 stack.pop()
                 var_stack.pop()
             elif token == '++':
-                vartable[globals.in_var_table(var_stack[l()], scope)][0] += 1
+                vartable[var_stack[l()]][0] += 1
             elif token == '--':
-                vartable[globals.in_var_table(var_stack[l()], scope)][0] -= 1
+                vartable[var_stack[l()]][0] -= 1
             elif token == '/=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] /= stack[l()]
+                vartable[var_stack[l() - 1]][0] /= stack[l()]
                 stack[l() - 1] /= stack[l()]
                 stack.pop()
                 var_stack.pop()
             elif token == '%=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] %= stack[l()]
+                vartable[var_stack[l() - 1]][0] %= stack[l()]
                 stack[l() - 1] %= stack[l()]
                 stack.pop()
                 var_stack.pop()
             elif token == '-=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] -= stack[l()]
+                vartable[var_stack[l() - 1]][0] -= stack[l()]
                 stack[l() - 1] -= stack[l()]
                 stack.pop()
                 var_stack.pop()
             elif token == '+=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] += stack[l()]
+                vartable[var_stack[l() - 1]][0] += stack[l()]
                 stack[l() - 1] += stack[l()]
                 stack.pop()
                 var_stack.pop()
@@ -287,7 +287,7 @@ def calculate(expr, scope, vartable):
             elif token == '_':
                 stack[l()] = -stack[l()]
             elif token == '=':
-                vartable[globals.in_var_table(var_stack[l() - 1], scope)][0] = stack[l()]
+                vartable[var_stack[l() - 1]][0] = stack[l()]
                 stack[l() - 1] = stack[l()]
                 stack.pop()
                 var_stack.pop()
