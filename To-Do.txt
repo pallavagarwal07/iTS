@@ -1,6 +1,12 @@
-Static Variables
-Const Variables
-Pointers
-Arrays
-Functions
-Signed Unsigned variables
+Priority : Highest
+    Handle chars in Calc function
+    Code Traversal
+
+Priority : High
+    Arrays
+    Functions
+
+Priority : Medium
+    Static, const variables
+    Signed Unsigned variables
+    Pointers

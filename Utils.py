@@ -1,3 +1,4 @@
+"""
 def match_brack(code, num):
     i = num
     start = 0
@@ -11,6 +12,7 @@ def match_brack(code, num):
         if start == 0:
             return k
     return i
+"""
 
 
 def is_num(s):
@@ -20,14 +22,3 @@ def is_num(s):
     except ValueError:
         return 'Error'
 
-
-'''
-
-def handle_num(s):
-    try:
-        float(s)
-        return eval(str(s))
-    except ValueError:
-        return s
-
-'''
