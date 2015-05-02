@@ -1,6 +1,5 @@
 import re
 import globals
-import Utils
 import Calc
 import io
 import groups
@@ -62,6 +61,7 @@ def garbage_collector(scope):
 
 
 def execute(code, scope):
+    print globals.var_table
     if type(code) is str:
         execute([code], scope)
         return

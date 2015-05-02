@@ -104,5 +104,4 @@ def nest(code):
             i = match
         i += 1
     code = nest_groups(code, 0, 0)
-
     return code

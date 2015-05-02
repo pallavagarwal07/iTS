@@ -2,7 +2,7 @@ import globals
 import re
 from Utils import is_num
 from Vars import get_val, set_val
-import sys
+# import sys
 
 
 # starting of the expression, after '(', after some other operator
@@ -28,13 +28,13 @@ def sep(expr):
             i += 1
         if tk.strip():
             tokens.append(tk)
-    print tokens
+    print "tokens", tokens
     return tokens
 
 
 def calculate(expr, scope, vartable):
     postfix = []
-    print vartable
+    # print vartable
     stack = []
     expr = expr.strip()
     k = list(set(re.findall(r'--\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)))
