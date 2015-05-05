@@ -28,6 +28,6 @@ print code
 # print globals.type_range
 # Access is used to keep track of current scope
 Access = ['global']
-
+globals.setup()
 # Send the code to the execution factory
 # Runtime.execute(code, Access)

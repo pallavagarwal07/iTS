@@ -1,7 +1,7 @@
 import re
 import globals
 import Calc
-import io
+import i_o
 import groups
 
 
@@ -86,9 +86,9 @@ def execute(code, scope):
             continue
         if chk_decl(line, " ".join(scope)):
             continue
-        if io.handle_input(line, " ".join(scope)):
+        if i_o.handle_input(line, " ".join(scope)):
             continue
-        if io.handle_output(line, " ".join(scope)):
+        if i_o.handle_output(line, " ".join(scope)):
             continue
         # print "Here1"
         if is_updation(line):
