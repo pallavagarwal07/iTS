@@ -112,7 +112,7 @@ def calculate(expr, scope, vartable):
             if token not in expr:
                 print('Error 102: Did you miss the operator between'
                       ' two values/variables?\n' + token + '\n' + expr + '\n')
-                exit(0)
+                # exit(0)
         i += 1
     if len(token) > 0:
         postfix.append(token)

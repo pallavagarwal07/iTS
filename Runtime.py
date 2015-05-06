@@ -60,6 +60,75 @@ def garbage_collector(scope):
     return
 
 
+def decl_func(line):
+    k = re.match(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+                 '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
+    if k:
+        k = re.findall(
+            r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+            '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
+        assert len(k) == 1
+        k = k[0]
+        params = [a.strip() for a in k[2].split(',')]
+        for index, par in enumerate(params):
+            for data_type in globals.data_types:
+                if par.startswith(data_type):
+                    rep = re.sub(data_type + r'\s*', '', par)
+                    params[index] = (data_type, rep)
+                    break
+        globals.functions[k[1]] = [k[0], params, '']
+        return 1
+    else:
+        return 0
+
+
+def def_func(line, code, num):
+    k = re.match(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+                 '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
+    if k:
+        k = re.findall(
+            r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+            '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
+        assert len(k) == 1
+        k = k[0]
+        params = [a.strip() for a in k[2].split(',')]
+        for index, par in enumerate(params):
+            for data_type in globals.data_types:
+                if par.startswith(data_type):
+                    rep = re.sub(data_type + r'\s*', '', par)
+                    params[index] = (data_type, rep)
+                    break
+        print line
+        print code
+        print num
+        globals.functions[k[1]] = [k[0], params, code[num]]
+        print globals.functions
+        return 1
+    elif decl_func(line):
+        print globals.functions
+        return 1
+    else:
+        return 0
+
+
+def traverse(code, scope):
+    i = 0
+    while i < len(code):
+        line = code[i]
+        i += 1
+        if type(line) is not str:
+            continue
+        if len(line) < 1:
+            continue
+        if chk_decl(line, " ".join(scope)):
+            continue
+        if is_updation(line):
+            Calc.calculate(line, " ".join(scope), globals.var_table)
+            continue
+        if def_func(line, code, i):
+            continue
+
+
 def execute(code, scope):
     print globals.var_table
     if type(code) is str:
@@ -77,8 +146,6 @@ def execute(code, scope):
     while i < len(code):
         line = code[i]
         i += 1
-        if line == 'int':
-            continue
         if type(line) is list:
             execute(line, scope + [str(i - 1)])
             continue

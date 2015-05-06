@@ -43,24 +43,27 @@ unary_ops = {
 
 size_of = {}
 
-data_types = {
-    'char', 'int', 'long', 'long long', 'long long int', 'float', 'double', 'long double'
-}
+data_types = [
+    'long long int', 'long int', 'long double', 'long long', 'char', 'int', 'long', 'float', 'double',
+]
 
 type_range = {}
+
+functions = {}
 
 
 def setup():
     code = r"""
-    py::tuple res(8);
-    res[0] = (int)sizeof(char);
-    res[1] = (int)sizeof(int);
-    res[2] = (int)sizeof(long);
+    py::tuple res(9);
+    res[0] = (int)sizeof(long long int);
+    res[1] = (int)sizeof(long int);
+    res[2] = (int)sizeof(long double);
     res[3] = (int)sizeof(long long);
-    res[4] = (int)sizeof(long long int);
-    res[5] = (int)sizeof(float);
-    res[6] = (int)sizeof(double);
-    res[7] = (int)sizeof(long double);
+    res[4] = (int)sizeof(char);
+    res[5] = (int)sizeof(int);
+    res[6] = (int)sizeof(long);
+    res[7] = (int)sizeof(float);
+    res[8] = (int)sizeof(double);
     return_val = res;
     """
     result = weave.inline(code, [])
@@ -69,7 +72,7 @@ def setup():
         size_of[types] = result[i]
         i += 1
 
-    for types in {'char', 'int', 'long', 'long long', 'long long int'}:
+    for types in ['char', 'int', 'long', 'long long', 'long long int']:
         temp = 1 << ((8 * size_of[types])-1)
         type_range[types] = (-temp, temp-1)
 
