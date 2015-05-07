@@ -38,6 +38,7 @@ def handle_input(statement, scope):
             vals = (eval(values[0][i]) if Utils.is_num(values[0][i]) != 'Error' else values[0][i])
             from Runtime import update
             update(v, vals, scope)
+    print globals.var_table
     return True
 
 

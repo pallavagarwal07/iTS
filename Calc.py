@@ -50,7 +50,7 @@ def pass_to_func(detail, scope):
     for i, declarations in enumerate(globals.functions[name][1]):
         import Runtime
         Runtime.decl(declarations[1], detail[i], declarations[0], name)
-    return Runtime.execute(globals.functions[name][2], name)
+    return Runtime.execute(globals.functions[name][2], [name])
 
 
 def calculate(expr, scope, vartable=globals.var_table):

@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define s(n) scanf("%d",&n)
-int func(int a, int b)
-{
-    printf("This function was executed successfully\n");
-    return a*b;
-}
 
+
+int func(int a, int b);
 int main()
 {
     int c;
     c = func(4, 2)*32;
     printf("%d\n", c);
 }
-
+int func(int a, int b)
+{
+    int j;
+    s(j);
+    printf("This function was executed successfully\n");
+    return j*b;
+}
 
 
 
