@@ -29,7 +29,5 @@ print code
 # Access is used to keep track of current scope
 Access = ['global']
 globals.setup()
-# Build a dictionary of functions
+# Build a dictionary of functions and run main
 Runtime.traverse(code, Access)
-# Exectue the main function
-Runtime.execute(globals.functions['main'], Access)

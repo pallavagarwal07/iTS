@@ -1,9 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define s(n) scanf("%d",&n)
+
+int main()
+{
+    int c;
+    c = func(1, b)*32;
+}
+
+
+
+
+/*
 long func(int b)
 {
     printf("%d %d\n", b, b);
+}
+long double func2__();
+long double func2__(double a, int g);
+long double func2__()
+{
+    printf("hELLO wORLD");
+}
+int func2__(int overload)
+{
+    scanf("%d", &a);
 }
 int main()
 {
@@ -29,3 +50,8 @@ int main()
     return 0;
 }
 
+long double func2__(double a, int g)
+{
+    printf("Please Work!!!\n");
+}
+*/

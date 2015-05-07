@@ -34,7 +34,6 @@ def sep(expr):
 
 def calculate(expr, scope, vartable):
     postfix = []
-    # print vartable
     stack = []
     expr = expr.strip()
     k = list(set(re.findall(r'--\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)))
@@ -85,6 +84,7 @@ def calculate(expr, scope, vartable):
                             j += 1
                         i += len(expression) - 1
                         token += expression
+                        print "here, token=", token
                 elif ex == ')':
                     while stack[len(stack) - 1] != '(':
                         postfix.append(stack.pop())
@@ -118,7 +118,6 @@ def calculate(expr, scope, vartable):
         postfix.append(token)
     while len(stack) > 0:
         postfix.append(stack.pop())
-    postfix = (" ".join(postfix)).split()
     stack = []
     for k in postfix:
         if 'Error' == is_num(k):
@@ -136,10 +135,18 @@ def calculate(expr, scope, vartable):
         if token not in globals.ops:
             n = is_num(token)
             if 'Error' == n:
-                t = globals.in_var_table(token, scope)
-                val = get_val(t)
-                stack.append(val)
-                var_stack.append(t)
+                k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', token)
+                if k:
+                    print k
+                    exit(0)
+                    val = pass_to_func(k[0], scope)
+                    stack.append(val)
+                    var_stack.append(val)
+                else:
+                    t = globals.in_var_table(token, scope)
+                    val = get_val(t)
+                    stack.append(val)
+                    var_stack.append(t)
             else:
                 stack.append(token)
                 var_stack.append(token)

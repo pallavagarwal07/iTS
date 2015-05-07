@@ -3,6 +3,7 @@ import globals
 import Calc
 import i_o
 import groups
+import sys
 
 
 def decl(var, val, cast, scope):
@@ -60,13 +61,38 @@ def garbage_collector(scope):
     return
 
 
+def run_through(code, num):
+    i = num
+    while i < len(code):
+        line = code[i]
+        i += 1
+        if type(line) != str:
+            continue
+        k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+                       '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
+        if k:
+            assert len(k) == 1
+            k = k[0]
+            params = [a.strip() for a in k[2].split(',')]
+            for index, par in enumerate(params):
+                for data_type in globals.data_types:
+                    if par.startswith(data_type):
+                        rep = re.sub(data_type + r'\s*', '', par)
+                        params[index] = (data_type, rep)
+                        break
+            if len(params[0]) > 0:
+                type_key = tuple([temp[0] for temp in params])
+            else:
+                type_key = ''
+            if (k[1], type_key) in globals.functions and (globals.functions[(k[1], type_key)][2] == ''):
+                globals.functions[(k[1], type_key)] = [k[0], params, code[i]]
+            print globals.functions
+
+
 def decl_func(line):
-    k = re.match(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
-                 '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
+    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+                   '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
     if k:
-        k = re.findall(
-            r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
-            '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
         assert len(k) == 1
         k = k[0]
         params = [a.strip() for a in k[2].split(',')]
@@ -76,19 +102,25 @@ def decl_func(line):
                     rep = re.sub(data_type + r'\s*', '', par)
                     params[index] = (data_type, rep)
                     break
-        globals.functions[k[1]] = [k[0], params, '']
+        print params
+        if len(params[0]) > 0:
+            type_key = tuple([temp[0] for temp in params])
+        else:
+            type_key = ''
+        if k[1] in globals.functions:
+            print "Error!! Multiple declaration of function\n"
+        else:
+            globals.functions[(k[1], type_key)] = [k[0], params, '']
+
         return 1
     else:
         return 0
 
 
 def def_func(line, code, num):
-    k = re.match(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
-                 '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
+    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+                   '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
     if k:
-        k = re.findall(
-            r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
-            '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
         assert len(k) == 1
         k = k[0]
         params = [a.strip() for a in k[2].split(',')]
@@ -98,10 +130,20 @@ def def_func(line, code, num):
                     rep = re.sub(data_type + r'\s*', '', par)
                     params[index] = (data_type, rep)
                     break
-        print line
-        print code
-        print num
-        globals.functions[k[1]] = [k[0], params, code[num]]
+        print params
+        if len(params[0]) > 0:
+            type_key = tuple([temp[0] for temp in params])
+        else:
+            type_key = ''
+        if k[1] == 'main':
+            run_through(code, num + 1)
+            execute(code[num], ['global'])
+            exit(0)
+        if (k[1], type_key) in globals.functions and (globals.functions[(k[1], type_key)][2] != ''):
+            print "Error!! Multiple declaration of function"
+            exit(0)
+        else:
+            globals.functions[(k[1], type_key)] = [k[0], params, code[num]]
         print globals.functions
         return 1
     elif decl_func(line):
