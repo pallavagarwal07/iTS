@@ -84,8 +84,9 @@ def run_through(code, num):
                 type_key = tuple([temp[0] for temp in params])
             else:
                 type_key = ''
-            if (k[1], type_key) in globals.functions and (globals.functions[(k[1], type_key)][2] == ''):
-                globals.functions[(k[1], type_key)] = [k[0], params, code[i]]
+            if k[1] in globals.functions and globals.functions[k[1]][2] == '' \
+                    and globals.functions[k[1]][3] == type_key:
+                globals.functions[k[1]] = [k[0], params, code[i], type_key]
             print globals.functions
 
 
@@ -110,8 +111,8 @@ def decl_func(line):
         if k[1] in globals.functions:
             print "Error!! Multiple declaration of function\n"
         else:
-            globals.functions[(k[1], type_key)] = [k[0], params, '']
-
+            globals.functions[k[1]] = [k[0], params, '', type_key]
+        print globals.functions
         return 1
     else:
         return 0
@@ -139,11 +140,11 @@ def def_func(line, code, num):
             run_through(code, num + 1)
             execute(code[num], ['global'])
             exit(0)
-        if (k[1], type_key) in globals.functions and (globals.functions[(k[1], type_key)][2] != ''):
+        if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):
             print "Error!! Multiple declaration of function"
             exit(0)
         else:
-            globals.functions[(k[1], type_key)] = [k[0], params, code[num]]
+            globals.functions[k[1]] = [k[0], params, code[num], type_key]
         print globals.functions
         return 1
     elif decl_func(line):
@@ -174,8 +175,9 @@ def traverse(code, scope):
 def execute(code, scope):
     print globals.var_table
     if type(code) is str:
-        execute([code], scope)
-        return
+        r = execute([code], scope)
+        if r is not None:
+            return r
     i = 0
     if groups.if_conditionals(code, scope[:]):
         return
@@ -189,7 +191,9 @@ def execute(code, scope):
         line = code[i]
         i += 1
         if type(line) is list:
-            execute(line, scope + [str(i - 1)])
+            r = execute(line, scope + [str(i - 1)])
+            if r is not None:
+                return r
             continue
         if len(line) < 1:
             continue
@@ -199,10 +203,13 @@ def execute(code, scope):
             continue
         if i_o.handle_output(line, " ".join(scope)):
             continue
-        # print "Here1"
         if is_updation(line):
             Calc.calculate(line, " ".join(scope), globals.var_table)
             continue
+        ret = re.findall(r'^\s*return\s+(.*)\s*;\s*$', line);
+        if ret:
+            return Calc.calculate(ret[0], scope)
+
         try:
             Calc.calculate(line, scope, globals.var_table)
         except Exception:

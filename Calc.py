@@ -32,7 +32,28 @@ def sep(expr):
     return tokens
 
 
-def calculate(expr, scope, vartable):
+def pass_to_func(detail, scope):
+    name = detail[0]
+    l = len(detail[1].split(','))
+    if name not in globals.functions:
+        print "Error!! Undeclared Function"
+        exit(0)
+    if len(globals.functions[name][3]) != l:
+        print "Error!! Incorrect no. of parameters"
+        exit(0)
+    if globals.functions[name][2] == '':
+        print "Error!! The function was declared, but never defined."
+        exit(0)
+    detail = detail[1].split(',')
+    detail = [calculate(str(k).strip(), scope) for k in detail]
+
+    for i, declarations in enumerate(globals.functions[name][1]):
+        import Runtime
+        Runtime.decl(declarations[1], detail[i], declarations[0], name)
+    return Runtime.execute(globals.functions[name][2], name)
+
+
+def calculate(expr, scope, vartable=globals.var_table):
     postfix = []
     stack = []
     expr = expr.strip()
@@ -138,7 +159,6 @@ def calculate(expr, scope, vartable):
                 k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', token)
                 if k:
                     print k
-                    exit(0)
                     val = pass_to_func(k[0], scope)
                     stack.append(val)
                     var_stack.append(val)
