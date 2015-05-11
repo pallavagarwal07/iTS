@@ -173,14 +173,18 @@ def execute(code, scope):
             garbage_collector(scope)
             return r
     i = 0
-    if groups.if_conditionals(code, scope[:]):
-        return
-    if groups.if_for(code, scope[:]):
-        return
-    if groups.if_while(code, scope[:]):
-        return
-    if groups.if_do_while(code, scope[:]):
-        return
+    r = groups.if_conditionals(code, scope[:])
+    if r is not "NO":
+        return r
+    r = groups.if_for(code, scope[:])
+    if r is not "NO":
+        return r
+    r = groups.if_while(code, scope[:])
+    if r is not "NO":
+        return r
+    r = groups.if_do_while(code, scope[:])
+    if r is not "NO":
+        return r
     while i < len(code):
         line = code[i]
         i += 1

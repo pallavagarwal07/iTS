@@ -13,13 +13,14 @@ def if_conditionals(code, scope):
         expr = re.findall(r'^(?s)if\s*\((.*)\)', line)
     if len(expr) != 0:
         flag = Calc.calculate(expr[0], scope, globals.var_table)
+        ret = None
         if flag:
-            Runtime.execute(code[1], scope + ['1'])
+            ret = Runtime.execute(code[1], scope + ['1'])
         elif len(code) > 2:
-            Runtime.execute(code[3], scope + ['3'])
-        return True
+            ret = Runtime.execute(code[3], scope + ['3'])
+        return ret
     else:
-        return False
+        return "NO"
 
 
 def if_for(code, scope):
@@ -31,13 +32,16 @@ def if_for(code, scope):
     if len(expr) != 0:
         Calc.calculate(expr[0][0], scope, globals.var_table)
         flag = Calc.calculate(expr[0][1], scope, globals.var_table)
+        ret = None
         while flag:
-            Runtime.execute(code[1], scope + ['1'])
+            ret = Runtime.execute(code[1], scope + ['1'])
+            if ret is not None:
+                return ret
             Calc.calculate(expr[0][2], scope, globals.var_table)
             flag = Calc.calculate(expr[0][1], scope, globals.var_table)
-        return True
+        return ret
     else:
-        return False
+        return "NO"
 
 
 def if_while(code, scope):
@@ -47,13 +51,16 @@ def if_while(code, scope):
     else:
         expr = re.findall(r'^(?s)while\s*\((.*)\)', line)
     if len(expr) != 0:
+        ret = None
         flag = Calc.calculate(expr[0], scope, globals.var_table)
         while flag:
-            Runtime.execute(code[1], scope + ['1'])
+            ret = Runtime.execute(code[1], scope + ['1'])
+            if ret is not None:
+                return ret
             flag = Calc.calculate(expr[0], scope, globals.var_table)
-        return True
+        return ret
     else:
-        return False
+        return "NO"
 
 
 def if_do_while(code, scope):
@@ -68,10 +75,13 @@ def if_do_while(code, scope):
             print "Error"
             exit(0)
         else:
+            ret = None
             flag = 1
             while flag:
-                Runtime.execute(code[1], scope + ['1'])
+                ret = Runtime.execute(code[1], scope + ['1'])
+                if ret is not None:
+                    return ret
                 flag = Calc.calculate(condition[0], scope, globals.var_table)
-            return True
+            return ret
     else:
-        return False
+        return "NO"
