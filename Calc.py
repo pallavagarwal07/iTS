@@ -142,7 +142,8 @@ def calculate(expr, scope, vartable=globals.var_table):
     stack = []
     for k in postfix:
         if 'Error' == is_num(k):
-            stack.append(k)
+            if k:
+                stack.append(k)
         else:
             m = is_num(k)
             stack.append(m)
@@ -164,6 +165,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                     var_stack.append(val)
                 else:
                     t = globals.in_var_table(token, scope)
+                    print "key came from " + str((token, scope)), postfix
                     val = get_val(t)
                     stack.append(val)
                     var_stack.append(t)

@@ -2,7 +2,38 @@
 #include <stdlib.h>
 #define s(n) scanf("%d",&n)
 
+int isPrime(int a)
+{
+    int flag=1;
+    int i=2;
+    for(i=2; i<a; i++)
+    {
+        if(a%i == 0)
+            flag = 0;
+    }
+    return flag;
+}
 
+int main()
+{
+    long long a;
+    scanf("%lld\n", &a);
+    int i=0;
+    for(i=2; i<=a; i++)
+    {
+        if(isPrime(i) && a%i==0)
+        {
+            printf("One of the factors is %d.\n", i);
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+/*
 int func(int a, int b);
 int main()
 {
@@ -20,7 +51,7 @@ int func(int a, int b)
 
 
 
-/*
+
 long func(int b)
 {
     printf("%d %d\n", b, b);

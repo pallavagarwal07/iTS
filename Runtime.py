@@ -177,6 +177,7 @@ def execute(code, scope):
     if type(code) is str:
         r = execute([code], scope)
         if r is not None:
+            garbage_collector(scope)
             return r
     i = 0
     if groups.if_conditionals(code, scope[:]):
@@ -193,6 +194,7 @@ def execute(code, scope):
         if type(line) is list:
             r = execute(line, scope + [str(i - 1)])
             if r is not None:
+                garbage_collector(scope)
                 return r
             continue
         if len(line) < 1:
@@ -208,6 +210,7 @@ def execute(code, scope):
             continue
         ret = re.findall(r'^\s*return\s+(.*)\s*;\s*$', line);
         if ret:
+            garbage_collector(scope)
             return Calc.calculate(ret[0], scope)
 
         try:
