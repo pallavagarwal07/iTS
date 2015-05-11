@@ -28,7 +28,6 @@ def sep(expr):
             i += 1
         if tk.strip():
             tokens.append(tk)
-    print "tokens", tokens
     return tokens
 
 
@@ -67,7 +66,6 @@ def calculate(expr, scope, vartable=globals.var_table):
     for i in range(0, len(k)):
         k2.append(k[i].replace('++', '+++'))
         expr = expr.replace(k[i], k2[i])
-    print expr
     seperated_tokens = sep(expr)
     flag = 1
     for i, token in enumerate(seperated_tokens):
@@ -105,7 +103,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                             j += 1
                         i += len(expression) - 1
                         token += expression
-                        print "here, token=", token
                 elif ex == ')':
                     while stack[len(stack) - 1] != '(':
                         postfix.append(stack.pop())
@@ -129,7 +126,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                 break
         else:
             token += expr[i]
-            print 'Debug : ', token, postfix
             if token not in expr:
                 print('Error 102: Did you miss the operator between'
                       ' two values/variables?\n' + token + '\n' + expr + '\n')
@@ -152,20 +148,17 @@ def calculate(expr, scope, vartable=globals.var_table):
     stack = []
     var_stack = []
     l = lambda: len(stack) - 1
-    print "Postfix is:", postfix
     for token in postfix:
         if token not in globals.ops:
             n = is_num(token)
             if 'Error' == n:
                 k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', token)
                 if k:
-                    print k
                     val = pass_to_func(k[0], scope)
                     stack.append(val)
                     var_stack.append(val)
                 else:
                     t = globals.in_var_table(token, scope)
-                    print "key came from " + str((token, scope)), postfix
                     val = get_val(t)
                     stack.append(val)
                     var_stack.append(t)
@@ -328,5 +321,4 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '~':
                 stack[l()] = ~stack[l()]
     r = stack.pop()
-    print 'Return value is :', r
     return r

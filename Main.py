@@ -23,7 +23,6 @@ code = PreProcessing.use_c_preprocessor(filename)
 
 # code = PreProcessing.get_code(CodeFile)
 code = PreProcessing.nest(code)
-print code
 # Gui.make_ui(code)
 # print globals.type_range
 # Access is used to keep track of current scope

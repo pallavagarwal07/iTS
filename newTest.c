@@ -6,7 +6,14 @@ int isPrime(int a)
 {
     int flag=1;
     int i=2;
-    for(i=2; i<a; i++)
+    printf("Now checking for %d \n", a);
+    if(a%i==0 && i<a)
+    {
+        printf("I was here \n");
+        return 0;
+    }
+    printf("Now checking for %d \n", a);
+    for(i=3; i<a/2 && flag; i+=2)
     {
         if(a%i == 0)
             flag = 0;

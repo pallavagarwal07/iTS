@@ -87,7 +87,6 @@ def run_through(code, num):
             if k[1] in globals.functions and globals.functions[k[1]][2] == '' \
                     and globals.functions[k[1]][3] == type_key:
                 globals.functions[k[1]] = [k[0], params, code[i], type_key]
-            print globals.functions
 
 
 def decl_func(line):
@@ -103,7 +102,6 @@ def decl_func(line):
                     rep = re.sub(data_type + r'\s*', '', par)
                     params[index] = (data_type, rep)
                     break
-        print params
         if len(params[0]) > 0:
             type_key = tuple([temp[0] for temp in params])
         else:
@@ -112,7 +110,6 @@ def decl_func(line):
             print "Error!! Multiple declaration of function\n"
         else:
             globals.functions[k[1]] = [k[0], params, '', type_key]
-        print globals.functions
         return 1
     else:
         return 0
@@ -131,7 +128,6 @@ def def_func(line, code, num):
                     rep = re.sub(data_type + r'\s*', '', par)
                     params[index] = (data_type, rep)
                     break
-        print params
         if len(params[0]) > 0:
             type_key = tuple([temp[0] for temp in params])
         else:
@@ -145,10 +141,8 @@ def def_func(line, code, num):
             exit(0)
         else:
             globals.functions[k[1]] = [k[0], params, code[num], type_key]
-        print globals.functions
         return 1
     elif decl_func(line):
-        print globals.functions
         return 1
     else:
         return 0
@@ -173,7 +167,6 @@ def traverse(code, scope):
 
 
 def execute(code, scope):
-    print globals.var_table
     if type(code) is str:
         r = execute([code], scope)
         if r is not None:
@@ -210,9 +203,9 @@ def execute(code, scope):
             continue
         ret = re.findall(r'^\s*return\s+(.*)\s*;\s*$', line);
         if ret:
+            ret = Calc.calculate(ret[0], scope)
             garbage_collector(scope)
-            return Calc.calculate(ret[0], scope)
-
+            return ret 
         try:
             Calc.calculate(line, scope, globals.var_table)
         except Exception:

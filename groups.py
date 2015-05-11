@@ -29,7 +29,6 @@ def if_for(code, scope):
     else:
         expr = re.findall(r'^(?s)for\s*\((.*);(.*);(.*)\)', line)
     if len(expr) != 0:
-        # print expr
         Calc.calculate(expr[0][0], scope, globals.var_table)
         flag = Calc.calculate(expr[0][1], scope, globals.var_table)
         while flag:

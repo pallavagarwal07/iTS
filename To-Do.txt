@@ -1,13 +1,14 @@
-Priority : Highest
+                                                    Priority : Highest
     Handle chars in Calc function - Done, Kapila?
-    Code Traversal - Done!
+****Code Traversal - Done!
     Short circuit evaluation - Oh no!!!
+    break, continue!!!! - Damn it!
 
-Priority : High
+                                                    Priority : High
     Arrays
-    Functions
+****Functions - Done :D
 
-Priority : Medium
+                                                    Priority : Medium
     Static, const variables
     Signed Unsigned variables
     Pointers
