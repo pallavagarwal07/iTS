@@ -3,7 +3,6 @@ global inp
 import weave
 inp = ''
 var_table = {}
-mem_space = {}
 
 curr_mem = 1000000000
 
@@ -44,7 +43,7 @@ unary_ops = {
 size_of = {}
 
 data_types = [
-    'long long int', 'long int', 'long double', 'long long', 'char', 'int', 'long', 'float', 'double',
+    'long long int', 'long int', 'long double', 'long long', 'char', 'int', 'long', 'float', 'double', 'pointer'
 ]
 
 type_range = {}
@@ -54,7 +53,7 @@ functions = {}
 
 def setup():
     code = r"""
-    py::tuple res(9);
+    py::tuple res(10);
     res[0] = (int)sizeof(long long int);
     res[1] = (int)sizeof(long int);
     res[2] = (int)sizeof(long double);
@@ -64,6 +63,7 @@ def setup():
     res[6] = (int)sizeof(long);
     res[7] = (int)sizeof(float);
     res[8] = (int)sizeof(double);
+    res[9] = (int)sizeof(int*);
     return_val = res;
     """
     result = weave.inline(code, [])
@@ -83,7 +83,15 @@ def in_var_table(var, scope):
     else:
         scope = scope[:]
     while len(scope) > 0:
-        if (var, " ".join(scope)) in var_table:
-            return var, " ".join(scope)
+        for v in var_table:
+            if v[0] == var and v[1] == ' '.join(scope):
+                return v
         scope.pop()
+    return 0
+
+
+def find_by_mem(mem):
+    for v in var_table:
+        if v[2] == mem:
+            return v
     return 0

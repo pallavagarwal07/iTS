@@ -2,10 +2,6 @@ import globals
 import re
 from Utils import is_num
 from Vars import get_val, set_val
-# import sys
-
-
-# starting of the expression, after '(', after some other operator
 
 
 def sep(expr):
@@ -34,8 +30,15 @@ def sep(expr):
 def pass_to_func(detail, scope):
     name = detail[0]
     l = len(detail[1].split(','))
+    if name == 'sizeof':
+        t = re.findall(r'\*', name)
+        if t:
+            return globals.size_of['pointer']
+        else:
+            detail = detail[1].split(',')
+            return globals.size_of[detail[0].strip()]
     if name not in globals.functions:
-        print "Error!! Undeclared Function"
+        print "Error!! Undeclared Function", name
         exit(0)
     if len(globals.functions[name][3]) != l:
         print "Error!! Incorrect no. of parameters"
@@ -145,9 +148,8 @@ def calculate(expr, scope, vartable=globals.var_table):
             stack.append(m)
     postfix = stack
 
-    stack = []
     var_stack = []
-    l = lambda: len(stack) - 1
+    l = lambda: len(var_stack) - 1
     for token in postfix:
         if token not in globals.ops:
             n = is_num(token)
@@ -155,170 +157,173 @@ def calculate(expr, scope, vartable=globals.var_table):
                 k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', token)
                 if k:
                     val = pass_to_func(k[0], scope)
-                    stack.append(val)
                     var_stack.append(val)
                 else:
                     t = globals.in_var_table(token, scope)
-                    val = get_val(t)
-                    stack.append(val)
                     var_stack.append(t)
             else:
-                stack.append(token)
                 var_stack.append(token)
         else:
             if token == '---':
+                if type(var_stack[l()]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
                 set_val(var_stack[l()], get_val(var_stack[l()]) - 1)
-                stack[l()] = get_val(var_stack[l()])
             elif token == '+++':
+                if type(var_stack[l()]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
                 set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
-                stack[l()] = get_val(var_stack[l()])
             elif token == '`*`':
-                var_stack[l()] = globals.mem_space[stack[l()]]
-                stack[l()] = get_val(globals.mem_space[stack[l()]])
+                var_stack[l()] = globals.var_table[globals.find_by_mem(get_val(var_stack[l()]))]
             elif token == '`&`':
-                stack[l()] = vartable[var_stack[l()]][3]
+                var_stack[l()] = vartable[var_stack[l()]][3]
             elif token == '<<=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) << stack[l()])
-                stack[l() - 1] <<= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) << get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '>>=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) >> stack[l()])
-                stack[l() - 1] >>= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) >> get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '*=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) * stack[l()])
-                stack[l() - 1] *= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) * get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '|=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) | stack[l()])
-                stack[l() - 1] |= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) | get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '>=':
-                stack[l() - 1] = (1 if stack[l() - 1] >= stack[l()] else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) >= get_val(var_stack[l()]) else 0)
                 var_stack.pop()
             elif token == '>>':
-                stack[l() - 1] = (stack[l() - 1] >> stack[l()])
-                stack.pop()
+                var_stack[l() - 1] = (get_val(var_stack[l() - 1]) >> get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '==':
-                stack[l() - 1] = (1 if (stack[l() - 1] == stack[l()]) else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if (get_val(var_stack[l() - 1]) == get_val(var_stack[l()])) else 0)
                 var_stack.pop()
             elif token == '<<':
-                stack[l() - 1] = (stack[l() - 1] << stack[l()])
-                stack.pop()
+                var_stack[l() - 1] = (get_val(var_stack[l() - 1]) << get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '<=':
-                stack[l() - 1] = (1 if stack[l() - 1] <= stack[l()] else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) <= get_val(var_stack[l()]) else 0)
                 var_stack.pop()
             elif token == '&=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) & stack[l()])
-                stack[l() - 1] &= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) & get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '!=':
-                stack[l() - 1] = (1 if stack[l() - 1] != stack[l()] else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) != get_val(var_stack[l()]) else 0)
                 var_stack.pop()
             elif token == '&&':
-                stack[l() - 1] = (1 if stack[l() - 1] and stack[l()] else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) and get_val(var_stack[l()]) else 0)
                 var_stack.pop()
             elif token == '||':
-                stack[l() - 1] = (1 if stack[l() - 1] or stack[l()] else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) or get_val(var_stack[l()]) else 0)
                 var_stack.pop()
             elif token == '^=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) ^ stack[l()])
-                stack[l() - 1] ^= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) ^ get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '++':
+                if type(var_stack[l()]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
                 set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
             elif token == '--':
+                if type(var_stack[l()]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
                 set_val(var_stack[l()], get_val(var_stack[l()]) - 1)
             elif token == '/=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) / stack[l()])
-                stack[l() - 1] /= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                if get_val(var_stack[l()]) == 0:
+                    print "Division by 0 not permitted"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) / get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '%=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) % stack[l()])
-                stack[l() - 1] %= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) % get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '-=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) - stack[l()])
-                stack[l() - 1] -= stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) - get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '+=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) + stack[l()])
-                stack[l() - 1] += stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required"
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) + get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == ',':
-                stack[l() - 1] = stack[l()]
-                stack.pop()
+                var_stack[l() - 1] = var_stack[l()]
                 var_stack.pop()
             elif token == '>':
-                stack[l() - 1] = (1 if stack[l() - 1] > stack[l()] else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) > get_val(var_stack[l()]) else 0)
                 var_stack.pop()
             elif token == '|':
-                stack[l() - 1] = (stack[l() - 1]) | (stack[l()])
-                stack.pop()
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) | get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '^':
-                stack[l() - 1] = (stack[l() - 1]) ^ (stack[l()])
-                stack.pop()
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) ^ get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '!':
-                stack[l()] = (0 if (stack[l()]) else 1)
+                var_stack[l()] = (0 if get_val(var_stack[l()]) else 1)
             elif token == '%':
-                stack[l() - 1] = stack[l() - 1] % stack[l()]
-                stack.pop()
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) % get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '&':
-                stack[l() - 1] = (stack[l() - 1]) & (stack[l()])
-                stack.pop()
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) & get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '+':
-                stack[l() - 1] = stack[l() - 1] + stack[l()]
-                stack.pop()
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) + get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '*':
-                stack[l() - 1] = stack[l() - 1] * stack[l()]
-                stack.pop()
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) * get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '-':
-                stack[l() - 1] = stack[l() - 1] - stack[l()]
-                stack.pop()
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) - get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '/':
-                stack[l() - 1] = stack[l() - 1] / stack[l()]
-                stack.pop()
+                if get_val(var_stack[l()]) == 0:
+                    print "Division by 0 not permitted"
+                    exit(0)
+                var_stack[l() - 1] = get_val(var_stack[l() - 1]) / get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '#':
-                stack[l()] = stack[l()]
+                var_stack[l()] = var_stack[l()]
             elif token == '_':
-                stack[l()] = -stack[l()]
+                var_stack[l()] = 0 - get_val(var_stack[l()])
             elif token == '=':
-                set_val(var_stack[l() - 1], stack[l()])
-                stack[l() - 1] = stack[l()]
-                stack.pop()
+                if type(var_stack[l() - 1]) is not tuple:
+                    print "Error: Lvalue required", type(var_stack[l() - 1])
+                    exit(0)
+                set_val(var_stack[l() - 1], get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '<':
-                stack[l() - 1] = (1 if stack[l() - 1] < stack[l()] else 0)
-                stack.pop()
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) < get_val(var_stack[l()]) else 0)
                 var_stack.pop()
             elif token == '~':
-                stack[l()] = ~stack[l()]
-    r = stack.pop()
+                var_stack[l()] = ~get_val(var_stack[l()])
+    r = get_val(var_stack.pop())
     return r

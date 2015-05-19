@@ -49,7 +49,7 @@ def use_c_preprocessor(filename):
 #       ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs', '-l100000'],
 #       stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r":a;N;$!ba;s/\s+/ /g"], stdin=a.stdout, stdout=PIPE)
-    a = Popen(['astyle', '-A10'], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['astyle', '-A10', '-k3'], stdin=a.stdout, stdout=PIPE)
     a = Popen(['astyle', '--indent=spaces', '-A1'], stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r"s/^\s*//"], stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r"s/\s*$//"], stdin=a.stdout, stdout=PIPE)

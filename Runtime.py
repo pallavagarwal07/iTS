@@ -3,23 +3,32 @@ import globals
 import Calc
 import i_o
 import groups
+import Vars
 import sys
 
 
 def decl(var, val, cast, scope):
+    pointers = re.findall('\*+', var)
+    if pointers:
+        level = len(pointers)
+    else:
+        level = 0
+    var = re.sub('\*', '', var)
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
         print("Error 101: Multiple declaration of variable " + var + "\n")
         return
-    globals.var_table[(var, scope)] = [val, cast, scope, globals.curr_mem]
-    globals.mem_space[globals.curr_mem] = (var, scope)
-    globals.curr_mem += globals.size_of[cast]
+    globals.var_table[(var, scope, globals.curr_mem)] = [val, cast, level, globals.curr_mem]
+    if level == 0:
+        globals.curr_mem += globals.size_of[cast]
+    else:
+        globals.curr_mem += globals.size_of['pointer']
 
 
 def chk_decl(line, scope):
     r = re.findall(
         r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
-        '((\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*,)*((\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*;)',
+        '((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*,)*((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*;)',
         line)
     if len(r) != 0:
         r = r[0]
@@ -164,6 +173,19 @@ def traverse(code, scope):
             continue
         if def_func(line, code, i):
             continue
+
+
+def malloc(name, cast, number, scope, val):
+    cast = cast.replace(' ', '')
+    cast = cast[:len(cast) - 1]
+    if re.findall('\**'):
+        t = globals.size_of('pointer')
+    else:
+        t = globals.size_of(cast)
+    number /= t
+    Vars.set_val((name, scope), globals.curr_mem)
+    for i in (0, number):
+        decl('#' + name + str(i), val, cast, scope)
 
 
 def execute(code, scope):

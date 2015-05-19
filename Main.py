@@ -20,7 +20,7 @@ CodeFile = open(filename)
 
 # Preprocessor does some work here
 code = PreProcessing.use_c_preprocessor(filename)
-
+# print code
 # code = PreProcessing.get_code(CodeFile)
 code = PreProcessing.nest(code)
 # Gui.make_ui(code)
@@ -28,5 +28,6 @@ code = PreProcessing.nest(code)
 # Access is used to keep track of current scope
 Access = ['global']
 globals.setup()
+print code
 # Build a dictionary of functions and run main
 Runtime.traverse(code, Access)
