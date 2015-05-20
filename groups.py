@@ -15,9 +15,9 @@ def if_conditionals(code, scope):
         flag = Calc.calculate(expr[0], scope, globals.var_table)
         ret = None
         if flag:
-            ret = Runtime.execute(code[1], scope + ['1'])
+            ret = Runtime.execute(code[1], scope + ' 1')
         elif len(code) > 2:
-            ret = Runtime.execute(code[3], scope + ['3'])
+            ret = Runtime.execute(code[3], scope + ' 3')
         return ret
     else:
         return "NO"
@@ -34,7 +34,7 @@ def if_for(code, scope):
         flag = Calc.calculate(expr[0][1], scope, globals.var_table)
         ret = None
         while flag:
-            ret = Runtime.execute(code[1], scope + ['1'])
+            ret = Runtime.execute(code[1], scope + ' 1')
             if ret is not None:
                 return ret
             Calc.calculate(expr[0][2], scope, globals.var_table)
@@ -54,7 +54,7 @@ def if_while(code, scope):
         ret = None
         flag = Calc.calculate(expr[0], scope, globals.var_table)
         while flag:
-            ret = Runtime.execute(code[1], scope + ['1'])
+            ret = Runtime.execute(code[1], scope + ' 1')
             if ret is not None:
                 return ret
             flag = Calc.calculate(expr[0], scope, globals.var_table)
@@ -78,7 +78,7 @@ def if_do_while(code, scope):
             ret = None
             flag = 1
             while flag:
-                ret = Runtime.execute(code[1], scope + ['1'])
+                ret = Runtime.execute(code[1], scope + ' 1')
                 if ret is not None:
                     return ret
                 flag = Calc.calculate(condition[0], scope, globals.var_table)

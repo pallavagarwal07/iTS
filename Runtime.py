@@ -63,7 +63,6 @@ def is_updation(exp):
 
 def garbage_collector(scope):
     keys = globals.var_table.keys()
-    scope = " ".join(scope)
     for key in keys:
         if key[1] == scope:
             del globals.var_table[key]
@@ -143,7 +142,7 @@ def def_func(line, code, num):
             type_key = ''
         if k[1] == 'main':
             run_through(code, num + 1)
-            execute(code[num], ['global'])
+            execute(code[num], 'global')
             exit(0)
         if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):
             print "Error!! Multiple declaration of function"
@@ -166,10 +165,10 @@ def traverse(code, scope):
             continue
         if len(line) < 1:
             continue
-        if chk_decl(line, " ".join(scope)):
+        if chk_decl(line, scope):
             continue
         if is_updation(line):
-            Calc.calculate(line, " ".join(scope), globals.var_table)
+            Calc.calculate(line, scope, globals.var_table)
             continue
         if def_func(line, code, i):
             continue
@@ -195,45 +194,42 @@ def execute(code, scope):
             garbage_collector(scope)
             return r
     i = 0
-    r = groups.if_conditionals(code, scope[:])
+    r = groups.if_conditionals(code, scope)
     if r is not "NO":
         return r
-    r = groups.if_for(code, scope[:])
+    r = groups.if_for(code, scope)
     if r is not "NO":
         return r
-    r = groups.if_while(code, scope[:])
+    r = groups.if_while(code, scope)
     if r is not "NO":
         return r
-    r = groups.if_do_while(code, scope[:])
+    r = groups.if_do_while(code, scope)
     if r is not "NO":
         return r
     while i < len(code):
         line = code[i]
         i += 1
         if type(line) is list:
-            r = execute(line, scope + [str(i - 1)])
+            r = execute(line, scope + " " + str(i - 1))
             if r is not None:
                 garbage_collector(scope)
                 return r
             continue
         if len(line) < 1:
             continue
-        if chk_decl(line, " ".join(scope)):
+        if chk_decl(line, scope):
             continue
-        if i_o.handle_input(line, " ".join(scope)):
+        if i_o.handle_input(line, scope):
             continue
-        if i_o.handle_output(line, " ".join(scope)):
+        if i_o.handle_output(line, scope):
             continue
         if is_updation(line):
-            Calc.calculate(line, " ".join(scope), globals.var_table)
+            Calc.calculate(line, scope, globals.var_table)
             continue
         ret = re.findall(r'^\s*return\s+(.*)\s*;\s*$', line);
         if ret:
             ret = Calc.calculate(ret[0], scope)
             garbage_collector(scope)
-            return ret 
-        try:
-            Calc.calculate(line, scope, globals.var_table)
-        except Exception:
-            pass
+            return ret
+        Calc.calculate(line, scope, globals.var_table)
     garbage_collector(scope)

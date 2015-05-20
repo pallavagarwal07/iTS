@@ -26,7 +26,7 @@ code = PreProcessing.nest(code)
 # Gui.make_ui(code)
 # print globals.type_range
 # Access is used to keep track of current scope
-Access = ['global']
+Access = 'global'
 globals.setup()
 print code
 # Build a dictionary of functions and run main

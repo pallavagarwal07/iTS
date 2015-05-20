@@ -6,23 +6,18 @@ int func(int a, int b);
 
 int main()
 {
-    long long a=1;
-    a=10*a;
-    int i=0;
-    int b= 5;
-    for(i=2; i<=a; i++)    
-    {
-        printf("%d\n", 10*sizeof(long long)); 
-        printf("One of the factors is\n");
-    }
-    printf("%d\n ", func(a, b));
-
+    int a = 9, b=4;
+    printf("%d \n", func(a, b));
     return 0;
 }
 
 int func(int a, int b)
 {
-    int j=0;
-    printf("This function was executed successfully\n");
-    return (a+b);
+    if(b > a)
+        return 0;
+    if(a == b)
+        return 1;
+    if(b == 0)
+        return 1;
+    return func(a-1, b) + func(a-1, b-1);
 }

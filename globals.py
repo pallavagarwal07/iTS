@@ -151,4 +151,59 @@ def toplevelsplit(var_str, delimiter):
     tokens.append("".join(cur_tk))
     return tokens
 
+def toplevelreplace(var_str, orig, repl):
+    illegal_delimiters = ['(', ')' , '{', '}', '[', ']', '"', "'"]
+    if orig in illegal_delimiters:
+        print "Sorry, that replacement is not allowed"
+        exit(0)
+    cur_tk = []
+    paren = 0
+    sq_brace = 0
+    curly_brace = 0
+    dbl_q = 0
+    sing_q = 0
+    i = 0
+    while i < len(var_str):
+        ch = var_str[i]
+        if ch not in illegal_delimiters:
+            if paren or sq_brace or curly_brace or dbl_q or sing_q:
+                cur_tk.append(ch)
+            elif var_str.startswith(orig, i):
+                cur_tk.append(repl)
+                i += (len(orig)-1)
+            else:
+                cur_tk.append(ch)
+        elif dbl_q:
+            if ch=='"' and var_str[i-1]!='\\':
+                dbl_q = 0
+                cur_tk.append(ch)
+            else:
+                cur_tk.append(ch)
+        elif sing_q:
+            if ch=="'" and var_str[i-1]!='\\':
+                dbl_q = 0
+                cur_tk.append(ch)
+            else:
+                cur_tk.append(ch)
+        else:
+            if ch == '(':
+                paren += 1
+            elif ch == ')':
+                paren -= 1
+            elif ch == '[':
+                sq_brace += 1
+            elif ch ==']':
+                sq_brace -= 1
+            elif ch == '{':
+                curly_brace += 1
+            elif ch == '}':
+                curly_brace -= 1
+            elif ch == '"':
+                dbl_q = 1
+            elif ch == "'":
+                sing_q = 1
+            cur_tk.append(ch)
+        i += 1
+    return "".join(cur_tk)
+
 

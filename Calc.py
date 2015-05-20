@@ -2,6 +2,7 @@ import globals
 import re
 from Utils import is_num
 from Vars import get_val, set_val
+import random
 
 
 def sep(expr):
@@ -29,13 +30,13 @@ def sep(expr):
 
 def pass_to_func(detail, scope):
     name = detail[0]
-    l = len(detail[1].split(','))
+    l = len(globals.toplevelsplit(detail[1], ','))
     if name == 'sizeof':
         t = re.findall(r'\*', name)
         if t:
             return globals.size_of['pointer']
         else:
-            detail = detail[1].split(',')
+            detail = globals.toplevelsplit(detail[1], ',')
             return globals.size_of[detail[0].strip()]
     if name not in globals.functions:
         print "Error!! Undeclared Function", name
@@ -46,13 +47,14 @@ def pass_to_func(detail, scope):
     if globals.functions[name][2] == '':
         print "Error!! The function was declared, but never defined."
         exit(0)
-    detail = detail[1].split(',')
+    detail = globals.toplevelsplit(detail[1], ',')
     detail = [calculate(str(k).strip(), scope) for k in detail]
 
+    RandomHash = hex(random.getrandbits(64))[2:-1]
     for i, declarations in enumerate(globals.functions[name][1]):
         import Runtime
-        Runtime.decl(declarations[1], detail[i], declarations[0], name)
-    return Runtime.execute(globals.functions[name][2], [name])
+        Runtime.decl(declarations[1], detail[i], declarations[0], name + " " + RandomHash)
+    return Runtime.execute(globals.functions[name][2], name + " " + RandomHash)
 
 
 def calculate(expr, scope, vartable=globals.var_table):
@@ -63,12 +65,12 @@ def calculate(expr, scope, vartable=globals.var_table):
     k2 = []
     for i in range(0, len(k)):
         k2.append(k[i].replace('--', '---'))
-        expr = expr.replace(k[i], k2[i])
+        expr = globals.toplevelreplace(expr, k[i], k2[i])
     k = list(set(re.findall(r'\+\+\s*[a-zA-Z_]+[a-zA-Z0-9_]*', expr)))
     k2 = []
     for i in range(0, len(k)):
         k2.append(k[i].replace('++', '+++'))
-        expr = expr.replace(k[i], k2[i])
+        expr = globals.toplevelreplace(expr, k[i], k2[i])
     seperated_tokens = sep(expr)
     flag = 1
     for i, token in enumerate(seperated_tokens):
