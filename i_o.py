@@ -40,7 +40,6 @@ def handle_input(statement, scope):
             update(v, vals, scope)
     return True
 
-
 def handle_output(line, scope):
     line = line.decode('string_escape')
     sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
@@ -52,7 +51,7 @@ def handle_output(line, scope):
     if sep[0][1] == '':
         sys.stderr.write(format_string)
     else:
-        format_vars = sep[0][1][1:].split(',')
+        format_vars = globals.toplevelsplit(sep[0][1][1:], ',')
         for i in range(0, len(format_vars)):
             if format_vars[i] != '':
                 format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)

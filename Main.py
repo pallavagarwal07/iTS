@@ -1,7 +1,7 @@
 import sys
 import globals
 import PreProcessing
-import Gui
+#import Gui
 import Runtime
 
 filename = 'newTest.c'
