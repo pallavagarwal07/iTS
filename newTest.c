@@ -2,22 +2,29 @@
 #include <stdlib.h>
 #define s(n) scanf("%d",&n)
 
-int func(int a, int b);
+int func(int a);
 
 int main()
 {
-    int a = 9, b=4;
-    printf("%d \n", func(a, b));
+    int a = 400000000000000000000000009000000000000000000000000000000000000;
+    while(a>0)
+    {
+        int n = func(a);
+        printf("%d\n", n);
+        a -= n;
+    }
     return 0;
 }
 
-int func(int a, int b)
+int func(int a)
 {
-    if(b > a)
-        return 0;
-    if(a == b)
-        return 1;
-    if(b == 0)
-        return 1;
-    return func(a-1, b) + func(a-1, b-1);
+    int i = 1;
+    int j = 1;
+    while(j<=a)
+    {
+        int t = i+j;
+        i = j;
+        j = t;
+    }
+    return i;
 }

@@ -77,17 +77,30 @@ def setup():
         type_range[types] = (-temp, temp-1)
 
 
+#def in_var_table(var, scope):
+    #if type(scope) is str:
+        #scope = scope.split(' ')
+    #else:
+        #scope = scope[:]
+    #while len(scope) > 0:
+        #for v in var_table:
+            #if v[0] == var and v[1] == ' '.join(scope):
+                #return v
+        #scope.pop()
+    #return 0
+
 def in_var_table(var, scope):
-    if type(scope) is str:
-        scope = scope.split(' ')
-    else:
-        scope = scope[:]
-    while len(scope) > 0:
-        for v in var_table:
-            if v[0] == var and v[1] == ' '.join(scope):
-                return v
-        scope.pop()
-    return 0
+    if type(scope) is list:
+        scope = " ".join(scope)
+    probables = []
+    for v in var_table:
+        if v[0] == var and v[1] == scope:
+            return v
+        elif v[0] == var and scope.startswith(v[1] + ' '):
+            probables.append(v)
+    if len(probables) == 0:
+        return 0
+    return max(probables, key=lambda v: len(v[1]))
 
 
 def find_by_mem(mem):
