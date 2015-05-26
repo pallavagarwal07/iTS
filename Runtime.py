@@ -5,6 +5,7 @@ import i_o
 import groups
 import Vars
 import sys
+import Exceptions
 
 
 def decl(var, val, cast, scope):
@@ -68,6 +69,12 @@ def garbage_collector(scope):
             del globals.var_table[key]
     return
 
+
+def halter(line):
+    if re.match(r'^(?s)\s*break\s*;', line):
+        raise Exceptions.custom_break;
+    if re.match(r'^(?s)\s*continue\s*;', line):
+        raise Exceptions.custom_continue;
 
 def run_through(code, num):
     i = num
@@ -225,6 +232,8 @@ def execute(code, scope):
             continue
         if is_updation(line):
             Calc.calculate(line, scope, globals.var_table)
+            continue
+        if halter(line):
             continue
         ret = re.findall(r'^\s*return\s+(.*)\s*;\s*$', line);
         if ret:

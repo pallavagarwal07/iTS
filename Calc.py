@@ -58,6 +58,8 @@ def pass_to_func(detail, scope):
 
 
 def calculate(expr, scope, vartable=globals.var_table):
+    if re.match(r"^(?s)\s*$", expr):
+        return 0
     postfix = []
     stack = []
     expr = expr.strip()

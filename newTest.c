@@ -2,29 +2,14 @@
 #include <stdlib.h>
 #define s(n) scanf("%d",&n)
 
-int func(int a);
-
 int main()
 {
-    int a = 400000000000000000000000009000000000000000000000000000000000000;
-    while(a>0)
+    int i=0;
+    for(i=0; i<15; i++)
     {
-        int n = func(a);
-        printf("%d\n", n);
-        a -= n;
+        printf("%d Hello World\n", i);
+        if(i == 5)
+            break;
     }
-    return 0;
-}
-
-int func(int a)
-{
-    int i = 1;
-    int j = 1;
-    while(j<=a)
-    {
-        int t = i+j;
-        i = j;
-        j = t;
-    }
-    return i;
+    printf("Out of the loop !! ");
 }
