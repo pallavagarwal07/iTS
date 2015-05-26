@@ -32,12 +32,16 @@ def pass_to_func(detail, scope):
     name = detail[0]
     l = len(globals.toplevelsplit(detail[1], ','))
     if name == 'sizeof':
-        t = re.findall(r'\*', name)
+        t = re.findall(r'\*', detail[1])
         if t:
             return globals.size_of['pointer']
         else:
             detail = globals.toplevelsplit(detail[1], ',')
+            assert len(detail) == 1
             return globals.size_of[detail[0].strip()]
+    elif name == 'malloc':
+        print "Malloc"
+        exit(0)
     if name not in globals.functions:
         print "Error!! Undeclared Function", name
         exit(0)
@@ -179,7 +183,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                     exit(0)
                 set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
             elif token == '`*`':
-                var_stack[l()] = globals.var_table[globals.find_by_mem(get_val(var_stack[l()]))]
+                var_stack[l()] = globals.find_by_mem(get_val(var_stack[l()]))
             elif token == '`&`':
                 var_stack[l()] = vartable[var_stack[l()]][3]
             elif token == '<<=':

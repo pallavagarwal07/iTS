@@ -11,10 +11,10 @@ import Exceptions
 def decl(var, val, cast, scope):
     pointers = re.findall('\*+', var)
     if pointers:
-        level = len(pointers)
+        level = len(pointers[0])
+        var = re.sub('\*', '', var)
     else:
         level = 0
-    var = re.sub('\*', '', var)
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
         print("Error 101: Multiple declaration of variable " + var + "\n")

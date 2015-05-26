@@ -4,12 +4,8 @@
 
 int main()
 {
-    int i=0;
-    for(i=0; i<15; i++)
-    {
-        printf("%d Hello World\n", i);
-        if(i == 5)
-            break;
-    }
-    printf("Out of the loop !! ");
+    int *a, b;
+    b = sizeof(int*);
+    a = &b;
+    printf("%d\n", *a);
 }
