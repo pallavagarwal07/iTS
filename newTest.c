@@ -4,8 +4,6 @@
 
 int main()
 {
-    int *a, b;
-    b = sizeof(int*);
-    a = &b;
-    printf("%d\n", *a);
+    int a[2][3];
+    return 0;
 }

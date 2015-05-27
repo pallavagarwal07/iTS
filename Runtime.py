@@ -1,11 +1,25 @@
 import re
 import globals
+from globals import Value
 import Calc
 import i_o
 import groups
 import Vars
 import sys
 import Exceptions
+
+
+def makeMemory(mem, indices, l, type):
+    mem = (mem, )
+    print "type is", type
+    step = globals.size_of[type if l == 0 else 'pointer']
+    globals.memory[mem][0].v = malloc(indices[0] if indices else 1, step, l)
+    if indices[1:]:
+        for i in range(0, indices[0]):
+            makeMemory(globals.memory[mem][0].v + i*step, indices[1:], l-1, type)
+    print globals.var_table
+    print globals.memory
+    print "Made Memory at level", l
 
 
 def decl(var, val, cast, scope):
@@ -15,21 +29,36 @@ def decl(var, val, cast, scope):
         var = re.sub('\*', '', var)
     else:
         level = 0
+    data = globals.get_details(var)
+    var = data[0]
+    indices = data[1]
+    indices = [Calc.calculate(ind, scope) for ind in indices]
+    print "Indices are ", indices
+    level += len(indices)
+    print "Var to be checked is ", var
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
         print("Error 101: Multiple declaration of variable " + var + "\n")
-        return
-    globals.var_table[(var, scope, globals.curr_mem)] = [val, cast, level, globals.curr_mem]
+        exit(0)
+    newKey = (var, scope, globals.curr_mem)
+    globals.var_table[newKey] = [Value(val), cast, level, globals.curr_mem]
+    if level:
+        size = globals.size_of['pointer']
+    else:
+        size = globals.size_of[cast]
+    globals.memory[(globals.curr_mem,)] = [globals.var_table[newKey][0], size, level+1]
     if level == 0:
         globals.curr_mem += globals.size_of[cast]
     else:
         globals.curr_mem += globals.size_of['pointer']
+    if indices:
+        makeMemory(globals.curr_mem - globals.size_of['pointer'], indices, level - 1, cast)
 
 
 def chk_decl(line, scope):
     r = re.findall(
         r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
-        '((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*,)*((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*)(\s*=\s*(.*?))?\s*;)',
+        '((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*,)*((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*;)',
         line)
     if len(r) != 0:
         r = r[0]
@@ -48,13 +77,13 @@ def chk_decl(line, scope):
         return False
 
 
-def update(var, val, scope):
-    key = globals.in_var_table(var, scope)
-    if key:
-        globals.var_table[key][0] = val
-    else:
-        print('Error 103: ' + var + "not declared \n")
-        return
+#def update(var, val, scope):
+    #key = globals.in_var_table(var, scope)
+    #if key:
+        #globals.var_table[key][0].v = val
+    #else:
+        #print('Error 103: ' + var + "not declared \n")
+        #return
 
 
 def is_updation(exp):
@@ -67,6 +96,7 @@ def garbage_collector(scope):
     for key in keys:
         if key[1] == scope:
             del globals.var_table[key]
+            del globals.memory[(key[2],)]
     return
 
 
@@ -181,17 +211,28 @@ def traverse(code, scope):
             continue
 
 
-def malloc(name, cast, number, scope, val):
-    cast = cast.replace(' ', '')
-    cast = cast[:len(cast) - 1]
-    if re.findall('\**'):
-        t = globals.size_of('pointer')
-    else:
-        t = globals.size_of(cast)
-    number /= t
-    Vars.set_val((name, scope), globals.curr_mem)
-    for i in (0, number):
-        decl('#' + name + str(i), val, cast, scope)
+#def malloc(name, cast, number, scope, val):
+    #cast = cast.replace(' ', '')
+    #cast = cast[:len(cast) - 1]
+    #if re.findall('\**'):
+        #t = globals.size_of('pointer')
+    #else:
+        #t = globals.size_of(cast)
+    #number /= t
+    #Vars.set_val((name, scope), globals.curr_mem)
+    #for i in (0, number):
+        #decl('\' + name + str(i), val, cast, scope)
+
+
+def malloc(num, step, level):
+    print "227 got", num, step, level, globals.curr_mem
+    assert level >= 0
+    ret = globals.curr_mem
+    for i in range(0, num):
+        globals.memory[(globals.curr_mem,)] = [Value(''), step, level + 1]
+        globals.curr_mem += step
+        print globals.curr_mem, i
+    return ret
 
 
 def execute(code, scope):

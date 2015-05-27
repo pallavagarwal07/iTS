@@ -31,8 +31,11 @@ def get_code(code_file):
 
 
 def use_c_preprocessor(filename):
+    content = open(filename).read()
+    print [ content ], '\n\n\n\n\n'
     content = os.popen('gcc -E ' + filename)
-    content = list(content.readlines())
+    content = content.readlines()
+    content = list(content)
     code = []
     flag = False
     for line in content:
@@ -49,12 +52,13 @@ def use_c_preprocessor(filename):
 #       ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs', '-l100000'],
 #       stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r":a;N;$!ba;s/\s+/ /g"], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['sed', r's:}:}\n:'], stdin=a.stdout, stdout=PIPE)
     a = Popen(['astyle', '-A10', '-k3'], stdin=a.stdout, stdout=PIPE)
-    a = Popen(['astyle', '--indent=spaces', '-A1'], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['astyle', '--indent=spaces', '-A1', '-e'], stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r"s/^\s*//"], stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r"s/\s*$//"], stdin=a.stdout, stdout=PIPE)
     code = a.stdout.read()
-    code = re.sub(r'else\s*if', 'else\nif', code)
+    print [ code ], '\n\n\n\n\n'
     code = code.split('\n')
     code = [line.strip() for line in code]
     content = []

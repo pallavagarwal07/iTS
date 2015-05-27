@@ -47,6 +47,7 @@ data_types = [
 ]
 
 type_range = {}
+memory = {}
 
 functions = {}
 
@@ -104,10 +105,51 @@ def in_var_table(var, scope):
 
 
 def find_by_mem(mem):
-    for v in var_table:
-        if v[2] == mem:
-            return v
-    return 0
+    if mem in memory:
+        return memory[mem].v
+
+
+class Value(object):
+    def __init__(self, v=None):
+        self.v = v
+    def __str__(self):
+        return "Value: "+str(self.v)
+    def __repr__(self):
+        return "Value: "+str(self.v)
+
+
+def get_details(var):
+    name = ''
+    indices = []
+    flag = 1
+    first = 0
+    bracks = 0
+    for i, ch in enumerate(var):
+        if flag and ch!='[':
+            continue;
+        if flag:
+            name = var[:i]
+            flag = not flag
+            bracks += 1
+            if bracks == 1:
+                first = i
+            continue
+        if ch == ']':
+            print "Here", bracks
+            bracks -= 1
+            if bracks == 0:
+                indices.append(var[first+1:i])
+            continue
+        if ch == '[':
+            bracks += 1
+            if bracks == 1:
+                first = i
+            continue
+    if flag:
+        name = var[:i+1]
+    assert bracks == 0
+    return name, indices
+
 
 
 def toplevelsplit(var_str, delimiter):

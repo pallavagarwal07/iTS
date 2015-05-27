@@ -41,6 +41,8 @@ def pass_to_func(detail, scope):
             return globals.size_of[detail[0].strip()]
     elif name == 'malloc':
         print "Malloc"
+        size = calculate(detail[1].strip(), scope)
+        print "Request for", size
         exit(0)
     if name not in globals.functions:
         print "Error!! Undeclared Function", name
@@ -183,7 +185,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                     exit(0)
                 set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
             elif token == '`*`':
-                var_stack[l()] = globals.find_by_mem(get_val(var_stack[l()]))
+                var_stack[l()] = (get_val(var_stack[l()]),) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':
                 var_stack[l()] = vartable[var_stack[l()]][3]
             elif token == '<<=':

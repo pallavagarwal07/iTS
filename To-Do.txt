@@ -13,6 +13,6 @@
 
 
 
-****Code Traversal - Done!
-****Functions - Done :D
+****Code Traversal      - Done!
+****Functions           - Done :D
 ****break, continue!!!! - Done!
