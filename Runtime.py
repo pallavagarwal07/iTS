@@ -55,6 +55,30 @@ def decl(var, val, cast, scope):
         makeMemory(globals.curr_mem - globals.size_of['pointer'], indices, level - 1, cast)
 
 
+def get_key(var, scope):
+    var = globals.get_details(var)
+    name = var[0]
+    indices = var[1]
+    if indices:
+        indices = [Calc.calculate(ind, scope) for ind in indices]
+        key = globals.in_var_table(name, scope)
+        return resolve(key, indices)
+    else:
+        return in_var_table(name, scope)
+
+
+def resolve(key, indices):
+    print "Initial k ", key
+    k = key
+    while indices:
+        k = (Vars.get_val(k),)
+        print type(k[0]), type(globals.memory[k][1]), type(indices[0])
+        k = (k[0] + globals.memory[k][1]*indices[0], )
+        print "Later k ", k
+        indices.pop(0)
+    return k
+
+
 def chk_decl(line, scope):
     r = re.findall(
         r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'

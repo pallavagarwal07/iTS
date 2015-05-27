@@ -3,6 +3,7 @@ import re
 from Utils import is_num
 from Vars import get_val, set_val
 import random
+import Runtime
 
 
 def sep(expr):
@@ -95,9 +96,9 @@ def calculate(expr, scope, vartable=globals.var_table):
     while i < len(expr) and expr[i] != ';':
         while i < len(expr) and expr[i] == ' ':
             i += 1
-        for ex in globals.ops:
+        for ex in globals.ops + ('[',):
             if expr.startswith(ex, i):
-                if ex != '(':
+                if ex != '(' and ex != '[':
                     postfix.append(token)
                     token = ''
                 if ex == '(':
@@ -120,6 +121,20 @@ def calculate(expr, scope, vartable=globals.var_table):
                     while stack[len(stack) - 1] != '(':
                         postfix.append(stack.pop())
                     stack.pop()
+                elif ex == '[':
+                    print "Token is " + token
+                    j = i + 1
+                    expression = "["
+                    bracks = 1
+                    while bracks > 0:
+                        expression += expr[j]
+                        if expr[j] == '[' and expr[j-1]!="'":
+                            bracks += 1;
+                        if expr[j] == ']' and expr[j-1]!="'":
+                            bracks -= 1;
+                        j+=1
+                    i += len(expression) - 1
+                    token += expression
                 elif len(stack) == 0 or stack[len(stack) - 1] == '(':
                     stack.append(ex)
                 else:
@@ -158,6 +173,7 @@ def calculate(expr, scope, vartable=globals.var_table):
             stack.append(m)
     postfix = stack
 
+    print "Postfix is: ", postfix
     var_stack = []
     l = lambda: len(var_stack) - 1
     for token in postfix:
@@ -169,7 +185,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                     val = pass_to_func(k[0], scope)
                     var_stack.append(val)
                 else:
-                    t = globals.in_var_table(token, scope)
+                    t = Runtime.get_key(token, scope)
                     var_stack.append(t)
             else:
                 var_stack.append(token)

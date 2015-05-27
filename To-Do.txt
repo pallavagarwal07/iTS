@@ -1,9 +1,10 @@
                                                     Priority : Highest
     Handle chars in Calc function - Done, Kapila?
+    Substitute exit(0) with custom Error or impossible to automate testing.
     Short circuit evaluation - Oh no!!!
 
                                                     Priority : High
-    Arrays
+    Arrays - ALMOST
 
                                                     Priority : Medium
     Static, const variables

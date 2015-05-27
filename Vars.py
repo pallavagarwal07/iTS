@@ -10,10 +10,10 @@ def get_val(key):
             if t:
                 return globals.var_table[t][0].v
         else:
-            if key[0] in globals.memory:
-                return globals.memory[key[0]][0].v
+            if key in globals.memory:
+                return globals.memory[key][0].v
             else:
-                print "Invalid Memory location"
+                print "Invalid Memory location get_val"
                 exit(0)
 
 
@@ -23,8 +23,9 @@ def set_val(key, val):
         if t:
             globals.var_table[t][0].v = val
     else:
-        if key[0] in globals.memory:
-            globals.memory[key[0]][0].v = val
+        if key in globals.memory:
+            print "setting ", val, "to ", key
+            globals.memory[key][0].v = val
         else:
-            print "Invalid Memory location"
+            print "Invalid Memory location set_val", key
             exit(0)
