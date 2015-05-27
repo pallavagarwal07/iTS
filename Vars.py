@@ -24,7 +24,6 @@ def set_val(key, val):
             globals.var_table[t][0].v = val
     else:
         if key in globals.memory:
-            print "setting ", val, "to ", key
             globals.memory[key][0].v = val
         else:
             print "Invalid Memory location set_val", key

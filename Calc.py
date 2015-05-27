@@ -41,7 +41,6 @@ def pass_to_func(detail, scope):
             assert len(detail) == 1
             return globals.size_of[detail[0].strip()]
     elif name == 'malloc':
-        print "Malloc"
         size = calculate(detail[1].strip(), scope)
         print "Request for", size
         exit(0)
@@ -60,8 +59,8 @@ def pass_to_func(detail, scope):
     RandomHash = hex(random.getrandbits(64))[2:-1]
     for i, declarations in enumerate(globals.functions[name][1]):
         import Runtime
-        Runtime.decl(declarations[1], detail[i], declarations[0], name + " " + RandomHash)
-    return Runtime.execute(globals.functions[name][2], name + " " + RandomHash)
+        Runtime.decl(declarations[1], detail[i], declarations[0], "global " + name + " " + RandomHash)
+    return Runtime.execute(globals.functions[name][2], "global " + name + " " + RandomHash)
 
 
 def calculate(expr, scope, vartable=globals.var_table):
@@ -122,7 +121,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                         postfix.append(stack.pop())
                     stack.pop()
                 elif ex == '[':
-                    print "Token is " + token
                     j = i + 1
                     expression = "["
                     bracks = 1
@@ -173,7 +171,6 @@ def calculate(expr, scope, vartable=globals.var_table):
             stack.append(m)
     postfix = stack
 
-    print "Postfix is: ", postfix
     var_stack = []
     l = lambda: len(var_stack) - 1
     for token in postfix:

@@ -32,7 +32,6 @@ def get_code(code_file):
 
 def use_c_preprocessor(filename):
     content = open(filename).read()
-    print [ content ], '\n\n\n\n\n'
     content = os.popen('gcc -E ' + filename)
     content = content.readlines()
     content = list(content)
@@ -58,7 +57,6 @@ def use_c_preprocessor(filename):
     a = Popen(['sed', '-r', r"s/^\s*//"], stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r"s/\s*$//"], stdin=a.stdout, stdout=PIPE)
     code = a.stdout.read()
-    print [ code ], '\n\n\n\n\n'
     code = code.split('\n')
     code = [line.strip() for line in code]
     content = []

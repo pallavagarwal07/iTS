@@ -11,15 +11,11 @@ import Exceptions
 
 def makeMemory(mem, indices, l, type):
     mem = (mem, )
-    print "type is", type
     step = globals.size_of[type if l == 0 else 'pointer']
     globals.memory[mem][0].v = malloc(indices[0] if indices else 1, step, l)
     if indices[1:]:
         for i in range(0, indices[0]):
             makeMemory(globals.memory[mem][0].v + i*step, indices[1:], l-1, type)
-    print globals.var_table
-    print globals.memory
-    print "Made Memory at level", l
 
 
 def decl(var, val, cast, scope):
@@ -33,9 +29,7 @@ def decl(var, val, cast, scope):
     var = data[0]
     indices = data[1]
     indices = [Calc.calculate(ind, scope) for ind in indices]
-    print "Indices are ", indices
     level += len(indices)
-    print "Var to be checked is ", var
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
         print("Error 101: Multiple declaration of variable " + var + "\n")
@@ -64,17 +58,14 @@ def get_key(var, scope):
         key = globals.in_var_table(name, scope)
         return resolve(key, indices)
     else:
-        return in_var_table(name, scope)
+        return globals.in_var_table(name, scope)
 
 
 def resolve(key, indices):
-    print "Initial k ", key
     k = key
     while indices:
         k = (Vars.get_val(k),)
-        print type(k[0]), type(globals.memory[k][1]), type(indices[0])
         k = (k[0] + globals.memory[k][1]*indices[0], )
-        print "Later k ", k
         indices.pop(0)
     return k
 
@@ -249,13 +240,11 @@ def traverse(code, scope):
 
 
 def malloc(num, step, level):
-    print "227 got", num, step, level, globals.curr_mem
     assert level >= 0
     ret = globals.curr_mem
     for i in range(0, num):
         globals.memory[(globals.curr_mem,)] = [Value(''), step, level + 1]
         globals.curr_mem += step
-        print globals.curr_mem, i
     return ret
 
 

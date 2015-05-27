@@ -135,7 +135,6 @@ def get_details(var):
                 first = i
             continue
         if ch == ']':
-            print "Here", bracks
             bracks -= 1
             if bracks == 0:
                 indices.append(var[first+1:i])
