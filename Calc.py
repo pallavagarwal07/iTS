@@ -148,6 +148,10 @@ def calculate(expr, scope, vartable=globals.var_table):
                             stack.append(ex)
                         else:
                             stack.append(ex)
+                if ex == '&&':
+                    postfix.append('&0')
+                elif ex == '||':
+                    postfix.append('|1')
                 i += len(ex) - 1
                 break
         else:
@@ -170,11 +174,14 @@ def calculate(expr, scope, vartable=globals.var_table):
             m = is_num(k)
             stack.append(m)
     postfix = stack
-
     var_stack = []
     l = lambda: len(var_stack) - 1
-    for token in postfix:
-        if token not in globals.ops:
+    idx = 0
+    for i, token in enumerate(postfix):
+        if idx and postfix[i-1] != idx:
+            continue
+        idx = 0
+        if token not in globals.ops + ('&0', '|1'):
             n = is_num(token)
             if 'Error' == n:
                 k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', token)
@@ -213,6 +220,14 @@ def calculate(expr, scope, vartable=globals.var_table):
                     exit(0)
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) >> get_val(var_stack[l()]))
                 var_stack.pop()
+            elif token == '|1':
+                if get_val(var_stack[l()]):
+                    var_stack[l()] = 1
+                    idx = '||'
+            elif token == '&0':
+                if not get_val(var_stack[l()]):
+                    var_stack[l()] = 0
+                    idx = '&&'
             elif token == '*=':
                 if type(var_stack[l() - 1]) is not tuple:
                     print "Error: Lvalue required"
