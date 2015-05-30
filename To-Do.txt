@@ -1,10 +1,9 @@
                                                     Priority : Highest
-    Handle chars in Calc function - Done, Kapila?
+    Handle chars in Calc function - ALMOST
     Substitute exit(0) with custom Error or impossible to automate testing.
-    Short circuit evaluation - Oh no!!!
+    Short circuit evaluation - Oh no!!! - ALMOST
 
                                                     Priority : High
-    Arrays - ALMOST
 
                                                     Priority : Medium
     Static, const variables
@@ -14,6 +13,15 @@
 
 
 
+****Arrays              - Done :D
 ****Code Traversal      - Done!
 ****Functions           - Done :D
 ****break, continue!!!! - Done!
+
+
+
+Current Priorities:
+0. Cleanup
+1. Strings
+2. Docs
+3. Debug flags (-v1, -v2, -v3)
