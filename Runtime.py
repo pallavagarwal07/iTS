@@ -58,6 +58,9 @@ def get_key(var, scope):
         key = globals.in_var_table(name, scope)
         return resolve(key, indices)
     else:
+        name = name.decode('string_escape')
+        if re.match(r"'.'", name):
+            return ord(name.replace("'", ''))
         return globals.in_var_table(name, scope)
 
 

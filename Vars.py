@@ -3,6 +3,7 @@ import globals
 
 def get_val(key):
     if type(key) is not tuple:
+        print "GETVAL", key
         return key
     else:
         if len(key) != 1:

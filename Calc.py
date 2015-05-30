@@ -174,6 +174,7 @@ def calculate(expr, scope, vartable=globals.var_table):
             m = is_num(k)
             stack.append(m)
     postfix = stack
+    print "POST", postfix
     var_stack = []
     l = lambda: len(var_stack) - 1
     idx = 0
