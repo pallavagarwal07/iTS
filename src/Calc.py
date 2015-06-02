@@ -7,6 +7,7 @@ import Runtime
 
 
 def sep(expr):
+    print "Sep takes in ", expr, "and gives ",
     expr = expr.split()
     tokens = []
     for token in expr:
@@ -26,6 +27,7 @@ def sep(expr):
             i += 1
         if tk.strip():
             tokens.append(tk)
+    print tokens
     return tokens
 
 
@@ -64,6 +66,7 @@ def pass_to_func(detail, scope):
 
 
 def calculate(expr, scope, vartable=globals.var_table):
+    print "Calculate has ", expr
     if re.match(r"^(?s)\s*$", expr):
         return 0
     postfix = []
@@ -92,10 +95,11 @@ def calculate(expr, scope, vartable=globals.var_table):
     expr = " ".join(seperated_tokens)
     token = ''
     i = 0
+    print "Calcuate step2 ", expr
     while i < len(expr) and expr[i] != ';':
         while i < len(expr) and expr[i] == ' ':
             i += 1
-        for ex in globals.ops + ('[',):
+        for ex in globals.ops + ('[',"'"):
             if expr.startswith(ex, i):
                 if ex != '(' and ex != '[':
                     postfix.append(token)
@@ -131,6 +135,17 @@ def calculate(expr, scope, vartable=globals.var_table):
                         if expr[j] == ']' and expr[j-1]!="'":
                             bracks -= 1;
                         j+=1
+                    i += len(expression) - 1
+                    token += expression
+                elif ex == '\'':
+                    assert token == ""
+                    j = i + 1
+                    expression = "'"
+                    while expr[j] != "'" or expr[j-1] == '\\':
+                        expression += expr[j]
+                        print "I added '"+expr[j]+"'", expr
+                        j += 1
+                    expression += expr[j]
                     i += len(expression) - 1
                     token += expression
                 elif len(stack) == 0 or stack[len(stack) - 1] == '(':
@@ -175,6 +190,7 @@ def calculate(expr, scope, vartable=globals.var_table):
             stack.append(m)
     postfix = stack
     print "POST", postfix
+
     var_stack = []
     l = lambda: len(var_stack) - 1
     idx = 0

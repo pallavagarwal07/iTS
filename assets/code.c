@@ -3,11 +3,10 @@
 #define s(n) scanf("%d",&n)
 int main()
 {
-    char a = 'l';
-    char b = 'b';
-    int a1 = a;
-    int a2 = b;
-    printf("%c %d\n", a1, a2);
+    int *a;
+    int b= 10;
+    a = &b;
+    printf("%d\n", *a);
     return 0;
 }
 /*int num = -1, a[10000];*/
