@@ -261,3 +261,9 @@ def toplevelreplace(var_str, orig, repl):
     return "".join(cur_tk)
 
 
+def is_num(s):
+    try:
+        float(s)
+        return eval(str(s))
+    except ValueError:
+        return 'Error'

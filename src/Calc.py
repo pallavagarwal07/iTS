@@ -1,6 +1,6 @@
 import globals
 import re
-from Utils import is_num
+from globals import is_num
 from Vars import get_val, set_val
 import random
 import Runtime

@@ -1,13 +1,22 @@
 import sys
 import globals
 import PreProcessing
-#import Gui
 import Runtime
 
-filename = 'newTest.c'
+print "ARGS", sys.argv
+
+filename = sys.argv[1]
 
 # inp variable stores user input.
-globals.inp = sys.stdin.read()
+if sys.argv[3] == 'stdin':
+    globals.inp = sys.stdin.read()
+else:
+    globals.inp = open(sys.argv[3]).read()
+
+if sys.argv[4] == 'stderr':
+    globals.out = sys.stderr
+else:
+    globals.out = open(sys.argv[4], 'w')
 
 # priority variable is a dictionary of operators and their priorities.
 priority = globals.priority

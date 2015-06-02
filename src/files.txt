@@ -1,0 +1,8 @@
+Calc : sep(), pass_to_func(), calculate()
+Exception : custom_break__, custom_continue__
+globals : var_table, priority, ops, bin_ops, unary_ops, size_of, data_types, type_range, memory, functions, setup(), in_var_table(), find_by_mem(), Value__, get_details(), toplevelsplit(), toplevelreplace()
+groups : if_conditionals(), if_for(), if_while(), if_do_while()
+i_o : handle_input(), handle_output()
+PreProcessing : get_code(), use_c_preprocessor(), nest_groups(), nest()
+Runtime : makeMemory(), decl(), get_key(), resolve(), chk_decl(), is_updation(), garbage_collector(), halter(), run_through(), decl_func(), def_func(), traverse(), malloc(), execute()
+

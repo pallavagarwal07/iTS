@@ -1,0 +1,64 @@
+#!/bin/sh
+CURRPATH=$(pwd)
+SOURCE=$0
+
+# We need to resolve the path to the actual code directory (Running executable could be a symlink)
+while [ -h "$SOURCE" ]; do
+    BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$BASEDIR/$SOURCE"
+done
+BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+# Python >=2.6 <3.0 needs to be used.
+PYTHONCMD="python2"
+
+abspath(){
+    cd "$(dirname "$1")"
+    printf "%s/%s\n" "$(pwd)" "$(basename "$1")"
+}
+
+echo $BASEDIR
+
+# Flags
+#
+# v verbose
+# i input file
+# o output file
+# c code file
+
+input=stdin
+output=stderr
+code=$BASEDIR/assets/code.c
+
+vLevel=0
+iFlag=0
+oFlag=0
+
+while getopts vi:o: myVar; do
+    case $myVar in
+        v) vLevel=$((vLevel+1))
+            ;;
+        i) input=$(abspath $OPTARG)
+            iFlag=1
+            ;;
+        o) output=$(abspath $OPTARG)
+            oFlag=1
+            ;;
+        c) code=$(abspath $OPTARG)
+            ;;
+    esac
+done
+
+echo Code is : $code
+echo Verbosity is : $vLevel
+echo Input file is : $input
+echo Output file is : $output
+
+
+# Now the python script would be run with the given arguments
+EXECUTE_SCRIPT=$PYTHONCMD" ""$BASEDIR""/src/Main.py "
+EXECUTE_SCRIPT=$EXECUTE_SCRIPT"$code $vLevel $input $output"
+
+echo $EXECUTE_SCRIPT
+$EXECUTE_SCRIPT
