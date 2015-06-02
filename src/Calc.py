@@ -167,13 +167,6 @@ def to_postfix(tokens):
     while i < len(tokens):
         tk = tokens[i]
         if tk in globals.ops:
-            if tk == '&&':
-                ctr += 1
-                add(postfix, ('&0', ctr), ctr)
-            elif tk == '||':
-                ctr += 1
-                add(postfix, ('|1', ctr), ctr)
-
             if tk == '(':
                 add(stack, tk, ctr)
             elif tk == ')':
@@ -194,6 +187,13 @@ def to_postfix(tokens):
                         add(stack, tk, ctr)
                     else:
                         add(stack, tk, ctr)
+            if tk == '&&':
+                add(postfix, ('&0', ctr), ctr)
+                ctr += 1
+            elif tk == '||':
+                add(postfix, ('|1', ctr), ctr)
+                ctr += 1
+
         else:
             add(postfix, tk, ctr)
         i += 1
@@ -212,94 +212,6 @@ def calculate(expr, scope, vartable=globals.var_table):
     separated_tokens = unary_handle(separated_tokens) # Fix unary operators
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
     postfix = to_postfix(separated_tokens)
-
-    #i = 0
-
-#   while i < len(expr) and expr[i] != ';':
-#       while i < len(expr) and expr[i] == ' ':
-#           i += 1
-#       for ex in globals.ops + ('[',"'"):
-#           if expr.startswith(ex, i):
-#               if ex != '(' and ex != '[':
-#                   postfix.append(token)
-#                   token = ''
-#               if ex == '(':
-#                   if token == "":
-#                       stack.append(ex)
-#                   else:
-#                       j = i + 1
-#                       expression = "("
-#                       bracks = 1
-#                       while bracks > 0:
-#                           expression += expr[j]
-#                           if expr[j] == '(':
-#                               bracks += 1
-#                           if expr[j] == ')':
-#                               bracks -= 1
-#                           j += 1
-#                       i += len(expression) - 1
-#                       token += expression
-#               elif ex == ')':
-#                   while stack[len(stack) - 1] != '(':
-#                       postfix.append(stack.pop())
-#                   stack.pop()
-#               elif ex == '[':
-#                   j = i + 1
-#                   expression = "["
-#                   bracks = 1
-#                   while bracks > 0:
-#                       expression += expr[j]
-#                       if expr[j] == '[' and expr[j-1]!="'":
-#                           bracks += 1;
-#                       if expr[j] == ']' and expr[j-1]!="'":
-#                           bracks -= 1;
-#                       j+=1
-#                   i += len(expression) - 1
-#                   token += expression
-#               elif ex == '\'':
-#                   assert token == ""
-#                   j = i + 1
-#                   expression = "'"
-#                   while expr[j] != "'" or expr[j-1] == '\\':
-#                       expression += expr[j]
-#                       print "I added '"+expr[j]+"'", expr
-#                       j += 1
-#                   expression += expr[j]
-#                   i += len(expression) - 1
-#                   token += expression
-#               elif len(stack) == 0 or stack[len(stack) - 1] == '(':
-#                   stack.append(ex)
-#               else:
-#                   if globals.priority[ex] < globals.priority[stack[len(stack) - 1]]:
-#                       postfix.append(stack.pop())
-#                       i -= 1
-#                       break
-#                   if globals.priority[ex] > globals.priority[stack[len(stack) - 1]]:
-#                       stack.append(ex)
-#                   elif globals.priority[ex] == globals.priority[stack[len(stack) - 1]]:
-#                       if globals.priority[ex] % 2 == 0:
-#                           postfix.append(stack.pop())
-#                           stack.append(ex)
-#                       else:
-#                           stack.append(ex)
-#               if ex == '&&':
-#                   postfix.append('&0')
-#               elif ex == '||':
-#                   postfix.append('|1')
-#               i += len(ex) - 1
-#               break
-#       else:
-#           token += expr[i]
-#           if token not in expr:
-#               print('Error 102: Did you miss the operator between'
-#                     ' two values/variables?\n' + token + '\n' + expr + '\n')
-#               # exit(0)
-#       i += 1
-#   if len(token) > 0:
-#       postfix.append(token)
-#   while len(stack) > 0:
-#       postfix.append(stack.pop())
-
     stack = []
     for k in postfix:
         if 'Error' == is_num(k[0]):
