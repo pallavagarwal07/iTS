@@ -85,8 +85,7 @@ def if_do_while(code, scope):
     if len(expr) != 0:
         condition = re.findall(r'^(?s)while\s*\((.*)\)\s*;', code[2]);
         if len(condition) == 0:
-            print "Error"
-            exit(0)
+            raise Exceptions.any_user_error("Error: do_while has no condition.")
         else:
             ret = None
             flag = 1

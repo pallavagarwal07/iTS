@@ -152,8 +152,7 @@ def get_details(var):
 def toplevelsplit(var_str, delimiter):
     illegal_delimiters = ['(', ')' , '{', '}', '[', ']', '"', "'"]
     if delimiter in illegal_delimiters:
-        print "Sorry, that delimiter is not allowed"
-        exit(0)
+        raise Exceptions.coding_bug("Sorry, that delimiter is not allowed")
     tokens = []
     cur_tk = []
     paren = 0
@@ -206,8 +205,7 @@ def toplevelsplit(var_str, delimiter):
 def toplevelreplace(var_str, orig, repl):
     illegal_delimiters = ['(', ')' , '{', '}', '[', ']', '"', "'"]
     if orig in illegal_delimiters:
-        print "Sorry, that replacement is not allowed"
-        exit(0)
+        raise Exceptions.coding_bug("Error: Illegal replacement.")
     cur_tk = []
     paren = 0
     sq_brace = 0

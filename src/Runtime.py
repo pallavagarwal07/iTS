@@ -32,8 +32,7 @@ def decl(var, val, cast, scope):
     level += len(indices)
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
-        print("Error 101: Multiple declaration of variable " + var + "\n")
-        exit(0)
+        raise Exceptions.any_user_error("Error 101: Multiple declaration of variable " + var + "\n")
     newKey = (var, scope, globals.curr_mem)
     globals.var_table[newKey] = [Value(val), cast, level, globals.curr_mem]
     if level:
@@ -179,7 +178,7 @@ def decl_func(line):
 
 
 def def_func(line, code, num):
-    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char|void)\s+'
                    '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
     if k:
         assert len(k) == 1
@@ -198,10 +197,9 @@ def def_func(line, code, num):
         if k[1] == 'main':
             run_through(code, num + 1)
             execute(code[num], 'global')
-            exit(0)
+            raise Exceptions.main_executed()
         if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):
-            print "Error!! Multiple declaration of function"
-            exit(0)
+            raise Exceptions.any_user_error("Error!! Multiple declaration of function")
         else:
             globals.functions[k[1]] = [k[0], params, code[num], type_key]
         return 1

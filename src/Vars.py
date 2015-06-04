@@ -13,8 +13,7 @@ def get_val(key):
             if key in globals.memory:
                 return globals.memory[key][0].v
             else:
-                print "Invalid Memory location get_val"
-                exit(0)
+                raise Exceptions.any_user_error("Invalid Memory location get_val")
 
 
 def set_val(key, val):
@@ -26,5 +25,4 @@ def set_val(key, val):
         if key in globals.memory:
             globals.memory[key][0].v = val
         else:
-            print "Invalid Memory location set_val", key
-            exit(0)
+            raise Exceptions.any_user_error("Invalid Memory location set_val", key)

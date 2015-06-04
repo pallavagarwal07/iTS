@@ -4,6 +4,7 @@ from globals import is_num
 from Vars import get_val, set_val
 import random
 import Runtime
+import Exceptions
 
 
 def pass_to_func(detail, scope):
@@ -19,17 +20,13 @@ def pass_to_func(detail, scope):
             return globals.size_of[detail[0].strip()]
     elif name == 'malloc':
         size = calculate(detail[1].strip(), scope)
-        print "Request for", size
-        exit(0)
+        raise Exceptions.unimplemented_error("Request for", size , "Malloc hasn't been handled yet")
     if name not in globals.functions:
-        print "Error!! Undeclared Function", name
-        exit(0)
+        raise Exceptions.any_user_error("Error!! Undeclared Function", name)
     if len(globals.functions[name][3]) != l:
-        print "Error!! Incorrect no. of parameters"
-        exit(0)
+        raise Exceptions.any_user_error("Error!! Incorrect no. of parameters")
     if globals.functions[name][2] == '':
-        print "Error!! The function was declared, but never defined."
-        exit(0)
+        raise Exceptions.any_user_error("Error!! The function was declared, but never defined.")
     detail = globals.toplevelsplit(detail[1], ',')
     detail = [calculate(str(k).strip(), scope) for k in detail]
 
@@ -245,13 +242,11 @@ def calculate(expr, scope, vartable=globals.var_table):
         else:
             if token == '---':
                 if type(var_stack[l()]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l()], get_val(var_stack[l()]) - 1)
             elif token == '+++':
                 if type(var_stack[l()]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
             elif token == '`*`':
                 var_stack[l()] = (get_val(var_stack[l()]),) # Do not remove the comma. It forces formation of a tuple
@@ -259,14 +254,12 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l()] = vartable[var_stack[l()]][3]
             elif token == '<<=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) << get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '>>=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) >> get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '|1':
@@ -279,14 +272,12 @@ def calculate(expr, scope, vartable=globals.var_table):
                     idx = ('&&', tk[1])
             elif token == '*=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) * get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '|=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) | get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '>=':
@@ -306,8 +297,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '&=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) & get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '!=':
@@ -321,45 +311,37 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '^=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) ^ get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '++':
                 if type(var_stack[l()]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
             elif token == '--':
                 if type(var_stack[l()]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l()], get_val(var_stack[l()]) - 1)
             elif token == '/=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 if get_val(var_stack[l()]) == 0:
-                    print "Division by 0 not permitted"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) / get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '%=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) % get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '-=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) - get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '+=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) + get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == ',':
@@ -393,8 +375,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '/':
                 if get_val(var_stack[l()]) == 0:
-                    print "Division by 0 not permitted"
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 var_stack[l() - 1] = get_val(var_stack[l() - 1]) / get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '#':
@@ -403,8 +384,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l()] = 0 - get_val(var_stack[l()])
             elif token == '=':
                 if type(var_stack[l() - 1]) is not tuple:
-                    print "Error: Lvalue required", type(var_stack[l() - 1])
-                    exit(0)
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '<':
