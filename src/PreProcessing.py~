@@ -1,6 +1,5 @@
 import re
 import os
-import Pre
 from subprocess import PIPE, Popen
 
 
@@ -47,15 +46,14 @@ def use_c_preprocessor(filename):
             else:
                 flag = False
     code = "\n".join(code)
-#    a = Popen(['echo', code], stdout=PIPE)
-#    a = Popen(['sed', '-r', r":a;N;$!ba;s/\s+/ /g"], stdin=a.stdout, stdout=PIPE)
-#    a = Popen(['sed', r's:}:}\n:'], stdin=a.stdout, stdout=PIPE)
-#    a = Popen(['astyle', '-A10', '-k3'], stdin=a.stdout, stdout=PIPE)
-#    a = Popen(['astyle', '--indent=spaces', '-A1', '-e'], stdin=a.stdout, stdout=PIPE)
-#    a = Popen(['sed', '-r', r"s/^\s*//"], stdin=a.stdout, stdout=PIPE)
-#    a = Popen(['sed', '-r', r"s/\s*$//"], stdin=a.stdout, stdout=PIPE)
-#    code = a.stdout.read()
-    code = Pre.process(code)
+    a = Popen(['echo', code], stdout=PIPE)
+    a = Popen(['sed', '-r', r":a;N;$!ba;s/\s+/ /g"], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['sed', r's:}:}\n:'], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['astyle', '-A10', '-k3'], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['astyle', '--indent=spaces', '-A1', '-e'], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['sed', '-r', r"s/^\s*//"], stdin=a.stdout, stdout=PIPE)
+    a = Popen(['sed', '-r', r"s/\s*$//"], stdin=a.stdout, stdout=PIPE)
+    code = a.stdout.read()
     code = code.split('\n')
     code = [line.strip() for line in code]
     content = []
