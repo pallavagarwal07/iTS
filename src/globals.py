@@ -177,7 +177,7 @@ def toplevelsplit(var_str, delimiter):
                 cur_tk.append(ch)
         elif sing_q:
             if ch=="'" and var_str[i-1]!='\\':
-                dbl_q = 0
+                sing_q = 0
                 cur_tk.append(ch)
             else:
                 cur_tk.append(ch)

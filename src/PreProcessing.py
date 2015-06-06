@@ -47,9 +47,6 @@ def use_c_preprocessor(filename):
                 flag = False
     code = "\n".join(code)
     a = Popen(['echo', code], stdout=PIPE)
-#   a = Popen(
-#       ['indent', '-nhnl', '-nbc', '-nce', '-sob', '-nlps', '-i0', '-cli0', '-bli0', '-bls', '-npcs', '-l100000'],
-#       stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', '-r', r":a;N;$!ba;s/\s+/ /g"], stdin=a.stdout, stdout=PIPE)
     a = Popen(['sed', r's:}:}\n:'], stdin=a.stdout, stdout=PIPE)
     a = Popen(['astyle', '-A10', '-k3'], stdin=a.stdout, stdout=PIPE)

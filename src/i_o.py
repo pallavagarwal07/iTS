@@ -2,6 +2,7 @@ import re
 import sys
 import globals
 import Calc
+import Vars
 
 
 def handle_input(statement, scope):
@@ -34,9 +35,10 @@ def handle_input(statement, scope):
     else:
         for i in range(0, len(variables)):
             v = variables[i].strip()
-            vals = (eval(values[0][i]) if Utils.is_num(values[0][i]) != 'Error' else values[0][i])
-            from Runtime import update
-            update(v, vals, scope)
+            vals = (eval(values[0][i]) if globals.is_num(values[0][i]) != 'Error' else values[0][i])
+            key = globals.in_var_table(v, scope)
+            Vars.set_val(key, vals)
+            print "Setting ", type( vals ), "to ", key
     return True
 
 def handle_output(line, scope):

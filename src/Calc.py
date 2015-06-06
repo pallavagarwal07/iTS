@@ -10,6 +10,8 @@ import Exceptions
 def pass_to_func(detail, scope):
     name = detail[0]
     l = len(globals.toplevelsplit(detail[1], ','))
+    if(detail[1].strip() == ''):
+        l = 0
     if name == 'sizeof':
         t = re.findall(r'\*', detail[1])
         if t:
@@ -24,6 +26,7 @@ def pass_to_func(detail, scope):
     if name not in globals.functions:
         raise Exceptions.any_user_error("Error!! Undeclared Function", name)
     if len(globals.functions[name][3]) != l:
+        print globals.functions[name][3], l, "HERE"
         raise Exceptions.any_user_error("Error!! Incorrect no. of parameters")
     if globals.functions[name][2] == '':
         raise Exceptions.any_user_error("Error!! The function was declared, but never defined.")
@@ -31,9 +34,10 @@ def pass_to_func(detail, scope):
     detail = [calculate(str(k).strip(), scope) for k in detail]
 
     RandomHash = hex(random.getrandbits(64))[2:-1]
-    for i, declarations in enumerate(globals.functions[name][1]):
-        import Runtime
-        Runtime.decl(declarations[1], detail[i], declarations[0], "global " + name + " " + RandomHash)
+    import Runtime
+    if l:
+        for i, declarations in enumerate(globals.functions[name][1]):
+            Runtime.decl(declarations[1], detail[i], declarations[0], "global " + name + " " + RandomHash)
     return Runtime.execute(globals.functions[name][2], "global " + name + " " + RandomHash)
 
 
@@ -67,6 +71,7 @@ def sep(expr):
     sep_tokens = []
 
     while i < len(expr) and expr[i] != ';':
+        #print "EXPR ", expr, i
         while i < len(expr) and expr[i] == ' ':
             if token != []:
                 sep_tokens.append(''.join(token))

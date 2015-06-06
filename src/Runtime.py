@@ -82,7 +82,8 @@ def chk_decl(line, scope):
         cast = r[0]
         a = re.sub(cast, '', line)
         a = re.sub(';', '', a)
-        a = a.split(',')
+        a = globals.toplevelsplit(a, ',')
+        #a = a.split(',')
         a = [k.strip().split('=') for k in a]
         for variables in a:
             if len(variables) == 1:
