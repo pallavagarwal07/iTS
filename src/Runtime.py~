@@ -228,6 +228,19 @@ def traverse(code, scope):
             continue
 
 
+#def malloc(name, cast, number, scope, val):
+    #cast = cast.replace(' ', '')
+    #cast = cast[:len(cast) - 1]
+    #if re.findall('\**'):
+        #t = globals.size_of('pointer')
+    #else:
+        #t = globals.size_of(cast)
+    #number /= t
+    #Vars.set_val((name, scope), globals.curr_mem)
+    #for i in (0, number):
+        #decl('\' + name + str(i), val, cast, scope)
+
+
 def malloc(num, step, level):
     assert level >= 0
     ret = globals.curr_mem
