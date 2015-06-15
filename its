@@ -35,7 +35,7 @@ vLevel=0
 iFlag=0
 oFlag=0
 
-while getopts vi:o: myVar; do
+while getopts vi:o:c: myVar; do
     case $myVar in
         v) vLevel=$((vLevel+1))
             ;;

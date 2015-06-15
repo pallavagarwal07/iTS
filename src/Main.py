@@ -2,7 +2,7 @@ import sys
 import globals
 import PreProcessing
 import Runtime
-import Gui
+#import Gui
 
 print "ARGS", sys.argv
 
@@ -33,7 +33,7 @@ code = PreProcessing.use_c_preprocessor(filename)
 # print code
 # code = PreProcessing.get_code(CodeFile)
 code = PreProcessing.nest(code)
-Gui.make_ui(code)
+#Gui.make_ui(code)
 # print globals.type_range
 # Access is used to keep track of current scope
 Access = 'global'

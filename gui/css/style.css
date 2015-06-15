@@ -1,0 +1,61 @@
+* {
+  -webkit-transition: all 1.4s;
+  -moz-transition: all 1.4s;
+  transition: all 1.4s; }
+
+html, body {
+  height: 99%;
+  width: 99%; }
+
+#global {
+  height: 90%;
+  width: 100%;
+  display: flex;
+  border: solid 1px black;
+  border-radius: 2%; }
+
+.newborn {
+  position: relative;
+  width: 0px;
+  height: 0px;
+  left: 90%;
+  top: 0%; }
+
+.var {
+  position: relative;
+  left: 0px;
+  height: 70px;
+  width: 130px;
+  margin: 12px;
+  border: solid 1px black;
+  border-radius: 5px; }
+
+.var .tagTop, .var .tagBot {
+  height: 35%;
+  width: 100%; }
+.var .tagTop {
+  border-bottom: solid 1px black;
+  display: flex; }
+  .var .tagTop .name, .var .tagTop .type {
+    width: 50%;
+    margin: 5%;
+    height: 100%;
+    text-align: center; }
+  .var .tagTop .name {
+    border-right: solid 1px black; }
+.var .tagBot {
+  text-align: center; }
+
+textarea, button {
+  height: 30px;
+  width: 100%;
+  resize: none;
+  border: 3px;
+  background-color: #F8F8F8;
+  box-sizing: border-box; }
+
+.oneSixth {
+  width: 16.6666666%;
+  margin: 5px; }
+
+/*# sourceMappingURL=style.css.map */
