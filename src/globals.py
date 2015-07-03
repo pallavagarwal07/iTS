@@ -56,7 +56,7 @@ def type_string():
         if types is not 'pointer':
             ret += t + '|'
     ret = ret[:-1]
-    ret = ret.replace(' ', '\s')
+    ret = ret.replace(' ', r'\s+')
     return ret
 
 
