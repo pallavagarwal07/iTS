@@ -120,6 +120,7 @@ def halter(line):
     if re.match(r'^(?s)\s*continue\s*;', line):
         raise Exceptions.custom_continue;
 
+
 def run_through(code, num):
     i = num
     while i < len(code):
