@@ -269,6 +269,13 @@ def execute(code, scope):
             continue
         if len(line) < 1:
             continue
+
+        code[i-1] = "__PALLAV_FLAG__"+code[i-1]
+        diff_index = str(globals.code).find("__PALLAV_FLAG__")
+        from stringDiff import getIndex
+        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        code[i-1] = code[i-1].replace("__PALLAV_FLAG__", '')
+
         if chk_decl(line, scope):
             continue
         if i_o.handle_input(line, scope):

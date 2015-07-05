@@ -33,11 +33,14 @@ ops = globals.ops
 # CodeFile stores a reference to the c file that has to be parsed.
 CodeFile = open(filename)
 
+globals.raw_code = CodeFile.read()
+
 # Preprocessor does some work here
 code = PreProcessing.use_c_preprocessor(filename)
 
 # Change all scope brackets and content into nested lists
 code = PreProcessing.nest(code)
+globals.code = code
 
 #Gui.make_ui(code)
 

@@ -1,5 +1,11 @@
 #include <stdio.h>
 
+int getVal3()
+{
+    int a = 3;
+    return a;
+}
+
 int main()
 {
     int a;
@@ -8,6 +14,6 @@ int main()
     b = ((float)a/20)*40;
     b = a==70? 3 + 8:4 + 6==6?3:8;
     printf("%f\n", b);
-    a = (long)b/100;
+    a = getVal3();
     return 0;
 }
