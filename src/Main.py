@@ -15,6 +15,7 @@ if sys.argv[3] == 'stdin':
 else:
     globals.inp = open(sys.argv[3]).read()
 
+# out variable is where c code's output is posted
 if sys.argv[4] == 'stderr':
     globals.out = sys.stderr
 else:
@@ -31,15 +32,19 @@ CodeFile = open(filename)
 
 # Preprocessor does some work here
 code = PreProcessing.use_c_preprocessor(filename)
-# print code
-# code = PreProcessing.get_code(CodeFile)
+
+# Change all scope brackets and content into nested lists
 code = PreProcessing.nest(code)
+
 #Gui.make_ui(code)
-# print globals.type_range
+
 # Access is used to keep track of current scope
 Access = 'global'
+
 globals.setup()
+
 print code
+
 # Build a dictionary of functions and run main
 try:
     Runtime.traverse(code, Access)

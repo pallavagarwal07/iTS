@@ -60,11 +60,10 @@ def sep(expr):
     sep_tokens = []
 
     while i < len(expr) and expr[i] != ';':
-        #print "EXPR ", expr, i
         while i < len(expr) and expr[i] == ' ':
-            if token != []:
-                sep_tokens.append(''.join(token))
-                token = []
+            #if token != []:
+                #sep_tokens.append(''.join(token))
+                #token = []
             i += 1
 
         checkOps = globals.startDict
@@ -207,7 +206,6 @@ def calculate(expr, scope, vartable=globals.var_table):
     # later when uninitialised vars are handled
 
     separated_tokens = sep(expr) # Separate out all tokens
-    print separated_tokens
     separated_tokens = unary_handle(separated_tokens) # Fix unary operators
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
     postfix = to_postfix(separated_tokens)
@@ -378,7 +376,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '/':
                 if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")    
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 elif get_val(var_stack[l()]) == 0:
                     raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
                 var_stack[l() - 1] = get_val(var_stack[l() - 1]) / get_val(var_stack[l()])
@@ -397,6 +395,17 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '~':
                 var_stack[l()] = ~get_val(var_stack[l()])
+            elif token == ':':
+                assert postfix[i+1][0] == '?'
+            elif token == '?':
+                assert postfix[i-1][0] == ':'
+                if get_val(var_stack[l()-2]):
+                    var_stack[l()-2] = get_val(var_stack[l()-1])
+                else:
+                    var_stack[l()-2] = get_val(var_stack[l()])
+                var_stack.pop() # pop twice
+                var_stack.pop()
+
             elif token == "#type#":
                 new_type = tk[1]
                 if new_type in ['float', 'double', 'long double']:
