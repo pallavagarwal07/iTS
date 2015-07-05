@@ -1,3 +1,4 @@
+from globals import print1, print2, print3
 import globals
 import Calc
 import re

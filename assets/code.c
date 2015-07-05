@@ -9,6 +9,5 @@ int main()
     b = a==70? 3 + 8:4 + 6==6?3:8;
     printf("%f\n", b);
     a = (long)b/100;
-    printf("The binary is: %c\n", (char)a);
     return 0;
 }

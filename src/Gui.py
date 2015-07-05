@@ -1,5 +1,6 @@
-import sys
+from globals import print1, print2, print3
 from PyQt4 import QtGui
+import sys
 
 
 class Gui(QtGui.QWidget):
@@ -13,8 +14,6 @@ class Gui(QtGui.QWidget):
         code = code[int(k)]
         n = len(code)
         i = 0
-        print k
-        print l
         hbox = QtGui.QHBoxLayout()
         hbox.addStretch(1)
         while i < n:

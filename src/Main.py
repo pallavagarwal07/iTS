@@ -1,3 +1,4 @@
+from globals import print1, print2, print3
 import sys
 import globals
 import PreProcessing
@@ -5,9 +6,11 @@ import Runtime
 import Exceptions
 #import Gui
 
-print "ARGS", sys.argv
+print1("ARGS", sys.argv)
 
 filename = sys.argv[1]
+
+globals.vLevel = int(sys.argv[2]) # verbosity level
 
 # inp variable stores user input.
 if sys.argv[3] == 'stdin':
@@ -43,10 +46,10 @@ Access = 'global'
 
 globals.setup()
 
-print code
+print1(code)
 
 # Build a dictionary of functions and run main
 try:
     Runtime.traverse(code, Access)
 except Exceptions.main_executed as e:
-    print e.message
+    print1(e.message)

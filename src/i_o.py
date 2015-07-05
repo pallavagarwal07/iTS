@@ -1,6 +1,8 @@
+from globals import print1, print2, print3
+import globals
+import Exceptions
 import re
 import sys
-import globals
 import Calc
 import Vars
 
@@ -31,14 +33,13 @@ def handle_input(statement, scope):
         values = [[values[0]]]
 
     if len(values[0]) != len(variables):
-        print("Incorrect number of arguments or bug in my interpreter", values, variables)
+        raise Exceptions.any_user_error("Incorrect number of arguments or bug in my interpreter", values, variables)
     else:
         for i in range(0, len(variables)):
             v = variables[i].strip()
             vals = (eval(values[0][i]) if globals.is_num(values[0][i]) != 'Error' else values[0][i])
             key = globals.in_var_table(v, scope)
             Vars.set_val(key, vals)
-            print "Setting ", type( vals ), "to ", key
     return True
 
 def handle_output(line, scope):

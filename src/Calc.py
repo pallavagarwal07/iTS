@@ -1,6 +1,6 @@
 import globals
 import re
-from globals import is_num
+from globals import is_num, print1, print2, print3
 from Vars import get_val, set_val
 import random
 import Runtime
@@ -26,7 +26,7 @@ def pass_to_func(detail, scope):
     if name not in globals.functions:
         raise Exceptions.any_user_error("Error!! Undeclared Function", name)
     if len(globals.functions[name][3]) != l:
-        print globals.functions[name][3], l, "HERE"
+        print1(globals.functions[name][3], l, "HERE")
         raise Exceptions.any_user_error("Error!! Incorrect no. of parameters")
     if globals.functions[name][2] == '':
         raise Exceptions.any_user_error("Error!! The function was declared, but never defined.")
@@ -209,7 +209,7 @@ def calculate(expr, scope, vartable=globals.var_table):
     separated_tokens = unary_handle(separated_tokens) # Fix unary operators
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
     postfix = to_postfix(separated_tokens)
-    print postfix
+    print1(postfix)
     stack = []
     for k in postfix:
         if 'Error' == is_num(k[0]):
@@ -219,7 +219,6 @@ def calculate(expr, scope, vartable=globals.var_table):
             m = is_num(k[0])
             stack.append((m,))
     postfix = stack
-    print postfix
     var_stack = []
     l = lambda: len(var_stack) - 1
     idx = 0

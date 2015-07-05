@@ -1,9 +1,12 @@
+import weave
+
 global var_table
 global inp
-import weave
+
 inp = ''
 gui = ""
 var_table = {}
+vLevel = 0
 
 curr_mem = 1000000000
 
@@ -44,7 +47,8 @@ unary_ops = {
 
 size_of = {}
 data_types = [
-    'long long int', 'long int', 'long double', 'long long', 'char', 'int', 'long', 'float', 'double', 'pointer'
+    'long long int', 'long int', 'long double', 'long long', 'char',
+    'int', 'long', 'float', 'double', 'pointer'
 ]
 type_range = {}
 memory = {}
@@ -250,6 +254,27 @@ def toplevelreplace(var_str, orig, repl):
             cur_tk.append(ch)
         i += 1
     return "".join(cur_tk)
+
+
+def print1(*args):
+    if(vLevel):
+        for arg in args:
+            print arg,
+        print ''
+
+
+def print2(*args):
+    if(vLevel>1):
+        for arg in args:
+            print arg,
+        print ''
+
+
+def print3(*args):
+    if(vLevel>2):
+        for arg in args:
+            print arg,
+        print ''
 
 
 def is_num(s):

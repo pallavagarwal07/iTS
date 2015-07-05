@@ -1,7 +1,8 @@
+from globals import print1, print2, print3
+from subprocess import PIPE, Popen
 import re
 import os
 import Pre
-from subprocess import PIPE, Popen
 
 
 def get_code(code_file):

@@ -1,6 +1,7 @@
+from globals import print1, print2, print3
+from globals import Value
 import re
 import globals
-from globals import Value
 import Calc
 import i_o
 import groups
@@ -98,15 +99,6 @@ def chk_decl(line, scope):
         return False
 
 
-#def update(var, val, scope):
-    #key = globals.in_var_table(var, scope)
-    #if key:
-        #globals.var_table[key][0].v = val
-    #else:
-        #print('Error 103: ' + var + "not declared \n")
-        #return
-
-
 def is_updation(exp):
     k = re.match(r'^(?s)\s*[a-zA-Z_]+[a-zA-Z0-9_]*\s*=.*;', exp)
     return 1 if k else 0
@@ -174,7 +166,7 @@ def decl_func(line):
         else:
             type_key = ''
         if k[1] in globals.functions:
-            print "Error!! Multiple declaration of function\n"
+            raise Exceptions.any_user_error("Error!! Multiple declaration of function\n")
         else:
             globals.functions[k[1]] = [k[0], params, '', type_key]
         return 1
