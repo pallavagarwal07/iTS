@@ -1,9 +1,11 @@
 this.resize_list = []
 
-define_variable = (type, scp, name, val, id) ->
+define_variable = (type, scp, name, val, id = scp+"-"+name) ->
     scope = $('#'+scp+" .scp")
+    console.log(scope)
     scope.append('<div id=\''+id+'\'></div>')
     variable = $('#'+id)
+    console.log(variable)
     variable.append('<div class=\'tagTop\'></div>')
     variable.append('<div class=\'tagBot\'></div>')
     variable.children('.tagBot').html(val)

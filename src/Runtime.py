@@ -25,6 +25,9 @@ def decl(var, val, cast, scope):
         var = re.sub('\*', '', var)
     else:
         level = 0
+
+    globals.gui += "\ndefine_variable(\'"+cast+"\',\'"+'-'.join(scope.split())+"\',\'"+var+"\',\'"+str( val )+"\');"
+
     data = globals.get_details(var)
     var = data[0]
     indices = data[1]
@@ -110,6 +113,7 @@ def is_updation(exp):
 
 
 def garbage_collector(scope):
+    globals.gui += "\ndelete_scope(\'"+'-'.join(scope.split())+"\');"
     keys = globals.var_table.keys()
     for key in keys:
         if key[1] == scope:
@@ -198,7 +202,7 @@ def def_func(line, code, num):
         if k[1] == 'main':
             run_through(code, num + 1)
             execute(code[num], 'global')
-            raise Exceptions.main_executed()
+            raise Exceptions.main_executed(globals.gui)
         if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):
             raise Exceptions.any_user_error("Error!! Multiple declaration of function")
         else:
@@ -238,6 +242,11 @@ def malloc(num, step, level):
 
 
 def execute(code, scope):
+    gui_parent = '-'.join(scope.split()[:-1]) if '-'.join(scope.split()[:-1]) \
+            else 'body'
+    gui_str = "\ncreate_scope(\'"+gui_parent+"\',\'"+'-'.join(scope.split())+"\');"
+    if not globals.gui.endswith(gui_str):
+        globals.gui += gui_str
     if type(code) is str:
         r = execute([code], scope)
         if r is not None:

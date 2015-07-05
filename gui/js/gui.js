@@ -5,9 +5,14 @@ this.resize_list = [];
 
 define_variable = function(type, scp, name, val, id) {
   var scope, variable;
+  if (id == null) {
+    id = scp + "-" + name;
+  }
   scope = $('#' + scp + " .scp");
+  console.log(scope);
   scope.append('<div id=\'' + id + '\'></div>');
   variable = $('#' + id);
+  console.log(variable);
   variable.append('<div class=\'tagTop\'></div>');
   variable.append('<div class=\'tagBot\'></div>');
   variable.children('.tagBot').html(val);

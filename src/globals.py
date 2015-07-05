@@ -2,6 +2,7 @@ global var_table
 global inp
 import weave
 inp = ''
+gui = ""
 var_table = {}
 
 curr_mem = 1000000000

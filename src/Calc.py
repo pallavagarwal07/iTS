@@ -35,6 +35,8 @@ def pass_to_func(detail, scope):
 
     RandomHash = hex(random.getrandbits(64))[2:-1]
     import Runtime
+    globals.gui += "\ncreate_scope(\'global\',\'"+"global-"+name+"\');"
+    globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+"global-"+name+"-"+RandomHash+"\');"
     if l:
         for i, declarations in enumerate(globals.functions[name][1]):
             Runtime.decl(declarations[1], detail[i], declarations[0], "global " + name + " " + RandomHash)
@@ -182,7 +184,6 @@ def to_postfix(tokens):
             elif tk == '||':
                 add(postfix, ('|1', ctr), ctr)
                 ctr += 1
-
         else:
             add(postfix, tk, ctr)
         i += 1
@@ -198,9 +199,11 @@ def calculate(expr, scope, vartable=globals.var_table):
     # later when uninitialised vars are handled
 
     separated_tokens = sep(expr) # Separate out all tokens
+    print separated_tokens
     separated_tokens = unary_handle(separated_tokens) # Fix unary operators
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
     postfix = to_postfix(separated_tokens)
+    print postfix
     stack = []
     for k in postfix:
         if 'Error' == is_num(k[0]):

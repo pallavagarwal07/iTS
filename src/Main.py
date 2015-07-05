@@ -2,6 +2,7 @@ import sys
 import globals
 import PreProcessing
 import Runtime
+import Exceptions
 #import Gui
 
 print "ARGS", sys.argv
@@ -40,4 +41,7 @@ Access = 'global'
 globals.setup()
 print code
 # Build a dictionary of functions and run main
-Runtime.traverse(code, Access)
+try:
+    Runtime.traverse(code, Access)
+except Exceptions.main_executed as e:
+    print e.message

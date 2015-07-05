@@ -18,6 +18,8 @@ def get_val(key):
 
 def set_val(key, val):
     if len(key) != 1:
+        globals.gui += "\nupdate_variable(\'"+'-'.join(key[1].split())+ \
+            "-"+key[0]+"\',\'"+str(val)+"\');"
         t = globals.in_var_table(key[0], key[1])
         if t:
             globals.var_table[t][0].v = val
