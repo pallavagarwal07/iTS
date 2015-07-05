@@ -185,7 +185,15 @@ def to_postfix(tokens):
                 add(postfix, ('|1', ctr), ctr)
                 ctr += 1
         else:
-            add(postfix, tk, ctr)
+            tag = 0
+            for types in globals.data_types:
+                if tk.startswith(types):
+                    stack.pop()
+                    add(stack, ('#type#', tk), ctr)
+                    i += 1
+                    tag = 1
+            if tag == 0:
+                add(postfix, tk, ctr)
         i += 1
     while len(stack) > 0:
         add(postfix, stack.pop(), ctr)
@@ -213,7 +221,7 @@ def calculate(expr, scope, vartable=globals.var_table):
             m = is_num(k[0])
             stack.append((m,))
     postfix = stack
-
+    print postfix
     var_stack = []
     l = lambda: len(var_stack) - 1
     idx = 0
@@ -320,8 +328,8 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '/=':
                 if type(var_stack[l() - 1]) is not tuple:
                     raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                if get_val(var_stack[l()]) == 0:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
+                elif get_val(var_stack[l()]) == 0:
+                    raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) / get_val(var_stack[l()]))
                 var_stack.pop()
             elif token == '%=':
@@ -369,8 +377,10 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l() - 1] = get_val(var_stack[l() - 1]) - get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '/':
-                if get_val(var_stack[l()]) == 0:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
+                if type(var_stack[l() - 1]) is not tuple:
+                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")    
+                elif get_val(var_stack[l()]) == 0:
+                    raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
                 var_stack[l() - 1] = get_val(var_stack[l() - 1]) / get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '#':
@@ -387,5 +397,22 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '~':
                 var_stack[l()] = ~get_val(var_stack[l()])
+            elif token == "#type#":
+                new_type = tk[1]
+                if new_type in ['float', 'double', 'long double']:
+                    if type(var_stack[l()]) is 'str':
+                        raise Exceptions.any_user_error("Trying to convert string to float.")
+                    else:
+                        set_val(var_stack[l()], float(get_val(var_stack[l()])))
+                elif new_type in ['int', 'long', 'long int', 'long long int', 'long long']:
+                    if type(var_stack[l()]) is 'str':
+                        set_val(var_stack[l()], ord(get_val(var_stack[l()])))
+                    else:
+                        set_val(var_stack[l()], int(get_val(var_stack[l()])))
+                elif new_type is 'char':
+                    if type(var_stack[l()]) in ['float', 'double', 'long double']:
+                        raise Exceptions.any_user_error("Trying to convert float to string.")
+                    else:
+                        set_val(var_stack[l()], chr(get_val(var_stack[l()])))
     r = get_val(var_stack.pop())
     return r

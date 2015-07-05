@@ -51,6 +51,16 @@ functions = {}
 startDict = {'!': ['!=', '!'], '#': ['#type#', '#'], '%': ['%=', '%'], "'": ["'"], '&': ['&=', '&&', '&'], ')': [')'], '(': ['('], '+': ['+++', '++', '+=', '+'], '*': ['*=', '*'], '-': ['---', '--', '-=', '->', '-'], ',': [','], '/': ['/=', '/'], '=': ['==', '='], '<': ['<<=', '<<', '<=', '<'], '?': ['? :'], '>': ['>>=', '>=', '>>', '>'], '[': ['['], '_': ['_'], '^': ['^=', '^'], '`': ['`*`', '`&`'], '|': ['|=', '||', '|'], '~': ['~']}
 
 
+def type_string():
+    ret = ''
+    for types in data_types:
+        if types is not 'pointer':
+            ret += t + '|'
+    ret = ret[:-1]
+    ret = ret.replace(' ', r'\s+')
+    return ret
+
+
 def setup():
     code = r"""
     py::tuple res(10);
@@ -76,18 +86,6 @@ def setup():
         temp = 1 << ((8 * size_of[types])-1)
         type_range[types] = (-temp, temp-1)
 
-
-#def in_var_table(var, scope):
-    #if type(scope) is str:
-        #scope = scope.split(' ')
-    #else:
-        #scope = scope[:]
-    #while len(scope) > 0:
-        #for v in var_table:
-            #if v[0] == var and v[1] == ' '.join(scope):
-                #return v
-        #scope.pop()
-    #return 0
 
 def in_var_table(var, scope):
     if type(scope) is list:

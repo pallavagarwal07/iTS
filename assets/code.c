@@ -1,22 +1,13 @@
 #include <stdio.h>
 
-int toBinary(int a)
-{
-    int t = 0, l = 1;
-    while(a > 0)
-    {
-        t += l*(a%2);
-        a /= 2;
-        l *= 10;
-    }
-    return t;
-}
-
 int main()
 {
     int a;
-    scanf("%d", &a);
-    int bin = toBinary(a);
-    printf("The binary is: %d\n", bin);
+    a=70;
+    float b;
+    b = ((float)a/20)*40;
+    printf("%f\n", b);
+    a = (long)b/100;
+    printf("The binary is: %c\n", (char)a);
     return 0;
 }
