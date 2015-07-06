@@ -120,7 +120,7 @@ loading()
         multiPrint "." $num
         sleep $delay
     done
-    echo -n "  "
+    printf "  "
 }
 
 run_test()
@@ -138,17 +138,17 @@ run_test()
     local val2=`cat $BASEDIR/its_out/$filename; printf "a"`
 
     if [ "$val1" = "$val2" ]; then
-        echo "SUCCESS"
+        printf "SUCCESS\n"
     else
-        echo "FAIL"
+        printf "FAIL\n"
     fi
 }
 
-echo -e "Cleaning up dir ${Cyan}gcc_exec${Color_Off}.."
+printf "Cleaning up dir ${Cyan}gcc_exec${Color_Off}..\n"
 `rm -f $BASEDIR/gcc_exec/*`
-echo -e "Cleaning up dir ${Cyan}gcc_out${Color_Off}.."
+printf "Cleaning up dir ${Cyan}gcc_out${Color_Off}..\n"
 `rm -f $BASEDIR/gcc_out/*`
-echo -e "Cleaning up dir ${Cyan}its_out${Color_Off}..\n"
+printf "Cleaning up dir ${Cyan}its_out${Color_Off}..\n\n"
 `rm -f $BASEDIR/its_out/*`
 
 fail_count=0
@@ -157,27 +157,27 @@ total_count=0
 for file in $(ls "$BASEDIR/c_codes/");
 do
     filename="${file%.*}"
-    echo -en "Running test for ${BIYellow}$filename${Color_Off}"
+    printf "Running test for ${BIYellow}$filename${Color_Off}"
     run_test > /tmp/itsOutput &
     loading $!
     OUTPUT="$(cat /tmp/itsOutput)"
     if [ "$OUTPUT" = "SUCCESS" ];
     then
-        echo -e "${IGreen}PASSED${Color_Off}"
+        printf "${IGreen}PASSED${Color_Off}\n"
         total_count=$((total_count+1))
     else
-        echo -e "${BIRed}FAILED${Color_Off}"
+        printf "${BIRed}FAILED${Color_Off}\n"
         fail_count=$((fail_count+1))
     fi
 done
 
-echo ''
+printf '\n'
 total_count=$((total_count+fail_count))
 
 if [ $fail_count -eq 0 ]; then
-    echo -e "${BGreen}ALL $total_count TESTS PASSED${Color_Off}"
+    printf "${BGreen}ALL $total_count TESTS PASSED${Color_Off}\n"
 else
-    echo -e "${IRed}$fail_count TESTS OUT OF $total_count FAILED.${Color_Off}"
+    printf "${IRed}$fail_count TESTS OUT OF $total_count FAILED.${Color_Off}\n"
 fi
 
 exit 0
