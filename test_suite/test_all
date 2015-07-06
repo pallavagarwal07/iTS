@@ -1,7 +1,4 @@
-#!/bin/sh
-
-# We need the script to exit on error
-set -e
+#!/bin/sh -e
 
 CURRPATH=$(pwd)
 SOURCE=$0
@@ -97,6 +94,17 @@ On_IPurple='\e[0;105m'  # Purple
 On_ICyan='\e[0;106m'    # Cyan
 On_IWhite='\e[0;107m'   # White
 
+multiPrint()
+{
+    local char=$1
+    local repeat=$2
+
+    while [ $repeat -gt 0 ]; do
+        printf "$char"
+        repeat=$((repeat - 1))
+    done
+}
+
 loading()
 {
     local pid=$1
@@ -105,11 +113,11 @@ loading()
     printf ".%.0s" {1..$num}
     sleep $delay
     while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-        for((i=0; i<num; i++));do printf "\b";done
-        for((i=0; i<num; i++));do printf " ";done
-        for((i=0; i<num; i++));do printf "\b";done
+        multiPrint "\b" $num
+        multiPrint " " $num
+        multiPrint "\b" $num
         local num=$(((num+1)%5))
-        for((i=0; i<num; i++));do printf ".";done
+        multiPrint "." $num
         sleep $delay
     done
     echo -n "  "
@@ -117,9 +125,9 @@ loading()
 
 run_test()
 {
-    gcc -o $BASEDIR/gcc_execs/$filename $BASEDIR/c_codes/$file
+    gcc -o $BASEDIR/gcc_exec/$filename $BASEDIR/c_codes/$file
     touch "$BASEDIR/inputs/$filename"
-    CMD="$BASEDIR/gcc_execs/$filename < $BASEDIR/inputs/$filename >
+    CMD="$BASEDIR/gcc_exec/$filename < $BASEDIR/inputs/$filename >
             $BASEDIR/gcc_out/$filename"
     eval $CMD
     CMD="$BASEDIR/../its -i $BASEDIR/inputs/$filename
@@ -153,7 +161,7 @@ do
     run_test > /tmp/itsOutput &
     loading $!
     OUTPUT="$(cat /tmp/itsOutput)"
-    if [ "$OUTPUT" == "SUCCESS" ];
+    if [ "$OUTPUT" = "SUCCESS" ];
     then
         echo -e "${IGreen}PASSED${Color_Off}"
         total_count=$((total_count+1))

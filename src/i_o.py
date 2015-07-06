@@ -8,13 +8,22 @@ import Vars
 
 
 def handle_input(statement, scope):
+    # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
     statement = statement.decode('string_escape')
+
+    # sep = [('%d %c\n%lld', ' &a, &b,', ' &c')]
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
+
     if len(sep) == 0:
         return False
+    elif len(sep) > 1:
+        return Exceptions.any_user_error("I think you might be missing a semicolon")
+
     variables = sep[0][1].replace('&', '').split(',')
     variables.append(sep[0][2].replace('&', ''))
     variables.remove('')
+    # now, variables = [' a', ' b', ' c']
+
     reg = re.sub(r'%(lld|ld|d)', '%d', sep[0][0])
     reg = re.sub(r'%(Lf|lf|f)', '%f', reg)
     reg = reg.replace(' ', r'\s+')
@@ -27,8 +36,10 @@ def handle_input(statement, scope):
     reg = '^{0}'.format(reg)
     values = re.findall(reg, globals.inp)
     globals.inp = re.sub(reg, '', globals.inp)
+
     if len(values) == 0:
         return False
+
     if type(values[0]) is str:
         values = [[values[0]]]
 
