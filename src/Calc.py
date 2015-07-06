@@ -200,6 +200,7 @@ def to_postfix(tokens):
 
 
 def calculate(expr, scope, vartable=globals.var_table):
+    print2("calculate in Calc.py got:\n", expr, scope, "\nThat's all--")
     if re.match(r"^(?s)\s*$", expr):
         return 0
     # If string has nothing, return 0. This will be removed
@@ -318,10 +319,12 @@ def calculate(expr, scope, vartable=globals.var_table):
                 if type(var_stack[l()]) is not tuple:
                     raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
+                var_stack[l()] =  get_val(var_stack[l()]) - 1
             elif token == '--':
                 if type(var_stack[l()]) is not tuple:
                     raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
                 set_val(var_stack[l()], get_val(var_stack[l()]) - 1)
+                var_stack[l()] =  get_val(var_stack[l()]) + 1
             elif token == '/=':
                 if type(var_stack[l() - 1]) is not tuple:
                     raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
@@ -423,4 +426,5 @@ def calculate(expr, scope, vartable=globals.var_table):
                     else:
                         set_val(var_stack[l()], chr(get_val(var_stack[l()])))
     r = get_val(var_stack.pop())
+    print2("calculate in Calc.py returned:\n", r, "\nThat's all--")
     return r

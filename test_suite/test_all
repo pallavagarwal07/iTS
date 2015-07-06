@@ -1,0 +1,175 @@
+#!/bin/sh
+
+# We need the script to exit on error
+set -e
+
+CURRPATH=$(pwd)
+SOURCE=$0
+
+# We need to resolve the path to the actual code directory (Running executable could be a symlink)
+while [ -h "$SOURCE" ]; do
+    BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+    SOURCE="$(readlink "$SOURCE")"
+    [[ $SOURCE != /* ]] && SOURCE="$BASEDIR/$SOURCE"
+done
+BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+# Python >=2.6 <3.0 needs to be used.
+PYTHONCMD="python2 -B"
+
+abspath(){
+    cd "$(dirname "$1")"
+    printf "%s/%s\n" "$(pwd)" "$(basename "$1")"
+}
+
+# Define xterm - supprted color codes
+
+# Reset
+Color_Off='\e[0m'
+
+# Regular Colors
+Black='\e[0;30m'
+Red='\e[0;31m'
+Green='\e[0;32m'
+Yellow='\e[0;33m'
+Blue='\e[0;34m'
+Purple='\e[0;35m'
+Cyan='\e[0;36m'
+White='\e[0;37m'
+
+# Bold
+BBlack='\e[1;30m'
+BRed='\e[1;31m'
+BGreen='\e[1;32m'
+BYellow='\e[1;33m'
+BBlue='\e[1;34m'
+BPurple='\e[1;35m'
+BCyan='\e[1;36m'
+BWhite='\e[1;37m'
+
+# Underline
+UBlack='\e[4;30m'
+URed='\e[4;31m'
+UGreen='\e[4;32m'
+UYellow='\e[4;33m'
+UBlue='\e[4;34m'
+UPurple='\e[4;35m'
+UCyan='\e[4;36m'
+UWhite='\e[4;37m'
+
+# Background
+On_Black='\e[40m'
+On_Red='\e[41m'
+On_Green='\e[42m'
+On_Yellow='\e[43m'
+On_Blue='\e[44m'
+On_Purple='\e[45m'
+On_Cyan='\e[46m'
+On_White='\e[47m'
+
+# High Intensity
+IBlack='\e[0;90m'
+IRed='\e[0;91m'
+IGreen='\e[0;92m'
+IYellow='\e[0;93m'
+IBlue='\e[0;94m'
+IPurple='\e[0;95m'
+ICyan='\e[0;96m'
+IWhite='\e[0;97m'
+
+# Bold High Intensity
+BIBlack='\e[1;90m'
+BIRed='\e[1;91m'
+BIGreen='\e[1;92m'
+BIYellow='\e[1;93m'
+BIBlue='\e[1;94m'
+BIPurple='\e[1;95m'
+BICyan='\e[1;96m'
+BIWhite='\e[1;97m'
+
+# High Intensity backgrounds
+On_IBlack='\e[0;100m'   # Black
+On_IRed='\e[0;101m'     # Red
+On_IGreen='\e[0;102m'   # Green
+On_IYellow='\e[0;103m'  # Yellow
+On_IBlue='\e[0;104m'    # Blue
+On_IPurple='\e[0;105m'  # Purple
+On_ICyan='\e[0;106m'    # Cyan
+On_IWhite='\e[0;107m'   # White
+
+loading()
+{
+    local pid=$1
+    local delay=0.20
+    local num=1
+    printf ".%.0s" {1..$num}
+    sleep $delay
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+        for((i=0; i<num; i++));do printf "\b";done
+        for((i=0; i<num; i++));do printf " ";done
+        for((i=0; i<num; i++));do printf "\b";done
+        local num=$(((num+1)%5))
+        for((i=0; i<num; i++));do printf ".";done
+        sleep $delay
+    done
+    echo -n "  "
+}
+
+run_test()
+{
+    gcc -o $BASEDIR/gcc_execs/$filename $BASEDIR/c_codes/$file
+    touch "$BASEDIR/inputs/$filename"
+    CMD="$BASEDIR/gcc_execs/$filename < $BASEDIR/inputs/$filename >
+            $BASEDIR/gcc_out/$filename"
+    eval $CMD
+    CMD="$BASEDIR/../its -i $BASEDIR/inputs/$filename
+            -o $BASEDIR/its_out/$filename -c $BASEDIR/c_codes/${filename}.c > /dev/null"
+    eval $CMD
+
+    local val1=`cat $BASEDIR/gcc_out/$filename; printf "a"`
+    local val2=`cat $BASEDIR/its_out/$filename; printf "a"`
+
+    if [ "$val1" = "$val2" ]; then
+        echo "SUCCESS"
+    else
+        echo "FAIL"
+    fi
+}
+
+echo -e "Cleaning up dir ${Cyan}gcc_exec${Color_Off}.."
+`rm -f $BASEDIR/gcc_exec/*`
+echo -e "Cleaning up dir ${Cyan}gcc_out${Color_Off}.."
+`rm -f $BASEDIR/gcc_out/*`
+echo -e "Cleaning up dir ${Cyan}its_out${Color_Off}..\n"
+`rm -f $BASEDIR/its_out/*`
+
+fail_count=0
+total_count=0
+
+for file in $(ls "$BASEDIR/c_codes/");
+do
+    filename="${file%.*}"
+    echo -en "Running test for ${BIYellow}$filename${Color_Off}"
+    run_test > /tmp/itsOutput &
+    loading $!
+    OUTPUT="$(cat /tmp/itsOutput)"
+    if [ "$OUTPUT" == "SUCCESS" ];
+    then
+        echo -e "${IGreen}PASSED${Color_Off}"
+        total_count=$((total_count+1))
+    else
+        echo -e "${BIRed}FAILED${Color_Off}"
+        fail_count=$((fail_count+1))
+    fi
+done
+
+echo ''
+total_count=$((total_count+fail_count))
+
+if [ $fail_count -eq 0 ]; then
+    echo -e "${BGreen}ALL $total_count TESTS PASSED${Color_Off}"
+else
+    echo -e "${IRed}$fail_count TESTS OUT OF $total_count FAILED.${Color_Off}"
+fi
+
+exit 0
