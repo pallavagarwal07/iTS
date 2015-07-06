@@ -20,7 +20,20 @@ def process(code):
             if sq_brace or paren or dbl_q or sing_q:
                 cur_tk += ch
             elif ch in ['{', '}']:
-                cur_tk += ('\n' + ch + '\n')
+                temp = i-1
+                while var_str[temp] in [' ', '\t']:
+                    temp -= 1
+                if var_str[temp] != '=':
+                    cur_tk += ('\n' + ch + '\n')
+                else:
+                    array_brace = 1
+                    i += 1
+                    while array_brace:
+                        if var_str[i] is '{':
+                            array_brace += 1
+                        elif var_str[i] is '}':
+                            array_brace -= 1
+                        i += 1
             elif ch == ';':
                 cur_tk += (ch + '\n')
             elif var_str.startswith("if", i):
