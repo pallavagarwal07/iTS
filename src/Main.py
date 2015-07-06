@@ -4,6 +4,7 @@ import globals
 import PreProcessing
 import Runtime
 import Exceptions
+import stringDiff
 #import Gui
 
 print1("ARGS", sys.argv)
@@ -41,6 +42,8 @@ code = PreProcessing.use_c_preprocessor(filename)
 # Change all scope brackets and content into nested lists
 code = PreProcessing.nest(code)
 globals.code = code
+
+stringDiff.init(str(globals.code), str(globals.raw_code))
 
 #Gui.make_ui(code)
 

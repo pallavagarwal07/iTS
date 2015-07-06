@@ -29,7 +29,9 @@ def Dif(str1, str2):
         #print ''
     #print '\n\n'
 
-def getIndex(str2, str1, index):
+stack = {}
+
+def init(str2, str1):
     len1 = len(str1)+1
     len2 = len(str2)+1
     global arr
@@ -41,7 +43,6 @@ def getIndex(str2, str1, index):
     i = len2 - 1
     j = len1 - 1
 
-    stack = {}
 
     while i > 1 and j > 1:
         k = sorted([[arr[i-1][j], (i-1, j)], [arr[i][j-1], (i, j-1)], [arr[i-1][j-1], (i-1, j-1)]])
@@ -49,5 +50,6 @@ def getIndex(str2, str1, index):
         i, j = k
         stack[i] = j
 
+def getIndex(str2, str1, index):
     return stack[index+1]-1
 
