@@ -57,8 +57,8 @@ def handle_output(line, scope):
         for i in range(0, len(format_vars)):
             if format_vars[i] != '':
                 format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)
-        format_string = re.sub(r'%(lld|ld|d)', '%d', format_string)
-        format_string = re.sub(r'%(Lf|lf|f)', '%f', format_string)
+        format_string = re.sub(r'%(\d*\.?\d*)(lld|ld|d)', r'%\1d', format_string)
+        format_string = re.sub(r'%(\d*\.?\d*)(Lf|lf|f)', r'%\1f', format_string)
         format_string = format_string % tuple(format_vars)
         globals.out.write(format_string)
     return True

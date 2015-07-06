@@ -9,7 +9,7 @@ int main()
     scanf("%lld %f", &t, &m);
     a += 3;
     t += 30000;
-    m += a;
-    printf("%d\t%lld\n%f\n", a, t, m);
+    m += t;
+    printf("%d\t%5.7lld\n%f\n", a, t, m);
     return 0;
 }
