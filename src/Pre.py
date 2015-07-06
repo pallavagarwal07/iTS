@@ -20,7 +20,13 @@ def process(code):
             if sq_brace or paren or dbl_q or sing_q:
                 cur_tk += ch
             elif ch in ['{', '}']:
-                cur_tk += ('\n' + ch + '\n')
+                ptr = i - 1
+                while var_str[ptr] in [' ', '\t']:
+                    ptr -= 1
+                if var_str[ptr] != '=':
+                    cur_tk += ('\n' + ch + '\n')
+                else:
+                    i = getMatchingBrack(i) + 1
             elif ch == ';':
                 cur_tk += (ch + '\n')
             elif var_str.startswith("if", i):
