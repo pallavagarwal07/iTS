@@ -24,5 +24,7 @@ The following Flags are supported:
 -i Specify the input file (default is stdin)
 -o Specify the output file (default is stderr)
 -c Specify the file with the code to be run (Default is assets/code.c)
--v Verbosity level (Not yet implemented)
+-v Verbosity level (verbosity level is compounded) 
+-vv
+-vvv
 ```
