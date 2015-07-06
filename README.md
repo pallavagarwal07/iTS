@@ -24,7 +24,11 @@ The following Flags are supported:
 -i Specify the input file (default is stdin)
 -o Specify the output file (default is stderr)
 -c Specify the file with the code to be run (Default is assets/code.c)
--v Verbosity level (verbosity level is compounded) 
+-v Verbosity level (verbosity level is compounded)
 -vv
 -vvv
 ```
+
+## Test Suite:
+In case you feel that something is wrong with the program, or if it not working,
+run the test_suite in its directory.
