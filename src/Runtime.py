@@ -19,6 +19,9 @@ def makeMemory(mem, indices, l, type, val, scope):
             makeMemory(globals.memory[mem][0].v + i*step, indices[1:], l-1, type, val[i] if val is not '' else '', scope)
 
 
+dim = []
+
+
 def decl(var, val, cast, scope):
     pointers = re.findall('\*+', var)
     if pointers:
@@ -51,16 +54,29 @@ def decl(var, val, cast, scope):
         if val is not '':
             val = val.strip()
             val = split_array_initialization(val[1:-1])
-            print2("val", val)
+            global dim
+            dim = []
+            dimension_list(val)            
+            print2("dim: ",dim, " indices: ", indices)
+            if dim == indices or (indices[0] == 0 and indices[1:] == dim[1:]):
+                indices = dim
+            else:
+                raise Exceptions.any_user_error("Dimensions of array and initialized value don't match")
             # check if input matches with dimension of array, else raise user_error Exception
         makeMemory(globals.curr_mem - globals.size_of['pointer'], indices, level - 1, cast, val, scope)
+
+
+def dimension_list(val):
+    global dim
+    if type(val) is list:
+        dim.append(len(val))
+        dimension_list(val[0])
 
 
 def split_array_initialization(val):
     i = 0
     list = []
     cur_val = ''
-    print2("val: ", val)
     while i < len(val):
         if val[i] is '{':
             temp = get_matching_brace(val, i)
@@ -270,7 +286,6 @@ def malloc(num, step, level, val, scope):
             globals.memory[(globals.curr_mem,)] = [Value(''), step, level + 1]
         else:
             globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope)), step, level + 1]
-#            print2("val", val[i])
             print3("mem", globals.memory, "\nvar_table", globals.var_table)
         globals.curr_mem += step
     return ret

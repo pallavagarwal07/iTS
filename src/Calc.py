@@ -208,13 +208,12 @@ def calculate(expr, scope, vartable=globals.var_table):
     if re.match(r"^(?s)\s*{\s*", expr):
         return expr
     separated_tokens = sep(expr) # Separate out all tokens
-    print2(separated_tokens)
+    print2("separated_tokens: ",separated_tokens)
     separated_tokens = unary_handle(separated_tokens) # Fix unary operators
-    print2(separated_tokens)
+    print2("after handling unary_ops: ", separated_tokens)
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
-    print2(separated_tokens)
     postfix = to_postfix(separated_tokens)
-    print1("postfix")
+    print1("postfix:")
     print1(postfix)
     stack = []
     for k in postfix:
