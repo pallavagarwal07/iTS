@@ -81,6 +81,7 @@ def split_array_initialization(val):
     i = 0
     list = []
     cur_val = ''
+    val = globals.toplevelreplace(val, ' ', '') 
     while i < len(val):
         if val[i] is '{':
             temp = get_matching_brace(val, i)

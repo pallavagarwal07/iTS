@@ -28,7 +28,8 @@ def process(code):
                 else:
                     array_brace = 1
                     while array_brace:
-                        cur_tk += var_str[i]
+                        if var_str[i] is not '\n' or var_str[i] is not ' ':
+                            cur_tk += var_str[i]
                         i += 1
                         if var_str[i] is '{':
                             array_brace += 1
