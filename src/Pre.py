@@ -2,8 +2,33 @@ from globals import print1, print2, print3
 import globals
 
 
+def remove_non_string_newlines(code):
+    code = list(code)
+    dblq = 0
+    sngq = 0
+    for i, char in enumerate(code):
+        if char == '"' and code[i-1] != '\\' and not sngq:
+            dblq = 1 - dblq
+        elif char == "'" and code[i-1] != '\\' and not dblq:
+            sngq = 1 - sngq
+        elif not sngq and not dblq and char == '\n':
+            code[i] = ' '
+
+    for i, char in enumerate(code):
+        if char == '"' and code[i-1] != '\\' and not sngq:
+            dblq = 1 - dblq
+        elif char == "'" and code[i-1] != '\\' and not dblq:
+            sngq = 1 - sngq
+        elif not sngq and not dblq and char == ' ':
+            j = i + 1
+            while j < len(code) and ( code[j] == ' ' or code[j] == '\t' ):
+                code[j] = ''
+                j += 1
+    return ''.join(code)
+
+
 def process(code):
-    var_str = globals.toplevelreplace(code, '\n', ' ')
+    var_str = remove_non_string_newlines(code)
     illegal_delimiters = ['"', "'", '(', ')', '[', ']']
     tokens = ''
     cur_tk = ''

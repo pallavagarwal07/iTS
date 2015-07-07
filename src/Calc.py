@@ -61,9 +61,6 @@ def sep(expr):
 
     while i < len(expr) and expr[i] != ';':
         while i < len(expr) and expr[i] == ' ':
-            #if token != []:
-                #sep_tokens.append(''.join(token))
-                #token = []
             i += 1
 
         checkOps = globals.startDict
@@ -200,14 +197,14 @@ def to_postfix(tokens):
 
 
 def calculate(expr, scope, vartable=globals.var_table):
-    print2("calculate in Calc.py got:\n", expr, scope, "\nThat's all--")
+    print2("calculate in Calc.py got: \%"+str(expr)+"%", scope, "\n")
     if re.match(r"^(?s)\s*$", expr):
         return 0
     # If string has nothing, return 0. This will be removed
     # later when uninitialised vars are handled
     if re.match(r"^(?s)\s*{\s*", expr):
         return expr
-    separated_tokens = sep(expr) # Separate out all tokens
+    separated_tokens = sep(expr.strip()) # Separate out all tokens
     print2("separated_tokens: ",separated_tokens)
     separated_tokens = unary_handle(separated_tokens) # Fix unary operators
     print2("after handling unary_ops: ", separated_tokens)
@@ -430,5 +427,5 @@ def calculate(expr, scope, vartable=globals.var_table):
                     else:
                         set_val(var_stack[l()], chr(get_val(var_stack[l()])))
     r = get_val(var_stack.pop())
-    print2("calculate in Calc.py returned:\n", r, "\nThat's all--")
+    print2("calculate in Calc.py returned:", r, "\n")
     return r
