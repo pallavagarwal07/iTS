@@ -25,6 +25,7 @@ int main()
         case 5: printf("Nope, not this either.\n");
         case 6: printf("Yep, you got it!!\n");
         case 7: printf("too far, bro, too far.\n");
+                break;
         default: printf("Seriously?!\n");
     }
     printf("\n");

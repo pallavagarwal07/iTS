@@ -19,10 +19,10 @@ def handle_input(statement, scope):
     elif len(sep) > 1:
         return Exceptions.any_user_error("I think you might be missing a semicolon")
 
-    variables = sep[0][1].replace('&', '').split(',')
-    variables.append(sep[0][2].replace('&', ''))
-    variables.remove('')
-    # now, variables = [' a', ' b', ' c']
+    variables = globals.toplevelsplit(sep[0][1], ',')
+    variables = variables[:-1]
+    variables.append(sep[0][2])
+    # now, variables = ['&a', '&b', '&c']
 
     reg = re.sub(r'%(lld|ld|d)', '%d', sep[0][0])
     reg = re.sub(r'%(Lf|lf|f)', '%f', reg)
@@ -41,16 +41,15 @@ def handle_input(statement, scope):
         return False
 
     if type(values[0]) is str:
-        values = [[values[0]]]
+        values = [[ values[0] ]]
 
     if len(values[0]) != len(variables):
         raise Exceptions.any_user_error("Incorrect number of arguments or bug in my interpreter", values, variables)
     else:
         for i in range(0, len(variables)):
-            v = variables[i].strip()
+            v = (Calc.calculate(variables[i], scope),)
             vals = (eval(values[0][i]) if globals.is_num(values[0][i]) != 'Error' else values[0][i])
-            key = globals.in_var_table(v, scope)
-            Vars.set_val(key, vals)
+            Vars.set_val(v, vals)
     return True
 
 def handle_output(line, scope):

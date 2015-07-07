@@ -23,13 +23,17 @@ def pass_to_func(detail, scope):
     elif name == 'malloc':
         size = calculate(detail[1].strip(), scope)
         raise Exceptions.unimplemented_error("Request for", size , "Malloc hasn't been handled yet")
+
     if name not in globals.functions:
         raise Exceptions.any_user_error("Error!! Undeclared Function", name)
+
     if len(globals.functions[name][3]) != l:
         print1(globals.functions[name][3], l, "HERE")
         raise Exceptions.any_user_error("Error!! Incorrect no. of parameters")
+
     if globals.functions[name][2] == '':
         raise Exceptions.any_user_error("Error!! The function was declared, but never defined.")
+
     detail = globals.toplevelsplit(detail[1], ',')
     detail = [calculate(str(k).strip(), scope) for k in detail]
 
