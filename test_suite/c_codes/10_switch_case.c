@@ -21,6 +21,7 @@ int main()
 
     switch (a)
     {
+        printf("Never print this\n");
         case 4: printf("That's not right!\n");
         case 5: printf("Nope, not this either.\n");
         case 6: printf("Yep, you got it!!\n");

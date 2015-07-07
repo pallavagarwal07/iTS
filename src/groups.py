@@ -52,6 +52,52 @@ def if_for(code, scope):
         return "NO"
 
 
+def if_switch(code, scope):
+    line = code[0]
+    if type(line) is list:
+        expr = []
+    else:
+        expr = re.findall(r'^(?s)switch\s*\((.*)\)', line)
+
+
+    if len(expr) != 0:
+        print2("if_switch got: ", code[0], scope)
+        switch_val = Calc.calculate(expr[0][0], scope)
+        ret = None
+
+        fall = None
+        index_default = None
+        for i, tup in enumerate(code[1]):
+            if tup[0] == '-default-':
+                index_default = i
+            elif tup[0] == None:
+                continue
+            else:
+                cal = Calc.calculate(tup[0], scope)
+                if switch_val == cal:
+                    fall = i
+                    break
+        if fall == None:
+            fall = index_default
+        if fall != None:
+            i = fall
+            try:
+                while i < len(code[1]):
+                    ret = Runtime.execute(code[1][i][1], scope + ' -invalid-')
+                    if ret is not None:
+                        return ret
+                    i += 1
+            except Exceptions.custom_break:
+                Runtime.garbage_collector(scope + ' -invalid-')
+                return ret
+            except Exceptions.custom_continue:
+                Runtime.garbage_collector(scope + ' -invalid-')
+                return ret
+    else:
+        return "NO"
+
+
+
 def if_while(code, scope):
     line = code[0]
     if type(line) is list:

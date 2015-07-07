@@ -61,7 +61,7 @@ def decl(var, val, cast, scope):
             val = split_array_initialization(val[1:-1])
             global dim
             dim = []
-            dimension_list(val)            
+            dimension_list(val)
             print2("dim: ",dim, " indices: ", indices)
             if indices[0] is 0:
                 indices[0] = dim[0]
@@ -81,7 +81,7 @@ def split_array_initialization(val):
     i = 0
     list = []
     cur_val = ''
-    val = globals.toplevelreplace(val, ' ', '') 
+    val = globals.toplevelreplace(val, ' ', '')
     while i < len(val):
         if val[i] is '{':
             temp = get_matching_brace(val, i)
@@ -308,18 +308,27 @@ def execute(code, scope):
             garbage_collector(scope)
             return r
     i = 0
+
     r = groups.if_conditionals(code, scope)
     if r is not "NO":
         return r
+
     r = groups.if_for(code, scope)
     if r is not "NO":
         return r
+
     r = groups.if_while(code, scope)
     if r is not "NO":
         return r
+
     r = groups.if_do_while(code, scope)
     if r is not "NO":
         return r
+
+    r = groups.if_switch(code, scope)
+    if r is not "NO":
+        return r
+
     while i < len(code):
         line = code[i]
         i += 1

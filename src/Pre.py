@@ -63,6 +63,8 @@ def process(code):
                     cur_tk += var_str[i]
             elif ch == ';':
                 cur_tk += (ch + '\n')
+            elif ch == ':':
+                cur_tk += (ch + '\n')
             elif var_str.startswith("if", i):
                 level = paren
                 i += 1
@@ -74,6 +76,10 @@ def process(code):
                 level = paren
                 i += 2
                 cur_tk += "for"
+            elif var_str.startswith("switch", i):
+                level = paren
+                i += 5
+                cur_tk += "switch"
             elif var_str.startswith("do", i):
                 i += 1
                 cur_tk += "do\n"

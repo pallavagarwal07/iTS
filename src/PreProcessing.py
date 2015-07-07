@@ -76,8 +76,11 @@ def nest_groups(code, i, make_list):
         else:
             k = re.findall(r'^(?s)while\s*\(.+\)\s*(?!(\s*;))', line)
             k1 = re.findall(r'^(?s)for\s*\(.*;.*;.*\)', line)
-            if k or k1:
+            k4 = re.findall(r'^(?s)switch\s*\(.*\)', line)
+            if k or k1 or k4:
                 code = nest_groups(code, i + 1, 1)
+                if k4:
+                    code[i+1] = nest_cases(code[i+1])
                 code = code[:i] + [code[i:i + 2]] + code[i + 2:]
             k2 = re.findall(r'^(?s)do', line)
             if k2:
@@ -97,6 +100,28 @@ def nest_groups(code, i, make_list):
                 return code
         i += 1
     return code
+
+
+def nest_cases(code):
+    stack = []
+    begin = 0
+    end = 0
+    val = None
+    for i, line in enumerate(code):
+        if type(line) is list:
+            continue
+        match = re.findall(r'^(?s)case\s+(.*):', line)
+        if not match:
+            if re.match(r'^(?s)default\s*:', line):
+                match = [['-default-']]
+            else:
+                continue
+        end = i
+        stack.append( (val, code[begin+1:end]) )
+        val = match[0][0]
+        begin = i
+    stack.append( (val, code[begin+1:]) )
+    return stack
 
 
 def nest(code):
