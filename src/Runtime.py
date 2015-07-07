@@ -10,13 +10,13 @@ import sys
 import Exceptions
 
 
-def makeMemory(mem, indices, l, type):
+def makeMemory(mem, indices, l, type, val, scope):
     mem = (mem, )
     step = globals.size_of[type if l == 0 else 'pointer']
-    globals.memory[mem][0].v = malloc(indices[0] if indices else 1, step, l)
+    globals.memory[mem][0].v = malloc(indices[0] if indices else 1, step, l, val, scope)
     if indices[1:]:
         for i in range(0, indices[0]):
-            makeMemory(globals.memory[mem][0].v + i*step, indices[1:], l-1, type)
+            makeMemory(globals.memory[mem][0].v + i*step, indices[1:], l-1, type, val[i] if val is not '' else '', scope)
 
 
 def decl(var, val, cast, scope):
@@ -28,7 +28,6 @@ def decl(var, val, cast, scope):
         level = 0
 
     globals.gui += "\ndefine_variable(\'"+cast+"\',\'"+'-'.join(scope.split())+"\',\'"+var+"\',\'"+str( val )+"\');"
-
     data = globals.get_details(var)
     var = data[0]
     indices = data[1]
@@ -49,7 +48,45 @@ def decl(var, val, cast, scope):
     else:
         globals.curr_mem += globals.size_of['pointer']
     if indices:
-        makeMemory(globals.curr_mem - globals.size_of['pointer'], indices, level - 1, cast)
+        if val is not '':
+            val = val.strip()
+            val = split_array_initialization(val[1:-1])
+            print2("val", val)
+            # check if input matches with dimension of array, else raise user_error Exception
+        makeMemory(globals.curr_mem - globals.size_of['pointer'], indices, level - 1, cast, val, scope)
+
+
+def split_array_initialization(val):
+    i = 0
+    list = []
+    cur_val = ''
+    print2("val: ", val)
+    while i < len(val):
+        if val[i] is '{':
+            temp = get_matching_brace(val, i)
+            list.append(split_array_initialization(val[i+1:temp]))
+            i = temp
+        elif val[i] is ',':
+            if cur_val is not '':
+                list.append(cur_val)
+                cur_val = ''
+        else:
+            cur_val += val[i]
+        i += 1
+    if cur_val is not '':
+        list.append(cur_val)
+    return list
+
+
+def get_matching_brace(val, i):
+    brack = 1
+    while brack:
+        i += 1
+        if val[i] is '{':
+            brack += 1
+        elif val[i] is '}':
+            brack -= 1
+    return i
 
 
 def get_key(var, scope):
@@ -225,11 +262,16 @@ def traverse(code, scope):
             continue
 
 
-def malloc(num, step, level):
+def malloc(num, step, level, val, scope):
     assert level >= 0
     ret = globals.curr_mem
     for i in range(0, num):
-        globals.memory[(globals.curr_mem,)] = [Value(''), step, level + 1]
+        if level or val is '':
+            globals.memory[(globals.curr_mem,)] = [Value(''), step, level + 1]
+        else:
+            globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope)), step, level + 1]
+#            print2("val", val[i])
+            print3("mem", globals.memory, "\nvar_table", globals.var_table)
         globals.curr_mem += step
     return ret
 
