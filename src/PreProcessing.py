@@ -63,6 +63,7 @@ def use_c_preprocessor(filename):
     for line in code:
         if len(line) > 0:
             content.append(line)
+    print2("preprocessed code: ", content)
     return content
 
 
