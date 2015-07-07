@@ -36,6 +36,8 @@ def decl(var, val, cast, scope):
         level = 0
 
     globals.gui += "\ndefine_variable(\'"+cast+"\',\'"+'-'.join(scope.split())+"\',\'"+var+"\',\'"+str( val )+"\');"
+    if scope.endswith("-invalid-"):
+        raise Exceptions.any_user_error("Variable declaration not allowed within switch case")
     data = globals.get_details(var)
     var = data[0]
     indices = data[1]

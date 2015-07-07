@@ -80,6 +80,10 @@ def process(code):
                             flag = 0
                     j += 1
                 i = j
+            elif var_str.startswith("default", i):
+                cur_tk += "default :\n"
+                while var_str[i] is not ':':
+                    i += 1
             elif var_str.startswith("if", i):
                 level = paren
                 i += 1

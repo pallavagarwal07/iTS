@@ -7,11 +7,11 @@ int main()
     ++a;
     switch (a)
     {
-            case 4: printf("That's not right!\n");
+           case a>0?4:3: printf("That's not right!\n");int b;
                 break;
-        case 5: printf("Nope, not this either.\n");
+        case 15: printf("Nope, not this either.\n");
                 break;
-        case 6: printf("Yep, you got it!!\n");
+        case 6: printf("Yep, you got it!!\n");{int c=10; printf("%d",c*c);}
                 break;
         case 7: printf("too far, bro, too far.\n");
                 break;
