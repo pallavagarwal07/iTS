@@ -39,6 +39,7 @@ def process(code):
     i = 0
     do_while = 0
     level = -1
+    ques = 0
     while i < len(var_str):
         ch = var_str[i]
         if ch not in illegal_delimiters:
@@ -63,8 +64,22 @@ def process(code):
                     cur_tk += var_str[i]
             elif ch == ';':
                 cur_tk += (ch + '\n')
-            elif ch == ':':
-                cur_tk += (ch + '\n')
+            elif var_str.startswith("case", i):
+                cur_tk += "case"
+                j = i + 4
+                flag = 1
+                while flag:
+                    cur_tk += var_str[j]
+                    if var_str[j] == '?':
+                        ques += 1
+                    elif var_str[j] == ':':
+                        if ques:
+                            ques -= 1
+                        else:
+                            cur_tk += '\n'
+                            flag = 0
+                    j += 1
+                i = j
             elif var_str.startswith("if", i):
                 level = paren
                 i += 1

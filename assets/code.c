@@ -7,7 +7,7 @@ int main()
     ++a;
     switch (a)
     {
-        case 4: printf("That's not right!\n");
+            case 4: printf("That's not right!\n");
                 break;
         case 5: printf("Nope, not this either.\n");
                 break;
