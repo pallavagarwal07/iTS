@@ -62,6 +62,11 @@ startDict = {
 '`': ['`*`', '`&`'], '|': ['|=', '||', '|'], '~': ['~'], '?':['?'], ':':[':']
 }
 
+predefined_funcs = ['sqrt', 'pow', 'cbrt', 'hypot', 'ceil', 'floor',
+ 'fmod', 'fabs', 'abs', 'round', 'exp', 'frexp', 'ldexp', 'log', 'log10',
+ 'log2', 'modf', 'exp2', 'expm1', 'sin', 'asin', 'sinh', 'asinh', 'cos',
+ 'acos', 'cosh', 'acosh', 'tan', 'atan', 'tanh', 'atanh', 'atan2']
+
 
 def type_string():
     ret = ''

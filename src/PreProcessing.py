@@ -111,9 +111,9 @@ def nest_cases(code):
     for i, line in enumerate(code):
         if type(line) is list:
             continue
-        match = re.findall(r'^(?s)case\s+(.*):', line)
+        match = re.findall(r'^(?s)case\s+(.+)\:', line)
         if not match:
-            if re.match(r'^(?s)default\s*:', line):
+            if re.match(r'^(?s)default\s*\:', line):
                 match = [['-default-']]
             else:
                 continue

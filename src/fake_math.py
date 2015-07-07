@@ -2,6 +2,8 @@ from math import *
 
 #Power Functions
 
+funcs = {}
+
 
 def __sqrt__(x):
     return sqrt(x)
@@ -137,3 +139,14 @@ def __atanh__(x):
 
 def __atan2__(x):
     return atan2(x)
+
+
+
+
+funcs = {'sqrt':__sqrt__, 'pow':__pow__, 'cbrt':__cbrt__, 'hypot':__hypot__, 'ceil':__ceil__,
+'floor':__floor__, 'fmod':__fmod__, 'fabs':__fabs__, 'abs':__abs__, 'round':__round__,
+'exp':__exp__, 'frexp':__frexp__, 'ldexp':__ldexp__, 'log':__log__, 'log10':__log10__,
+'log2':__log2__, 'modf':__modf__, 'exp2':__exp2__, 'expm1':__expm1__, 'sin':__sin__,
+'asin':__asin__, 'sinh':__sinh__, 'asinh':__asinh__, 'cos':__cos__, 'acos':__acos__,
+'cosh':__cosh__, 'acosh':__acosh__, 'tan':__tan__, 'atan':__atan__, 'tanh':__tanh__,
+'atanh':__atanh__, 'atan2':__atan2__}

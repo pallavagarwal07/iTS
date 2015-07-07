@@ -5,11 +5,13 @@ from Vars import get_val, set_val
 import random
 import Runtime
 import Exceptions
+import fake_math
 
 
 def pass_to_func(detail, scope):
     name = detail[0]
     l = len(globals.toplevelsplit(detail[1], ','))
+    flag = 0
     if(detail[1].strip() == ''):
         l = 0
     if name == 'sizeof':
@@ -24,7 +26,10 @@ def pass_to_func(detail, scope):
         size = calculate(detail[1].strip(), scope)
         raise Exceptions.unimplemented_error("Request for", size , "Malloc hasn't been handled yet")
 
-    if name not in globals.functions:
+    if name in globals.predefined_funcs:
+        flag = 1
+
+    if name not in globals.functions and not flag:
         raise Exceptions.any_user_error("Error!! Undeclared Function", name)
 
     if len(globals.functions[name][3]) != l:
@@ -36,6 +41,9 @@ def pass_to_func(detail, scope):
 
     detail = globals.toplevelsplit(detail[1], ',')
     detail = [calculate(str(k).strip(), scope) for k in detail]
+
+    if flag:
+        return fake_math.funcs[name](*detail)
 
     RandomHash = hex(random.getrandbits(64))[2:-1]
     import Runtime
