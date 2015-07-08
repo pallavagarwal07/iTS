@@ -18,8 +18,10 @@ def get_val(key, scope):
                 return val
             else:
                 key = Runtime.get_key(key, scope)
+                if type(key) is int:
+                    return key
         else:
-            return key
+            return eval(str(key))
     if len(key) != 1:
         t = globals.in_var_table(key[0], key[1])
         if t:
@@ -31,8 +33,10 @@ def get_val(key, scope):
             raise Exceptions.any_user_error("Invalid Memory location get_val")
 
 
-def set_val(key, val, scope):
+def set_val(key, val, scope = '-none-'):
     if type(key) is not tuple:
+        if scope == '-none-':
+            raise Exceptions.any_user_error("Something wrong.")
         if is_num(key) == 'Error':
             key = Runtime.get_key(key, scope)
         else:

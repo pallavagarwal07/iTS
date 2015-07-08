@@ -251,7 +251,7 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '`*`':
                 var_stack[l()] = (get_val(var_stack[l()], scope),) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':
-                var_stack[l()] = vartable[var_stack[l()]][3]
+                var_stack[l()] = vartable[Runtime.get_key(var_stack[l()], scope)][3]
             elif token == '<<=':
                 set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) << get_val(var_stack[l()], scope), scope)
                 var_stack.pop()

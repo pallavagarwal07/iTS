@@ -10,7 +10,7 @@ import Vars
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
     statement = statement.decode('string_escape')
-    print2("statement to input: ", statement, "with scope: ", scope)
+    print2("STATEMENT TO INPUT: ", statement, "WITH SCOPE: ", scope)
     # sep = [('%d %c\n%lld', ' &a, &b,', ' &c')]
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
     print2("sep: ", sep)
