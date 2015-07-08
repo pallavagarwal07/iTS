@@ -1,4 +1,5 @@
 import globals
+import inspect
 import re
 from globals import is_num, print1, print2, print3
 from Vars import get_val, set_val
@@ -222,8 +223,14 @@ def calculate(expr, scope, vartable=globals.var_table):
     print2("after handling unary_ops: ", separated_tokens)
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
     postfix = to_postfix(separated_tokens)
-    print1("postfix:")
-    print1(postfix)
+
+#DEBUGGING
+    curframe = inspect.currentframe()
+    calframe = inspect.getouterframes(curframe, 2)
+    print1("postfix : ", postfix, "CALLER: ", calframe[1][3])
+#--DEBUGGING
+
+
     stack = []
     for k in postfix:
         if 'Error' == is_num(k[0]):
@@ -245,18 +252,28 @@ def calculate(expr, scope, vartable=globals.var_table):
             var_stack.append(token)
         else:
             if token == '---':
-                set_val(var_stack[l()], get_val(var_stack[l()], scope) - 1, scope)
+                key = Runtime.get_key(var_stack[l()], scope)
+                val = get_val(key, scope) - 1
+                set_val(key, val, scope)
+                var_stack[l()] = val
             elif token == '+++':
-                set_val(var_stack[l()], get_val(var_stack[l()], scope) + 1, scope)
+                key = Runtime.get_key(var_stack[l()], scope)
+                val = get_val(key, scope) + 1
+                set_val(key, val, scope)
+                var_stack[l()] = val
             elif token == '`*`':
                 var_stack[l()] = (get_val(var_stack[l()], scope),) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':
                 var_stack[l()] = vartable[Runtime.get_key(var_stack[l()], scope)][3]
             elif token == '<<=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) << get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                set_val(key, get_val(key, scope) << get_val(var_stack[l()], scope), scope)
+                var_stack[l()-1] = get_val(key, scope)
                 var_stack.pop()
             elif token == '>>=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) >> get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                set_val(key, get_val(key, scope) >> get_val(var_stack[l()], scope), scope)
+                var_stack[l()-1] = get_val(key, scope)
                 var_stack.pop()
             elif token == '|1':
                 if get_val(var_stack[l()], scope):
@@ -267,10 +284,16 @@ def calculate(expr, scope, vartable=globals.var_table):
                     var_stack[l()] = 0
                     idx = ('&&', tk[1])
             elif token == '*=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) * get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) * get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '|=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) | get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) | get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '>=':
                 var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) >= get_val(var_stack[l()], scope) else 0)
@@ -288,7 +311,10 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) <= get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '&=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) & get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) & get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '!=':
                 var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) != get_val(var_stack[l()], scope) else 0)
@@ -300,27 +326,44 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) or get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '^=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) ^ get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) ^ get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '++':
-                set_val(var_stack[l()], get_val(var_stack[l()], scope) + 1, scope)
-                var_stack[l()] =  get_val(var_stack[l()], scope) - 1
+                key = Runtime.get_key(var_stack[l()], scope)
+                val = get_val(key, scope) + 1
+                set_val(key, val, scope)
+                var_stack[l()] = val - 1
             elif token == '--':
-                set_val(var_stack[l()], get_val(var_stack[l()], scope) - 1, scope)
-                var_stack[l()] =  get_val(var_stack[l()], scope) + 1
+                key = Runtime.get_key(var_stack[l()], scope)
+                val = get_val(key, scope) - 1
+                set_val(key, val, scope)
+                var_stack[l()] = val + 1
             elif token == '/=':
-                if get_val(var_stack[l()], scope) == 0:
-                    raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) / get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) / get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '%=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) % get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) % get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '-=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) - get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) - get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '+=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) + get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(key, scope) + get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == ',':
                 var_stack[l() - 1] = var_stack[l()]
@@ -361,7 +404,10 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '_':
                 var_stack[l()] = 0 - get_val(var_stack[l()], scope)
             elif token == '=':
-                set_val(var_stack[l() - 1], get_val(var_stack[l()], scope), scope)
+                key = Runtime.get_key(var_stack[l()-1], scope)
+                val = get_val(var_stack[l()], scope)
+                set_val(key, val, scope)
+                var_stack[l()-1] = val
                 var_stack.pop()
             elif token == '<':
                 var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) < get_val(var_stack[l()], scope) else 0)

@@ -54,10 +54,16 @@ int main()
 
     do
     {
-        a[j] = a[j/2] + ++b[j++];
-    }while(j<i-2);
-    for(j=0;j<23/2;j++)
-        printf("%d %d ", a[j], b[j]);
+        ++b[j++];
+    }while(j<i);
+
+    for(i=0; i<11; i++)
+        printf("%d\t", a[i]);
+    printf("\n");
+
+    for(i=0; i<11; i++)
+        printf("%d\t", b[i]);
+    printf("\n");
 
     return 0;
 }

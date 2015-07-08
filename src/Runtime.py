@@ -1,5 +1,6 @@
 from globals import print1, print2, print3
 from globals import Value
+import inspect
 import re
 import globals
 import Calc
@@ -113,6 +114,7 @@ def get_matching_brace(val, i):
 
 
 def get_key(var, scope):
+
     var = globals.get_details(var)
     name = var[0]
     indices = var[1]
