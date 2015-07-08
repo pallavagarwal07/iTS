@@ -57,12 +57,12 @@ def if_switch(code, scope):
     if type(line) is list:
         expr = []
     else:
-        expr = re.findall(r'^(?s)switch\s*\((.*)\)', line)
+        expr = re.findall(r'^(?s)switch\s*\((.+)\)', line)
 
 
     if len(expr) != 0:
-        print2("if_switch got: ", code[0], scope)
-        switch_val = Calc.calculate(expr[0][0], scope)
+        print2("if_switch got: ", code[0], scope, expr[0])
+        switch_val = Calc.calculate(expr[0], scope)
         ret = None
 
         fall = None
@@ -74,6 +74,7 @@ def if_switch(code, scope):
                 continue
             else:
                 cal = Calc.calculate(tup[0], scope)
+                print1("CAL = " , cal, type(cal), switch_val, type(switch_val))
                 if switch_val == cal:
                     fall = i
                     break

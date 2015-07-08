@@ -9,6 +9,13 @@ int main()
         b[j-1]+=b[5];
         b[j-1]%=2;
     }
+    for(i=0; i<11; i++)
+        printf("%d\t", a[i]);
+    printf("\n");
+    for(i=0; i<11; i++)
+        printf("%d\t", b[i]);
+    printf("\n");
+
     i=0;
     while(i<11)
     {

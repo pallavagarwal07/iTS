@@ -114,12 +114,13 @@ def nest_cases(code):
         match = re.findall(r'^(?s)case\s+(.+)\:', line)
         if not match:
             if re.match(r'^(?s)default\s*\:', line):
-                match = [['-default-']]
+                match = ['-default-']
             else:
                 continue
         end = i
         stack.append( (val, code[begin+1:end]) )
-        val = match[0][0]
+        val = match[0]
+        print2("case: ", val)
         begin = i
     stack.append( (val, code[begin+1:]) )
     return stack

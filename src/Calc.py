@@ -390,9 +390,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l() - 1] = get_val(var_stack[l() - 1]) - get_val(var_stack[l()])
                 var_stack.pop()
             elif token == '/':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                elif get_val(var_stack[l()]) == 0:
+                if get_val(var_stack[l()]) == 0:
                     raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
                 var_stack[l() - 1] = get_val(var_stack[l() - 1]) / get_val(var_stack[l()])
                 var_stack.pop()
@@ -427,17 +425,17 @@ def calculate(expr, scope, vartable=globals.var_table):
                     if type(var_stack[l()]) is 'str':
                         raise Exceptions.any_user_error("Trying to convert string to float.")
                     else:
-                        set_val(var_stack[l()], float(get_val(var_stack[l()])))
+                        var_stack[l()] =  float(get_val(var_stack[l()]))
                 elif new_type in ['int', 'long', 'long int', 'long long int', 'long long']:
                     if type(var_stack[l()]) is 'str':
-                        set_val(var_stack[l()], ord(get_val(var_stack[l()])))
+                        var_stack[l()] =  ord(get_val(var_stack[l()]))
                     else:
-                        set_val(var_stack[l()], int(get_val(var_stack[l()])))
+                        var_stack[l()] = int(get_val(var_stack[l()]))
                 elif new_type is 'char':
                     if type(var_stack[l()]) in ['float', 'double', 'long double']:
                         raise Exceptions.any_user_error("Trying to convert float to string.")
                     else:
-                        set_val(var_stack[l()], chr(get_val(var_stack[l()])))
+                        var_stack[l()] = chr(get_val(var_stack[l()]))
     r = get_val(var_stack.pop())
     print2("calculate in Calc.py returned:", r, "\n")
     return r

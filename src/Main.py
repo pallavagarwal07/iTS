@@ -58,4 +58,4 @@ print1(code)
 try:
     Runtime.traverse(code, Access)
 except Exceptions.main_executed as e:
-    print1(e.message)
+    print3(e.message)
