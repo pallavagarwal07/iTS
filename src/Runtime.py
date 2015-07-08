@@ -119,7 +119,7 @@ def get_key(var, scope):
     if indices:
         indices = [Calc.calculate(ind, scope) for ind in indices]
         key = globals.in_var_table(name, scope)
-        return resolve(key, indices)
+        return resolve(key, indices, scope)
     else:
         name = name.decode('string_escape')
         if re.match(r"'.'", name):
@@ -127,10 +127,10 @@ def get_key(var, scope):
         return globals.in_var_table(name, scope)
 
 
-def resolve(key, indices):
+def resolve(key, indices, scope):
     k = key
     while indices:
-        k = (Vars.get_val(k),)
+        k = (Vars.get_val(k, scope),)
         k = (k[0] + globals.memory[k][1]*indices[0], )
         indices.pop(0)
     return k

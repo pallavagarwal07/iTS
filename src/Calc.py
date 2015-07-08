@@ -242,180 +242,140 @@ def calculate(expr, scope, vartable=globals.var_table):
             continue
         idx = 0
         if token not in globals.ops + ('&0', '|1'):
-            n = is_num(token)
-            if 'Error' == n:
-                k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', token)
-                if k:
-                    val = pass_to_func(k[0], scope)
-                    var_stack.append(val)
-                else:
-                    t = Runtime.get_key(token, scope)
-                    var_stack.append(t)
-            else:
-                var_stack.append(token)
+            var_stack.append(token)
         else:
             if token == '---':
-                if type(var_stack[l()]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l()], get_val(var_stack[l()]) - 1)
+                set_val(var_stack[l()], get_val(var_stack[l()], scope) - 1, scope)
             elif token == '+++':
-                if type(var_stack[l()]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
+                set_val(var_stack[l()], get_val(var_stack[l()], scope) + 1, scope)
             elif token == '`*`':
-                var_stack[l()] = (get_val(var_stack[l()]),) # Do not remove the comma. It forces formation of a tuple
+                var_stack[l()] = (get_val(var_stack[l()], scope),) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':
                 var_stack[l()] = vartable[var_stack[l()]][3]
             elif token == '<<=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) << get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) << get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '>>=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) >> get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) >> get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '|1':
-                if get_val(var_stack[l()]):
+                if get_val(var_stack[l()], scope):
                     var_stack[l()] = 1
                     idx = ('||', tk[1])
             elif token == '&0':
-                if not get_val(var_stack[l()]):
+                if not get_val(var_stack[l()], scope):
                     var_stack[l()] = 0
                     idx = ('&&', tk[1])
             elif token == '*=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) * get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) * get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '|=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) | get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) | get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '>=':
-                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) >= get_val(var_stack[l()]) else 0)
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) >= get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '>>':
-                var_stack[l() - 1] = (get_val(var_stack[l() - 1]) >> get_val(var_stack[l()]))
+                var_stack[l() - 1] = (get_val(var_stack[l() - 1], scope) >> get_val(var_stack[l()], scope))
                 var_stack.pop()
             elif token == '==':
-                var_stack[l() - 1] = (1 if (get_val(var_stack[l() - 1]) == get_val(var_stack[l()])) else 0)
+                var_stack[l() - 1] = (1 if (get_val(var_stack[l() - 1], scope) == get_val(var_stack[l()], scope)) else 0)
                 var_stack.pop()
             elif token == '<<':
-                var_stack[l() - 1] = (get_val(var_stack[l() - 1]) << get_val(var_stack[l()]))
+                var_stack[l() - 1] = (get_val(var_stack[l() - 1], scope) << get_val(var_stack[l()], scope))
                 var_stack.pop()
             elif token == '<=':
-                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) <= get_val(var_stack[l()]) else 0)
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) <= get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '&=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) & get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) & get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '!=':
-                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) != get_val(var_stack[l()]) else 0)
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) != get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '&&':
-                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) and get_val(var_stack[l()]) else 0)
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) and get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '||':
-                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) or get_val(var_stack[l()]) else 0)
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) or get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '^=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) ^ get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) ^ get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '++':
-                if type(var_stack[l()]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l()], get_val(var_stack[l()]) + 1)
-                var_stack[l()] =  get_val(var_stack[l()]) - 1
+                set_val(var_stack[l()], get_val(var_stack[l()], scope) + 1, scope)
+                var_stack[l()] =  get_val(var_stack[l()], scope) - 1
             elif token == '--':
-                if type(var_stack[l()]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l()], get_val(var_stack[l()]) - 1)
-                var_stack[l()] =  get_val(var_stack[l()]) + 1
+                set_val(var_stack[l()], get_val(var_stack[l()], scope) - 1, scope)
+                var_stack[l()] =  get_val(var_stack[l()], scope) + 1
             elif token == '/=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                elif get_val(var_stack[l()]) == 0:
+                if get_val(var_stack[l()], scope) == 0:
                     raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) / get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) / get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '%=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) % get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) % get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '-=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) - get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) - get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '+=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1]) + get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l() - 1], scope) + get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == ',':
                 var_stack[l() - 1] = var_stack[l()]
                 var_stack.pop()
             elif token == '>':
-                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) > get_val(var_stack[l()]) else 0)
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) > get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '|':
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) | get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) | get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '^':
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) ^ get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) ^ get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '!':
-                var_stack[l()] = (0 if get_val(var_stack[l()]) else 1)
+                var_stack[l()] = (0 if get_val(var_stack[l()], scope) else 1)
             elif token == '%':
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) % get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) % get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '&':
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) & get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) & get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '+':
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) + get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) + get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '*':
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) * get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) * get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '-':
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) - get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) - get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '/':
-                if get_val(var_stack[l()]) == 0:
+                if get_val(var_stack[l()], scope) == 0:
                     raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
-                var_stack[l() - 1] = get_val(var_stack[l() - 1]) / get_val(var_stack[l()])
+                var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) / get_val(var_stack[l()], scope)
                 var_stack.pop()
             elif token == '#':
                 var_stack[l()] = var_stack[l()]
             elif token == '_':
-                var_stack[l()] = 0 - get_val(var_stack[l()])
+                var_stack[l()] = 0 - get_val(var_stack[l()], scope)
             elif token == '=':
-                if type(var_stack[l() - 1]) is not tuple:
-                    raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable.")
-                set_val(var_stack[l() - 1], get_val(var_stack[l()]))
+                set_val(var_stack[l() - 1], get_val(var_stack[l()], scope), scope)
                 var_stack.pop()
             elif token == '<':
-                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1]) < get_val(var_stack[l()]) else 0)
+                var_stack[l() - 1] = (1 if get_val(var_stack[l() - 1], scope) < get_val(var_stack[l()], scope) else 0)
                 var_stack.pop()
             elif token == '~':
-                var_stack[l()] = ~get_val(var_stack[l()])
+                var_stack[l()] = ~get_val(var_stack[l()], scope)
             elif token == ':':
                 assert postfix[i+1][0] == '?'
             elif token == '?':
                 assert postfix[i-1][0] == ':'
-                if get_val(var_stack[l()-2]):
-                    var_stack[l()-2] = get_val(var_stack[l()-1])
+                if get_val(var_stack[l()-2], scope):
+                    var_stack[l()-2] = get_val(var_stack[l()-1], scope)
                 else:
-                    var_stack[l()-2] = get_val(var_stack[l()])
+                    var_stack[l()-2] = get_val(var_stack[l()], scope)
                 var_stack.pop() # pop twice
                 var_stack.pop()
 
@@ -425,17 +385,17 @@ def calculate(expr, scope, vartable=globals.var_table):
                     if type(var_stack[l()]) is 'str':
                         raise Exceptions.any_user_error("Trying to convert string to float.")
                     else:
-                        var_stack[l()] =  float(get_val(var_stack[l()]))
+                        var_stack[l()] =  float(get_val(var_stack[l()], scope))
                 elif new_type in ['int', 'long', 'long int', 'long long int', 'long long']:
                     if type(var_stack[l()]) is 'str':
-                        var_stack[l()] =  ord(get_val(var_stack[l()]))
+                        var_stack[l()] =  ord(get_val(var_stack[l()], scope))
                     else:
-                        var_stack[l()] = int(get_val(var_stack[l()]))
+                        var_stack[l()] = int(get_val(var_stack[l()], scope))
                 elif new_type is 'char':
                     if type(var_stack[l()]) in ['float', 'double', 'long double']:
                         raise Exceptions.any_user_error("Trying to convert float to string.")
                     else:
-                        var_stack[l()] = chr(get_val(var_stack[l()]))
-    r = get_val(var_stack.pop())
+                        var_stack[l()] = chr(get_val(var_stack[l()], scope))
+    r = get_val(var_stack.pop(), scope)
     print2("calculate in Calc.py returned:", r, "\n")
     return r

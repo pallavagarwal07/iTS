@@ -10,15 +10,16 @@ import Vars
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
     statement = statement.decode('string_escape')
-
+    print2("statement to input: ", statement, "with scope: ", scope)
     # sep = [('%d %c\n%lld', ' &a, &b,', ' &c')]
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
-
+    print2("sep: ", sep)
     if len(sep) == 0:
         return False
     elif len(sep) > 1:
         return Exceptions.any_user_error("I think you might be missing a semicolon")
 
+    print2("Reached here in handle_input")
     variables = globals.toplevelsplit(sep[0][1], ',')
     variables = variables[:-1]
     variables.append(sep[0][2])
@@ -37,6 +38,7 @@ def handle_input(statement, scope):
     values = re.findall(reg, globals.inp)
     globals.inp = re.sub(reg, '', globals.inp)
 
+    print2(variables, reg, values)
     if len(values) == 0:
         return False
 

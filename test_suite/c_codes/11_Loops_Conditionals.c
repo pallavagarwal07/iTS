@@ -55,7 +55,7 @@ int main()
     do
     {
         a[j] = a[j/2] + ++b[j++];
-    }while(j<i);
+    }while(j<i-2);
     for(j=0;j<23/2;j++)
         printf("%d %d ", a[j], b[j]);
 
