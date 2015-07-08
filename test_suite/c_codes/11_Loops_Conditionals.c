@@ -39,14 +39,25 @@ int main()
         }
         i++;
     }
-    printf("While over!");
+    printf("While over!\n");
     j=0;
+
+
+    for(i=0; i<11; i++)
+        printf("%d\t", a[i]);
+    printf("\n");
+
+    for(i=0; i<11; i++)
+        printf("%d\t", b[i]);
+    printf("\n");
+
+
     do
     {
         a[j] = a[j/2] + ++b[j++];
     }while(j<i);
     for(j=0;j<23/2;j++)
-        printf("%d %d", a[j], b[j]);
+        printf("%d %d ", a[j], b[j]);
 
     return 0;
 }

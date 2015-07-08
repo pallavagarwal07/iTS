@@ -299,6 +299,8 @@ def malloc(num, step, level, val, scope):
 
 
 def execute(code, scope):
+    if code == []:
+        return
     gui_parent = '-'.join(scope.split()[:-1]) if '-'.join(scope.split()[:-1]) \
             else 'body'
     gui_str = "\ncreate_scope(\'"+gui_parent+"\',\'"+'-'.join(scope.split())+"\');"
