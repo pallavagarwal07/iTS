@@ -17,38 +17,95 @@ def get_input_value(val, cast):
         return ord(val)
     if cast == 'string':
         return val
+
 def var_types(s):
-    s = globals.toplevelsplit(s, ' ')
-    for i in range(0,len(s)):
-        if s[i] is '':
-            continue
-        s[i] = re.sub(r'%', '', s[i])
-        if re.findall(r'.*lld', s[i]):
-            t = re.sub(r'lld', '',s[i])
-            s[i] = ('long long', 696969 if t is '' else int(t))
-        elif re.findall(r'.*ld', s[i]):
-            t = re.sub(r'ld', '',s[i])
-            s[i] = ('long', 696969 if t is '' else int(t))
-        elif re.findall(r'.*d', s[i]):
-            t = re.sub(r'd', '',s[i])
-            s[i] = ('int', 696969 if t is '' else int(t))
-        elif re.findall(r'.*c', s[i]):
-            t = re.sub(r'c', '',s[i])
-            s[i] = ('char', 696969 if t is '' else int(t))
-        elif re.findall(r'.*s', s[i]):
-            t = re.sub(r's', '',s[i])
-            s[i] = ('string', 696969 if t is '' else int(t))
-        elif re.findall(r'.*lf', s[i]):
-            t = re.sub(r'lf', '',s[i])
-            s[i] = ('double', 696969 if t is '' else int(t))
-        elif re.findall(r'.*Lf', s[i]):
-            t = re.sub(r'Lf', '',s[i])
-            s[i] = ('long double', 696969 if t is '' else int(t))
-        elif re.findall(r'.*f', s[i]):
-            t = re.sub(r'f', '',s[i])
-            s[i] = ('float', 696969 if t is '' else int(t))
-    print1(s)
-    return s
+    arr = []
+    var_arr = []
+    flag = 0
+    for i, ch in enumerate(s):
+        if flag > 0:
+            flag -= 1
+        elif ch in [' ', '\n', '\t', '\f']:
+            arr.append(('whitespace', '\s*', 999999))
+        elif ch == '%':
+            if s[i+1] == '%':
+                arr.append(('literal', re.escape(ch), 1))
+                flag = 1
+            else:
+                k = re.findall(r'^(%(\d*)d)', s[i:])
+                if k:
+                    arr.append(('int', '\s*([-+]?\d+)',
+                        int(k[0][1]) if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+                k = re.findall(r'^(%(\d*)f)', s[i:])
+                if k:
+                    arr.append(('float',
+                        '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
+                        int(k[0][1]) if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+                k = re.findall(r'^(%(\d*)ld)', s[i:])
+                if k:
+                    arr.append(('long', '\s*([-+]?\d+)',
+                        int(k[0][1]) if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+                k = re.findall(r'^(%(\d*)lf)', s[i:])
+                if k:
+                    arr.append(('double',
+                        '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
+                        int(k[0][1]) if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+                k = re.findall(r'^(%(\d*)lld)', s[i:])
+                if k:
+                    arr.append(('long long', '\s*([-+]?\d+)',
+                        int(k[0][1]) if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+                k = re.findall(r'^(%(\d*)Lf)', s[i:])
+                if k:
+                    arr.append(('long double',
+                        '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
+                        int(k[0][1]) if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+                k = re.findall(r'^(%(\d*)c)', s[i:])
+                if k:
+                    arr.append(('char', '[\n\r]*(.)', int(k[0][1])
+                        if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+                k = re.findall(r'^(%(\d*)s)', s[i:])
+                if k:
+                    arr.append(('string', '\s*(\S+)', int(k[0][1])
+                        if k[0][1] else 999999))
+                    var_arr.append(arr[-1])
+                    flag = len(k[0][0]) - 1
+                    continue
+        else:
+            arr.append(('literal', re.escape(ch), 1))
+    return var_arr, arr
+
+
+def is_same(str1, str2):
+    arr1 = ['long', 'long int']
+    arr2 = ['long long', 'long long int']
+    if str1 in arr1 and str2 in arr1:
+        return True
+    if str1 in arr2 and str2 in arr2:
+        return True
+    if str1 == str2:
+        return True
+
 
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
@@ -61,6 +118,8 @@ def handle_input(statement, scope):
         return False
     elif len(sep) > 1:
         return Exceptions.any_user_error("I think you might be missing a semicolon")
+
+    type_arr, regex_arr = var_types(sep[0][0])
 
     print2("Reached here in handle_input")
     variables = globals.toplevelsplit(sep[0][1], ',')

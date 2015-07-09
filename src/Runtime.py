@@ -28,7 +28,7 @@ def makeMemory(mem, indices, l, type, val, scope):
 dim = []
 
 
-def decl(var, val, cast, scope):
+def decl(var, val, cast, scope, tags):
     pointers = re.findall('\*+', var)
     if pointers:
         level = len(pointers[0])
@@ -48,7 +48,7 @@ def decl(var, val, cast, scope):
     if key and key[1] == scope:
         raise Exceptions.any_user_error("Error 101: Multiple declaration of variable " + var + "\n")
     newKey = (var, scope, globals.curr_mem)
-    globals.var_table[newKey] = [Value(val, (cast, level)), cast, level, globals.curr_mem]
+    globals.var_table[newKey] = [Value(val, (cast, level), tags), cast, level, globals.curr_mem]
     if level:
         size = globals.size_of['pointer']
     else:
@@ -140,22 +140,24 @@ def resolve(key, indices, scope):
 
 def chk_decl(line, scope):
     r = re.findall(
-        r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
-        '((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*,)*((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*;)',
+        r'^(?s)\s*(static\s+)?(const\s+)?(long\s+double|long\s+long\s+int|'
+        r'long\s+long|long\s+int|long|int|float|double|char)\s+'
+        r'((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*,)'
+        r'*((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*;)',
         line)
     if len(r) != 0:
         r = r[0]
-        cast = r[0]
-        a = re.sub(cast, '', line)
+        cast = r[2]
+        tags = (r[0], r[1])
+        a = re.sub(r'^.*' + cast, '', line)
         a = re.sub(';', '', a)
         a = globals.toplevelsplit(a, ',')
-        #a = a.split(',')
         a = [k.strip().split('=') for k in a]
         for variables in a:
             if len(variables) == 1:
-                decl(variables[0].strip(), '', cast, scope)
+                decl(variables[0].strip(), '', cast, scope, tags)
             else:
-                decl(variables[0].strip(), Calc.calculate(variables[1], scope, globals.var_table), cast, scope)
+                decl(variables[0].strip(), Calc.calculate(variables[1], scope, globals.var_table), cast, scope, tags)
         return True
     else:
         return False

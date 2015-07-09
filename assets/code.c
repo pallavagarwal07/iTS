@@ -71,6 +71,6 @@ int main()
     int lol;
     float se;
     char ssd;
-    scanf("%11d %22Lf %c",lol,sw,ssd);
+    scanf("%11d %22Lf %c",&lol,&sw,&ssd);
     return 0;
 }

@@ -128,9 +128,10 @@ def find_by_mem(mem):
 
 # Class to store all types of values of variables
 class Value(object):
-    def __init__(self, v=None, type=('void', 0)):
+    def __init__(self, v=None, type=('void', 0), tags=None):
         self.v = v
         self.type = type
+        self.tags = tags
     def __str__(self):
         return "Value: "+str(self.v)
     def __repr__(self):
