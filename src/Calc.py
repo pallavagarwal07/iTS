@@ -52,7 +52,7 @@ def pass_to_func(detail, scope):
     globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+"global-"+name+"-"+RandomHash+"\');"
     if l:
         for i, declarations in enumerate(globals.functions[name][1]):
-            Runtime.decl(declarations[1], detail[i], declarations[0], "global " + name + " " + RandomHash)
+            Runtime.decl(declarations[1], detail[i], declarations[0], "global " + name + " " + RandomHash, None)
     return Runtime.execute(globals.functions[name][2], "global " + name + " " + RandomHash)
 
 

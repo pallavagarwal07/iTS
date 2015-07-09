@@ -107,6 +107,26 @@ def is_same(str1, str2):
         return True
 
 
+def extract(regex_arr, type_arr):
+    values = []
+    for tup in regex_arr:
+        reg = '^' + tup[1]
+        num = tup[2]
+        k = re.findall(reg, globals.inp[:num])
+        if not k:
+            raise Exceptions.any_user_error("Incorrect Input (probably)")
+
+        if tup not in type_arr:
+            k = re.sub(reg, '', globals.inp[:num])
+            globals.inp = k + globals.inp[num:]
+        else:
+            globals.inp = re.sub(reg, '', globals.inp[:num]) + globals.inp[num:]
+            values.append(k[0])
+
+    print2("INPUT EXTRACTED the following values: ", values)
+    return values
+
+
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
     statement = statement.decode('string_escape')
@@ -114,6 +134,7 @@ def handle_input(statement, scope):
     # sep = [('%d %c\n%lld', ' &a, &b,', ' &c')]
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
     print2("sep: ", sep)
+
     if len(sep) == 0:
         return False
     elif len(sep) > 1:
@@ -121,43 +142,31 @@ def handle_input(statement, scope):
 
     type_arr, regex_arr = var_types(sep[0][0])
 
+
     print2("Reached here in handle_input")
     variables = globals.toplevelsplit(sep[0][1], ',')
     variables = variables[:-1]
     variables.append(sep[0][2])
     # now, variables = ['&a', '&b', '&c']
-    var_type = var_types(sep[0][0])
-    reg = re.sub(r'%(lld|ld|d)', '%d', sep[0][0])
-    reg = re.sub(r'%(Lf|lf|f)', '%f', reg)
-    reg = reg.replace(' ', r'\s+')
-    reg = reg.replace('\n', r'\s+')
-    reg = reg.replace('\r', r'\s+')
-    reg = reg.replace('%d', r'\s*([-+]?\d+)')
-    reg = reg.replace('%f', r'\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)')
-    reg = reg.replace('%c', r'[\n\r]*(.)')
-    reg = reg.replace('%s', r'\s*(\S+)')
-    reg = '^{0}'.format(reg)
-    values = re.findall(reg, globals.inp)
-    globals.inp = re.sub(reg, '', globals.inp)
 
-    print2(variables, reg, values)
-    if len(values) == 0:
-        return False
+    values = extract(regex_arr, type_arr)
 
-    if type(values[0]) is str:
-        values = [[ values[0] ]]
+    assert len(type_arr) == len(values)
 
-    if len(values[0]) != len(variables):
-        raise Exceptions.any_user_error("Incorrect number of arguments or bug in my interpreter", values, variables)
+    if len(values) != len(variables):
+        raise Exceptions.any_user_error("Incorrect number of \
+                arguments or bug in my interpreter", values, variables)
     else:
         for i in range(0, len(variables)):
             v = (Calc.calculate(variables[i], scope),)
-            dst_type = globals.var_table[v][0].type
+            dst_type = globals.memory[v][0].type[0] \
+                    if globals.memory[v][0].type[1] == 0 else 'pointer'
             src_type = type_arr[i][0]
+            print1(dst_type, src_type)
             if not is_same(dst_type, src_type):
                 raise Exceptions.any_user_error("Variable Type not same as input!!")
 
-            vals = get_input_value(values[0][i], src_type)
+            vals = get_input_value(values[i], src_type)
 
             Vars.set_val(v, vals)
     return True
