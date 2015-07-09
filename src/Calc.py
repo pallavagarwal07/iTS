@@ -265,6 +265,10 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l()] = (get_val(var_stack[l()], scope),) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':
                 var_stack[l()] = vartable[Runtime.get_key(var_stack[l()], scope)][3]
+            elif token == '`+`':
+                var_stack[l()] = var_stack[l()]
+            elif token == '`-`':
+                var_stack[l()] = 0 - get_val(var_stack[l()], scope)
             elif token == '<<=':
                 key = Runtime.get_key(var_stack[l()-1], scope)
                 set_val(key, get_val(key, scope) << get_val(var_stack[l()], scope), scope)
@@ -399,10 +403,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                     raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
                 var_stack[l() - 1] = get_val(var_stack[l() - 1], scope) / get_val(var_stack[l()], scope)
                 var_stack.pop()
-            elif token == '#':
-                var_stack[l()] = var_stack[l()]
-            elif token == '_':
-                var_stack[l()] = 0 - get_val(var_stack[l()], scope)
             elif token == '=':
                 key = Runtime.get_key(var_stack[l()-1], scope)
                 val = get_val(var_stack[l()], scope)
