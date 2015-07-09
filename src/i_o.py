@@ -7,6 +7,18 @@ import Calc
 import Vars
 
 
+def get_input_value(val, cast):
+    if cast in ['int', 'long', 'long int', 'long long', 'long long int']:
+        return int(val)
+    if cast in ['float', 'double', 'long double']:
+        return float(val)
+    if cast == 'char':
+        assert len(val) == 1
+        return ord(val)
+    if cast == 'string':
+        return val
+
+
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
     statement = statement.decode('string_escape')
@@ -50,7 +62,13 @@ def handle_input(statement, scope):
     else:
         for i in range(0, len(variables)):
             v = (Calc.calculate(variables[i], scope),)
-            vals = (eval(values[0][i]) if globals.is_num(values[0][i]) != 'Error' else values[0][i])
+            dst_type = globals.var_table[v][0].type
+            src_type = type_arr[i][0]
+            if not is_same(dst_type, src_type):
+                raise Exceptions.any_user_error("Variable Type not same as input!!")
+
+            vals = get_input_value(values[0][i], src_type)
+
             Vars.set_val(v, vals)
     return True
 
