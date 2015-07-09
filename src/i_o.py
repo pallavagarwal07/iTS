@@ -99,9 +99,12 @@ def var_types(s):
 def is_same(str1, str2):
     arr1 = ['long', 'long int']
     arr2 = ['long long', 'long long int']
+    arr3 = ['string', 'char']
     if str1 in arr1 and str2 in arr1:
         return True
     if str1 in arr2 and str2 in arr2:
+        return True
+    if str1 in arr3 and str2 in arr3:
         return True
     if str1 == str2:
         return True
@@ -152,24 +155,33 @@ def handle_input(statement, scope):
     values = extract(regex_arr, type_arr)
 
     assert len(type_arr) == len(values)
-
+    print2("type array: ", type_arr)
     if len(values) != len(variables):
         raise Exceptions.any_user_error("Incorrect number of \
                 arguments or bug in my interpreter", values, variables)
     else:
+        print2("variables: ", variables)
         for i in range(0, len(variables)):
             v = (Calc.calculate(variables[i], scope),)
             dst_type = globals.memory[v][0].type[0] \
                     if globals.memory[v][0].type[1] == 0 else 'pointer'
             src_type = type_arr[i][0]
-            print1(dst_type, src_type)
+            print1("Type: ", dst_type, src_type, "memory: ", v)
             if not is_same(dst_type, src_type):
                 raise Exceptions.any_user_error("Variable Type not same as input!!")
 
+            print2("memory: ", globals.memory[v])
             vals = get_input_value(values[i], src_type)
-
-            Vars.set_val(v, vals)
+            print2("vals", vals)
+            if src_type == 'string':
+                for i in range(0, len(vals)):
+                    print3(v, globals.memory[v][1])
+                    Vars.set_val((v[0]+i*globals.memory[v][1],), ord(vals[i]))
+                Vars.set_val((v[0]+len(vals)*globals.memory[v][1],), 0)
+            else:
+                Vars.set_val(v, vals)
     return True
+
 
 def handle_output(line, scope):
     line = line.decode('string_escape')

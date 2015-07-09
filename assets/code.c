@@ -1,7 +1,13 @@
-/*#include <stdio.h>*/
+#include <stdio.h>
 
-/*int main()*/
-/*{*/
+int main()
+{
+    char a;
+    int b;
+    float c;
+    char d[10];
+    scanf("%c %d %f %s", &a,&b,&c,d);
+
     /*int a[11], b[11]={1,2,3}, i, j;*/
     /*for(i=0, j=1;j*i<=110;++j, i++)*/
     /*{*/
@@ -64,13 +70,13 @@
     /*for(i=0; i<11; i++)*/
         /*printf("%d\t", b[i]);*/
     /*printf("\n");*/
-#include <stdio.h>
+/*#include <stdio.h>*/
 
-int main()
-{
-    int lol;
-    float se;
-    char ssd;
-    scanf("%11d %22Lf %c",&lol,&sw,&ssd);
+/*int main()*/
+/*{*/
+    /*int lol;*/
+    /*float se;*/
+    /*char ssd;*/
+    /*scanf("%11d %22Lf %c",&lol,&sw,&ssd);*/
     return 0;
 }

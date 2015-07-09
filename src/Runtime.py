@@ -14,7 +14,7 @@ import Exceptions
 def makeMemory(mem, indices, l, type, val, scope):
     mem = (mem, )
     step = globals.size_of[type if l == 0 else 'pointer']
-    globals.memory[mem][0].v = malloc(indices[0] if indices else 1, step, l, val, scope)
+    globals.memory[mem][0].v = malloc(indices[0] if indices else 1, step, l, val, scope, type)
     if indices[1:]:
         for i in range(0, indices[0]):
             if val is '':
@@ -289,14 +289,14 @@ def traverse(code, scope):
             continue
 
 
-def malloc(num, step, level, val, scope):
+def malloc(num, step, level, val, scope, cast):
     assert level >= 0
     ret = globals.curr_mem
     for i in range(0, num):
         if level or val is '':
-            globals.memory[(globals.curr_mem,)] = [Value('', ('void', level)), step, level + 1]
+            globals.memory[(globals.curr_mem,)] = [Value('', (cast, level)), step, level + 1]
         else:
-            globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope), ('void', level)) if i < len(val) else Value(0, ('void', level)), step, level + 1]
+            globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope), (cast, level)) if i < len(val) else Value(0, (cast, level)), step, level + 1]
             print3("mem", globals.memory, "\nvar_table", globals.var_table)
         globals.curr_mem += step
     return ret

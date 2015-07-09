@@ -224,6 +224,10 @@ def calculate(expr, scope, vartable=globals.var_table):
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
     postfix = to_postfix(separated_tokens)
 
+    print3("vartable: ")
+    print3(globals.var_table)
+    print3("mem: ")
+    print3(globals.memory)
 #DEBUGGING
     curframe = inspect.currentframe()
     calframe = inspect.getouterframes(curframe, 2)
