@@ -17,7 +17,38 @@ def get_input_value(val, cast):
         return ord(val)
     if cast == 'string':
         return val
-
+def var_types(s):
+    s = globals.toplevelsplit(s, ' ')
+    for i in range(0,len(s)):
+        if s[i] is '':
+            continue
+        s[i] = re.sub(r'%', '', s[i])
+        if re.findall(r'.*lld', s[i]):
+            t = re.sub(r'lld', '',s[i])
+            s[i] = ('long long', 696969 if t is '' else int(t))
+        elif re.findall(r'.*ld', s[i]):
+            t = re.sub(r'ld', '',s[i])
+            s[i] = ('long', 696969 if t is '' else int(t))
+        elif re.findall(r'.*d', s[i]):
+            t = re.sub(r'd', '',s[i])
+            s[i] = ('int', 696969 if t is '' else int(t))
+        elif re.findall(r'.*c', s[i]):
+            t = re.sub(r'c', '',s[i])
+            s[i] = ('char', 696969 if t is '' else int(t))
+        elif re.findall(r'.*s', s[i]):
+            t = re.sub(r's', '',s[i])
+            s[i] = ('string', 696969 if t is '' else int(t))
+        elif re.findall(r'.*lf', s[i]):
+            t = re.sub(r'lf', '',s[i])
+            s[i] = ('double', 696969 if t is '' else int(t))
+        elif re.findall(r'.*Lf', s[i]):
+            t = re.sub(r'Lf', '',s[i])
+            s[i] = ('long double', 696969 if t is '' else int(t))
+        elif re.findall(r'.*f', s[i]):
+            t = re.sub(r'f', '',s[i])
+            s[i] = ('float', 696969 if t is '' else int(t))
+    print1(s)
+    return s
 
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
@@ -36,7 +67,7 @@ def handle_input(statement, scope):
     variables = variables[:-1]
     variables.append(sep[0][2])
     # now, variables = ['&a', '&b', '&c']
-
+    var_type = var_types(sep[0][0])
     reg = re.sub(r'%(lld|ld|d)', '%d', sep[0][0])
     reg = re.sub(r'%(Lf|lf|f)', '%f', reg)
     reg = reg.replace(' ', r'\s+')
