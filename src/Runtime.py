@@ -48,7 +48,7 @@ def decl(var, val, cast, scope):
     if key and key[1] == scope:
         raise Exceptions.any_user_error("Error 101: Multiple declaration of variable " + var + "\n")
     newKey = (var, scope, globals.curr_mem)
-    globals.var_table[newKey] = [Value(val), cast, level, globals.curr_mem]
+    globals.var_table[newKey] = [Value(val, (cast, level)), cast, level, globals.curr_mem]
     if level:
         size = globals.size_of['pointer']
     else:
@@ -190,7 +190,7 @@ def run_through(code, num):
         i += 1
         if type(line) != str:
             continue
-        k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+        k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char|void)\s+'
                        '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
         if k:
             assert len(k) == 1
@@ -212,7 +212,7 @@ def run_through(code, num):
 
 
 def decl_func(line):
-    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char)\s+'
+    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char|void)\s+'
                    '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
     if k:
         assert len(k) == 1
@@ -292,9 +292,9 @@ def malloc(num, step, level, val, scope):
     ret = globals.curr_mem
     for i in range(0, num):
         if level or val is '':
-            globals.memory[(globals.curr_mem,)] = [Value(''), step, level + 1]
+            globals.memory[(globals.curr_mem,)] = [Value('', ('void', level)), step, level + 1]
         else:
-            globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope)) if i < len(val) else Value(0), step, level + 1]
+            globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope), ('void', level)) if i < len(val) else Value(0, ('void', level)), step, level + 1]
             print3("mem", globals.memory, "\nvar_table", globals.var_table)
         globals.curr_mem += step
     return ret

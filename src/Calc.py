@@ -33,12 +33,12 @@ def pass_to_func(detail, scope):
     if name not in globals.functions and not flag:
         raise Exceptions.any_user_error("Error!! Undeclared Function", name)
 
-    if len(globals.functions[name][3]) != l:
-        print1(globals.functions[name][3], l, "HERE")
-        raise Exceptions.any_user_error("Error!! Incorrect no. of parameters")
+    if not flag:
+        if len(globals.functions[name][3]) != l:
+            raise Exceptions.any_user_error("Error!! Incorrect no. of parameters")
 
-    if globals.functions[name][2] == '':
-        raise Exceptions.any_user_error("Error!! The function was declared, but never defined.")
+        if globals.functions[name][2] == '':
+            raise Exceptions.any_user_error("Error!! The function was declared, but never defined.")
 
     detail = globals.toplevelsplit(detail[1], ',')
     detail = [calculate(str(k).strip(), scope) for k in detail]

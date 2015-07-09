@@ -10,7 +10,7 @@ vLevel = 0
 
 curr_mem = 1000000000
 
-# priority of operators. Even values are (generally) binary operators and vice versa.
+# priority of operators. Even values have left to right associativity and vice versa
 priority = {
     '->': 100, '++': 100, '--': 100,
     '+++': 91, '---': 91, '`+`': 91, '`-`': 91, '!': 91, '~': 91, '#type#': 91, '`*`': 91, '`&`': 91,
@@ -128,8 +128,9 @@ def find_by_mem(mem):
 
 # Class to store all types of values of variables
 class Value(object):
-    def __init__(self, v=None):
+    def __init__(self, v=None, type=('void', 0)):
         self.v = v
+        self.type = type
     def __str__(self):
         return "Value: "+str(self.v)
     def __repr__(self):
