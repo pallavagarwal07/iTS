@@ -61,3 +61,4 @@ target/
 .idea
 *.swp
 *.pyc
+test_suite/gcc_exec/*

@@ -29,17 +29,17 @@ def var_types(s):
             arr.append(('whitespace', '\s*', 999999))
         elif ch == '%':
             if s[i+1] == '%':
-                arr.append(('literal', re.escape(ch), 1))
+                arr.append(('literal', re.escape(ch), 1, ch))
                 flag = 1
             else:
-                k = re.findall(r'^(%(\d*)d)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)d)', s[i:])
                 if k:
                     arr.append(('int', '\s*([-+]?\d+)',
                         int(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
-                k = re.findall(r'^(%(\d*)f)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)f)', s[i:])
                 if k:
                     arr.append(('float',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
@@ -47,14 +47,14 @@ def var_types(s):
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
-                k = re.findall(r'^(%(\d*)ld)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)ld)', s[i:])
                 if k:
                     arr.append(('long', '\s*([-+]?\d+)',
                         int(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
-                k = re.findall(r'^(%(\d*)lf)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)lf)', s[i:])
                 if k:
                     arr.append(('double',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
@@ -62,14 +62,14 @@ def var_types(s):
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
-                k = re.findall(r'^(%(\d*)lld)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)lld)', s[i:])
                 if k:
                     arr.append(('long long', '\s*([-+]?\d+)',
                         int(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
-                k = re.findall(r'^(%(\d*)Lf)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)Lf)', s[i:])
                 if k:
                     arr.append(('long double',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
@@ -77,14 +77,14 @@ def var_types(s):
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
-                k = re.findall(r'^(%(\d*)c)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)c)', s[i:])
                 if k:
                     arr.append(('char', '[\n\r]*(.)', int(k[0][1])
                         if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
-                k = re.findall(r'^(%(\d*)s)', s[i:])
+                k = re.findall(r'^(%(\d*\.?\d*)s)', s[i:])
                 if k:
                     arr.append(('string', '\s*(\S+)', int(k[0][1])
                         if k[0][1] else 999999))
@@ -92,7 +92,7 @@ def var_types(s):
                     flag = len(k[0][0]) - 1
                     continue
         else:
-            arr.append(('literal', re.escape(ch), 1))
+            arr.append(('literal', re.escape(ch), 1, ch))
     return var_arr, arr
 
 
@@ -186,11 +186,16 @@ def handle_input(statement, scope):
 def handle_output(line, scope):
     line = line.decode('string_escape')
     sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
+    # sep = [('Hello %d %lf', ', 45, 67')]
+
+
     if len(sep) == 0:
         return False
     if type(sep[0]) is str:
         sep = [[sep[0]]]
-    format_string = sep[0][0]
+
+    type_arr, regex_arr = var_types(sep[0][0])
+
     if sep[0][1] == '':
         globals.out.write(format_string)
     else:
