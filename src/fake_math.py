@@ -1,4 +1,6 @@
 from math import *
+from globals import print1, print2, print3
+import Calc
 
 #Power Functions
 
@@ -150,3 +152,14 @@ funcs = {'sqrt':__sqrt__, 'pow':__pow__, 'cbrt':__cbrt__, 'hypot':__hypot__, 'ce
 'asin':__asin__, 'sinh':__sinh__, 'asinh':__asinh__, 'cos':__cos__, 'acos':__acos__,
 'cosh':__cosh__, 'acosh':__acosh__, 'tan':__tan__, 'atan':__atan__, 'tanh':__tanh__,
 'atanh':__atanh__, 'atan2':__atan2__}
+
+
+def invoke(name, params, scope):
+    print2(name, params, scope)
+    p = []
+    for i in range(0,len(params)):
+        p.append(Calc.calculate(params[i], scope))
+    if name in ['pow', 'hypot', 'fmod', 'modf', 'ldexp', 'frexp']:
+        return funcs[name](p[0], p[1])
+    else:
+        return funcs[name](p[0])
