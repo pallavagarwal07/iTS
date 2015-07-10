@@ -3,10 +3,14 @@ python:
     - "2.7"
 notifications:
       email: false
+sudo: false
 virtualenv:
     system_site_packages: true
+before-install:
+  - "pip install --upgrade pip"
 install:
   - "pip install weave"
+  - "pip install numpy"
   - "pip install scipy"
 script:
         test_suite/test_all
