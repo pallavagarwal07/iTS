@@ -37,7 +37,7 @@ def var_types(s):
                 k = re.findall(r'^(%(\d*\.?\d*)d)', s[i:])
                 if k:
                     arr.append(('int', '\s*([-+]?\d+)',
-                        int(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
@@ -45,14 +45,14 @@ def var_types(s):
                 if k:
                     arr.append(('float',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
-                        int(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)ld)', s[i:])
                 if k:
                     arr.append(('long', '\s*([-+]?\d+)',
-                        int(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
@@ -60,14 +60,14 @@ def var_types(s):
                 if k:
                     arr.append(('double',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
-                        int(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)lld)', s[i:])
                 if k:
                     arr.append(('long long', '\s*([-+]?\d+)',
-                        int(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
@@ -75,20 +75,20 @@ def var_types(s):
                 if k:
                     arr.append(('long double',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
-                        int(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)c)', s[i:])
                 if k:
-                    arr.append(('char', '[\n\r]*(.)', int(k[0][1])
+                    arr.append(('char', '[\n\r]*(.)', eval(k[0][1])
                         if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)s)', s[i:])
                 if k:
-                    arr.append(('string', '\s*(\S+)', int(k[0][1])
+                    arr.append(('string', '\s*(\S+)', eval(k[0][1])
                         if k[0][1] else 999999))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
@@ -198,8 +198,8 @@ def handle_output(line, scope):
     print2("req arrays:", type_arr,"\n", regex_arr)
     format_vars = globals.toplevelsplit(sep[0][1][1:], ',')
     print2("variables:", format_vars)
-    if len(format_vars) != len(type_arr):
-        raise Exceptions.any_user_error("Incorrect number of arguments")
+    #if len(format_vars) != len(type_arr):
+        #raise Exceptions.any_user_error("Incorrect number of arguments")
     format_string = ''
     j = 0
     for i, ch in enumerate(regex_arr):
@@ -207,14 +207,22 @@ def handle_output(line, scope):
         if ch[0] in ['literal', 'whitespace']:
             format_string += ch[3]
         else: 
-            key = Runtime.get_key(format_vars[j], scope)
-            print2("key: ", key, "var_table:", globals.var_table[key], "val = ", globals.var_table[key][0].v)
-            if not is_same(globals.var_table[key][1], ch[0]):
-                raise Exceptions.any_user_error("Variable type not same as output!!")
+            while format_vars[j] == '':
+                j += 1
+            #key = Runtime.get_key(format_vars[j], scope)
+            v = Calc.calculate(format_vars[j].strip(), scope, globals.var_table)
+            #print2("key: ", key, "var_table:", globals.var_table[key], "val = ", globals.var_table[key][0].v, "k=", v)
+            #if not is_same(globals.var_table[key][1], ch[0]):
+                #raise Exceptions.any_user_error("Variable type not same as output!!")
             if ch[0] is 'char':
-                format_string +=  chr(globals.var_table[key][0].v)
+                format_string +=  chr(v)
             elif ch[0] is 'string':
-                dwd
+                step = globals.memory[(v,)][1]
+                c = 0;
+                while globals.memory[(v + c*step,)][0].v is not 0:
+                    format_string += chr(globals.memory[(v+c*step,)][0].v)
+                    c += 1
+                #print2(globals.memory[(v,)])
             else:
                 if ch[2] != 999999:
                     st = '%' + str(ch[2])
@@ -222,9 +230,9 @@ def handle_output(line, scope):
                         st += 'd'
                     else:
                         st += 'f'
-                    format_string += st % globals.var_table[key][0].v
+                    format_string += st % v
                 else:
-                    format_string += str(globals.var_table[key][0].v)
+                    format_string += str(v)
             j += 1
         print2("format_string:", format_string)   
         #if format_vars[i] != '':
