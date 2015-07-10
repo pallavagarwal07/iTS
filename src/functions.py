@@ -1,5 +1,6 @@
 from globals import is_num, print1, print2, print3, toplevelsplit
 import fake_default
+import Exceptions
 import fake_math
 import globals
 import re
@@ -27,10 +28,12 @@ unique_id = 1
 
 def eval_user_function(name, params, scope):
     import Runtime
+    import Calc
+    global unique_id
 
-    target = func['user'][name]
+    target = globals.functions[name]
 
-    if len(params) != target[3]:
+    if len(params) != len(target[3]):
         raise Exceptions.any_user_error("Error! Incorrect number of parameters.")
 
     if target[2] == '':
@@ -53,7 +56,7 @@ def eval_user_function(name, params, scope):
             Runtime.decl(d[1], params[i], d[0], "global " + name + " " + hash, None)
 
     return Runtime.execute(globals.functions[name][2], \
-            "global " + name + " " + RandomHash)
+            "global " + name + " " + hash)
 
 
 def pass_to_func(detail, scope):
@@ -61,6 +64,8 @@ def pass_to_func(detail, scope):
     name = detail[0]
     params = tuple(a.strip() for a in toplevelsplit(detail[1], ','))
     length = len(params) if detail[1].strip() != '' else 0
+    if length == 0:
+        params = []
 
     for lib in func:
         arr = func[lib]
