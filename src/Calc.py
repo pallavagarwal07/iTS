@@ -1,6 +1,8 @@
 import globals
 import inspect
 import re
+import functions
+from functions import pass_to_func
 from globals import is_num, print1, print2, print3
 from Vars import get_val, set_val
 import random
@@ -9,9 +11,9 @@ import Exceptions
 import fake_math
 
 
-def pass_to_func(detail, scope):
-    name = detail[0]
-    l = len(globals.toplevelsplit(detail[1], ','))
+def pass_to_funcNO(detail, scope):
+    name = detail[0] # Name of function
+    l = len(globals.toplevelsplit(detail[1], ',')) # No. of params
     flag = 0
     if(detail[1].strip() == ''):
         l = 0
@@ -25,20 +27,24 @@ def pass_to_func(detail, scope):
             return globals.size_of[detail[0].strip()]
     elif name == 'malloc':
         size = calculate(detail[1].strip(), scope)
-        raise Exceptions.unimplemented_error("Request for", size , "Malloc hasn't been handled yet")
+        raise Exceptions.unimplemented_error("Request for", size,
+                "Malloc hasn't been handled yet")
 
     if name in globals.predefined_funcs:
         flag = 1
 
     if name not in globals.functions and not flag:
-        raise Exceptions.any_user_error("Error!! Undeclared Function", name)
+        raise Exceptions.any_user_error("Error!! Undeclared \
+                Function", name)
 
     if not flag:
         if len(globals.functions[name][3]) != l:
-            raise Exceptions.any_user_error("Error!! Incorrect no. of parameters")
+            raise Exceptions.any_user_error("Error!! Incorrect no. \
+                    of parameters")
 
         if globals.functions[name][2] == '':
-            raise Exceptions.any_user_error("Error!! The function was declared, but never defined.")
+            raise Exceptions.any_user_error("Error!! The function \
+                    was declared, but never defined.")
 
     detail = globals.toplevelsplit(detail[1], ',')
     detail = [calculate(str(k).strip(), scope) for k in detail]
@@ -49,11 +55,14 @@ def pass_to_func(detail, scope):
     RandomHash = hex(random.getrandbits(64))[2:-1]
     import Runtime
     globals.gui += "\ncreate_scope(\'global\',\'"+"global-"+name+"\');"
-    globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+"global-"+name+"-"+RandomHash+"\');"
+    globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+\
+            "global-"+name+"-"+RandomHash+"\');"
     if l:
         for i, declarations in enumerate(globals.functions[name][1]):
-            Runtime.decl(declarations[1], detail[i], declarations[0], "global " + name + " " + RandomHash, None)
-    return Runtime.execute(globals.functions[name][2], "global " + name + " " + RandomHash)
+            Runtime.decl(declarations[1], detail[i], declarations[0],
+                    "global " + name + " " + RandomHash, None)
+    return Runtime.execute(globals.functions[name][2], "global " + \
+            name + " " + RandomHash)
 
 
 def pre_post_handle(tokens):

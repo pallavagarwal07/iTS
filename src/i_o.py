@@ -119,7 +119,7 @@ def extract(regex_arr, type_arr):
         num = tup[2] if tup[2] else 999999
         k = re.findall(reg, globals.inp[:num])
         if not k:
-            raise Exceptions.any_user_error("Incorrect Input (probably)")
+            raise Exceptions.any_user_error("Incorrect Input (probably)", reg, globals.inp[:num], num)
 
         if tup not in type_arr:
             k = re.sub(reg, '', globals.inp[:num])
