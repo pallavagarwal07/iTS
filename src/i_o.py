@@ -28,7 +28,7 @@ def var_types(s):
         if flag > 0:
             flag -= 1
         elif ch in [' ', '\n', '\t', '\f']:
-            arr.append(('whitespace', '\s*', 999999, ch))
+            arr.append(('whitespace', '\s*', '', ch))
         elif ch == '%':
             if s[i+1] == '%':
                 arr.append(('literal', re.escape(ch), 1, ch))
@@ -37,7 +37,7 @@ def var_types(s):
                 k = re.findall(r'^(%(\d*\.?\d*)d)', s[i:])
                 if k:
                     arr.append(('int', '\s*([-+]?\d+)',
-                        eval(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
@@ -45,14 +45,14 @@ def var_types(s):
                 if k:
                     arr.append(('float',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
-                        eval(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)ld)', s[i:])
                 if k:
                     arr.append(('long', '\s*([-+]?\d+)',
-                        eval(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
@@ -60,14 +60,14 @@ def var_types(s):
                 if k:
                     arr.append(('double',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
-                        eval(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)lld)', s[i:])
                 if k:
                     arr.append(('long long', '\s*([-+]?\d+)',
-                        eval(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
@@ -75,21 +75,21 @@ def var_types(s):
                 if k:
                     arr.append(('long double',
                         '\s*([-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?)',
-                        eval(k[0][1]) if k[0][1] else 999999))
+                        eval(k[0][1]) if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)c)', s[i:])
                 if k:
                     arr.append(('char', '[\n\r]*(.)', eval(k[0][1])
-                        if k[0][1] else 999999))
+                        if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
                 k = re.findall(r'^(%(\d*\.?\d*)s)', s[i:])
                 if k:
                     arr.append(('string', '\s*(\S+)', eval(k[0][1])
-                        if k[0][1] else 999999))
+                        if k[0][1] else ''))
                     var_arr.append(arr[-1])
                     flag = len(k[0][0]) - 1
                     continue
@@ -116,7 +116,7 @@ def extract(regex_arr, type_arr):
     values = []
     for tup in regex_arr:
         reg = '^' + tup[1]
-        num = tup[2]
+        num = tup[2] if tup[2] else 999999
         k = re.findall(reg, globals.inp[:num])
         if not k:
             raise Exceptions.any_user_error("Incorrect Input (probably)")
@@ -206,7 +206,7 @@ def handle_output(line, scope):
         print2(ch)
         if ch[0] in ['literal', 'whitespace']:
             format_string += ch[3]
-        else: 
+        else:
             while format_vars[j] == '':
                 j += 1
             #key = Runtime.get_key(format_vars[j], scope)
@@ -224,17 +224,14 @@ def handle_output(line, scope):
                     c += 1
                 #print2(globals.memory[(v,)])
             else:
-                if ch[2] != 999999:
-                    st = '%' + str(ch[2])
-                    if ch[0] in ['int', 'long', 'long long']:
-                        st += 'd'
-                    else:
-                        st += 'f'
-                    format_string += st % v
+                st = '%' + str(ch[2])
+                if ch[0] in ['int', 'long', 'long long']:
+                    st += 'd'
                 else:
-                    format_string += str(v)
+                    st += 'f'
+                format_string += st % v
             j += 1
-        print2("format_string:", format_string)   
+        print2("format_string:", format_string)
         #if format_vars[i] != '':
             #format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)
     #format_string = format_string % tuple(format_vars)
