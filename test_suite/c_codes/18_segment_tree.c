@@ -24,8 +24,9 @@ ll max(ll a, ll b)
 
 void update(ll ss, ll se, ll qs, ll qe, ll val, ll x)
 {
+    printf("Update called with %lld %lld %lld %lld %lld %lld\n", ss, se, qs, qe, val, x);
     if(ss == qs && se == qe)
-    {   
+    {
         C[x]=min(C[x], val);
         return;
     }
@@ -55,6 +56,7 @@ ll query(ll ss, ll se, ll q, ll x)
 int main()
 {
     ll T, j, N, K, M, A[1001], l, r, c, temp, K1[1001], K2[1001], T1[501], T2[501], len, sum, i;
+    printf("All Declarations Done\n");
     s(T);
     while(T--)
     {
@@ -70,6 +72,7 @@ int main()
             s(l);
             s(r);
             s(c);
+            printf("Everything was scanned successfully\n");
             update(1,N,l,r,c,1);
         }
         j=0;
@@ -86,7 +89,7 @@ int main()
                     K2[j++]=temp;
                     //printf("%lld %lld\n", K1[j-1], K2[j-1]);
                 }
-            }   
+            }
         }
         //Knapsack
         len = j;

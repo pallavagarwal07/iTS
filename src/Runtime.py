@@ -366,7 +366,7 @@ def execute(code, scope):
             continue
         if halter(line):
             continue
-        ret = re.findall(r'^\s*return\s+(.*)\s*;\s*$', line);
+        ret = re.findall(r'^\s*return(?:\s+(.*)\s*)?;\s*$', line);
         if ret:
             ret = Calc.calculate(ret[0], scope)
             garbage_collector(scope)

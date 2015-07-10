@@ -30,7 +30,7 @@ def get_val(key, scope):
         if key in globals.memory:
             return globals.memory[key][0].v
         else:
-            raise Exceptions.any_user_error("Invalid Memory location get_val")
+            raise Exceptions.any_user_error("Invalid Memory location", key)
 
 
 def set_val(key, val, scope = '-none-'):
