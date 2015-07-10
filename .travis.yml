@@ -5,9 +5,8 @@ notifications:
       email: false
 virtualenv:
     system_site_packages: true
-before_install:
- - sudo apt-get install -qq python-numpy python-scipy
 install:
   - "pip install weave"
+  - "pip install scipy"
 script:
         test_suite/test_all
