@@ -5,6 +5,7 @@ import re
 import sys
 import Calc
 import Vars
+import Runtime
 
 
 def get_input_value(val, cast):
@@ -18,6 +19,7 @@ def get_input_value(val, cast):
     if cast == 'string':
         return val
 
+
 def var_types(s):
     arr = []
     var_arr = []
@@ -26,7 +28,7 @@ def var_types(s):
         if flag > 0:
             flag -= 1
         elif ch in [' ', '\n', '\t', '\f']:
-            arr.append(('whitespace', '\s*', 999999))
+            arr.append(('whitespace', '\s*', 999999, ch))
         elif ch == '%':
             if s[i+1] == '%':
                 arr.append(('literal', re.escape(ch), 1, ch))
@@ -157,8 +159,7 @@ def handle_input(statement, scope):
     assert len(type_arr) == len(values)
     print2("type array: ", type_arr)
     if len(values) != len(variables):
-        raise Exceptions.any_user_error("Incorrect number of \
-                arguments or bug in my interpreter", values, variables)
+        raise Exceptions.any_user_error("Incorrect number of argument", values, variables)
     else:
         print2("variables: ", variables)
         for i in range(0, len(variables)):
@@ -187,24 +188,47 @@ def handle_output(line, scope):
     line = line.decode('string_escape')
     sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
     # sep = [('Hello %d %lf', ', 45, 67')]
-
-
+    print2("STATEMENT TO OUTPUT:", line, "WITH", scope)
+    print2("sep:", sep)
     if len(sep) == 0:
         return False
-    if type(sep[0]) is str:
-        sep = [[sep[0]]]
-
+    #if type(sep[0]) is str:
+        #sep = [[sep[0]]]
     type_arr, regex_arr = var_types(sep[0][0])
-
-    if sep[0][1] == '':
-        globals.out.write(format_string)
-    else:
-        format_vars = globals.toplevelsplit(sep[0][1][1:], ',')
-        for i in range(0, len(format_vars)):
-            if format_vars[i] != '':
-                format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)
-        format_string = re.sub(r'%(\d*\.?\d*)(lld|ld|d)', r'%\1d', format_string)
-        format_string = re.sub(r'%(\d*\.?\d*)(Lf|lf|f)', r'%\1f', format_string)
-        format_string = format_string % tuple(format_vars)
-        globals.out.write(format_string)
+    print2("req arrays:", type_arr,"\n", regex_arr)
+    format_vars = globals.toplevelsplit(sep[0][1][1:], ',')
+    print2("variables:", format_vars)
+    if len(format_vars) != len(type_arr):
+        raise Exceptions.any_user_error("Incorrect number of arguments")
+    format_string = ''
+    j = 0
+    for i, ch in enumerate(regex_arr):
+        print2(ch)
+        if ch[0] in ['literal', 'whitespace']:
+            format_string += ch[3]
+        else: 
+            key = Runtime.get_key(format_vars[j], scope)
+            print2("key: ", key, "var_table:", globals.var_table[key], "val = ", globals.var_table[key][0].v)
+            if not is_same(globals.var_table[key][1], ch[0]):
+                raise Exceptions.any_user_error("Variable type not same as output!!")
+            if ch[0] is 'char':
+                format_string +=  chr(globals.var_table[key][0].v)
+            elif ch[0] is 'string':
+                dwd
+            else:
+                if ch[2] != 999999:
+                    st = '%' + str(ch[2])
+                    if ch[0] in ['int', 'long', 'long long']:
+                        st += 'd'
+                    else:
+                        st += 'f'
+                    format_string += st % globals.var_table[key][0].v
+                else:
+                    format_string += str(globals.var_table[key][0].v)
+            j += 1
+        print2("format_string:", format_string)   
+        #if format_vars[i] != '':
+            #format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)
+    #format_string = format_string % tuple(format_vars)
+    globals.out.write(format_string)
     return True
