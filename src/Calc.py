@@ -268,7 +268,14 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '`*`':
                 var_stack[l()] = (get_val(var_stack[l()], scope),) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':
-                var_stack[l()] = vartable[Runtime.get_key(var_stack[l()], scope)][3]
+                key = Runtime.get_key(var_stack[l()], scope)
+                if type(key) is not tuple:
+                    raise Exceptions.any_user_error("Something Wrong")
+                elif len(key) == 1:
+                    mem = key[0]
+                else:
+                    mem = vartable[key][3]
+                var_stack[l()] = mem
             elif token == '`+`':
                 var_stack[l()] = var_stack[l()]
             elif token == '`-`':
