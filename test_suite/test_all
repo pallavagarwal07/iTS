@@ -176,8 +176,8 @@ total_count=$((total_count+fail_count))
 
 if [ $fail_count -eq 0 ]; then
     printf "${BGreen}ALL $total_count TESTS PASSED${Color_Off}\n"
+    exit 0
 else
     printf "${IRed}$fail_count TESTS OUT OF $total_count FAILED.${Color_Off}\n"
+    exit 1
 fi
-
-exit 0
