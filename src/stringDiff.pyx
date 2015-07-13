@@ -1,10 +1,10 @@
 arr = []
 
-def Dif(str1, str2):
-    m = len(str2)
-    n = len(str1)
-    i = 0
-    j = 0
+def Dif(str str1,str str2):
+    cdef int m = len(str2)
+    cdef int n = len(str1)
+    cdef int i = 0
+    cdef int j = 0
     while i<=n:
         arr[0][i] = i
         i += 1
@@ -23,24 +23,6 @@ def Dif(str1, str2):
             j += 1
         i += 1
     return arr[m][n]
-
-#def Dif(str1, str2):
-    #if arr[len(str2)][len(str1)] != 999999:
-        #return arr[len(str2)][len(str1)]
-    #if len(str1) == 0:
-        #arr[len(str2)][len(str1)] = len(str2)
-        #return len(str2)
-    #if len(str2) == 0:
-        #arr[len(str2)][len(str1)] = len(str1)
-        #return len(str1)
-    #if str1[-1] == str2[-1]:
-        #k = Dif(str1[:len(str1)-1], str2[:len(str2)-1])
-        #arr[len(str2)][len(str1)] = k
-        #return k
-    #k = min(Dif(str1, str2[:len(str2)-1]), Dif(str1[:len(str1)-1], str2)) + 1
-    #arr[len(str2)][len(str1)] = k
-    #return k
-
 
 def print_arr(str2, str1, arr):
     print "\t0\t",

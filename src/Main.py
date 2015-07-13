@@ -1,3 +1,4 @@
+import pyximport; pyximport.install()
 from globals import print1, print2, print3
 import sys
 import globals
