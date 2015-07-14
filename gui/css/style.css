@@ -51,6 +51,9 @@ html, body {
   width: 50%;
   float: right; }
 
+#ace1 * {
+  transition: none; }
+
 #editor {
   position: relative;
   height: 100%;
@@ -59,7 +62,8 @@ html, body {
   right: 0;
   bottom: 0;
   left: 0;
-  font-family: "Source Code Pro", "Courier New", Courier, monospace; }
+  font-family: "Source Code Pro", "Courier New", Courier, monospace;
+  transition: auto; }
 
 #input {
   position: relative;

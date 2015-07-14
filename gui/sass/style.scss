@@ -2,6 +2,7 @@
 * {
     @include transition(all 1.4s);
 }
+
 html, body {
     height: 99%;
     width: 99%;
@@ -68,6 +69,10 @@ html, body {
     float: right;
 }
 
+#ace1 * {
+    transition: none;
+}
+
 #editor { 
     position: relative;
     height: 100%;
@@ -77,6 +82,7 @@ html, body {
     bottom: 0;
     left: 0;
     font-family: "Source Code Pro", "Courier New", Courier, monospace;
+    transition: auto;
 }
 
 #input {
