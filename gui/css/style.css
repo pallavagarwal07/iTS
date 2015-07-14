@@ -63,8 +63,13 @@ html, body {
 
 #input {
   position: relative;
-  clear: right;
+  clear: both;
   float: right;
-  height: 50%; }
+  height: 50%;
+  width: 50%; }
+
+.txt {
+  height: 100%;
+  width: 48.7%; }
 
 /*# sourceMappingURL=style.css.map */
