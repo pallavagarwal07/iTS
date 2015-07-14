@@ -7,9 +7,9 @@ html, body {
     width: 99%;
 }
 
-div {
-	padding: 5px;
-}
+//div {
+//	padding: 5px;
+//}
 
 .scope{
 	float: left;
@@ -60,4 +60,28 @@ div {
     .tagBot {
         text-align: center;
     }
+}
+
+#ace1 {
+    height: 50%;
+    width: 50%;
+    float: right;
+}
+
+#editor { 
+    position: relative;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    font-family: "Source Code Pro", "Courier New", Courier, monospace;
+}
+
+#input {
+    position: relative;
+    clear: right;
+    float: right;
+    height: 50%;
 }

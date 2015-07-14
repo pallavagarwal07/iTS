@@ -4,8 +4,54 @@
         <title>Simulation</title>
         <script src="./js/jquery-1.11.3.min.js"></script>
         <script src="./js/gui.js"></script>
+        <script src="./ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
         <link rel="stylesheet" type="text/css" href="./css/style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>
+    	$('#ace1').ready(function(){
+		    var editor = ace.edit("editor");
+		    editor.resize(true);
+		    editor.setTheme("ace/theme/tomorrow_night_bright");
+		    editor.getSession().setMode("ace/mode/c_cpp");
+		    editor.setReadOnly(true);
+		    editor.setAutoScrollEditorIntoView(true);
+		    editor.setHighlightActiveLine(true);
+		    str =  editor.getValue();
+			k = hljs.highlightAuto(str);
+			});
+		</script>
     </head>
     <body id='body'>
-    </body>
+	    <div id='ace1'>
+		    <div id="editor">#include "iostream"
+using namespace std;
+int main()
+{
+	int T, N, M, A1, A2, A3, Ans;
+	cin >> T;
+	while(T--)
+	{
+		cin >> N >> M;
+		cin >> A1 >> A2 >> A3;
+		int A[N];
+		A[0] = A1 % M;
+		A[1] = A2 % M;
+		A[2] = A3 % M;
+		Ans = A1 + A2 + A3;
+		for(int i = 3; i < N; i = i + 1)
+		{
+			A[i] = (A[i-1] + A[i-2] + A[i-3]) % M;
+			Ans = (Ans + A[i]) % M;
+		}
+		cout << Ans << endl;
+	}
+	return 0;
+}
+		    </div>
+	    </div>
+	    <div id="input">
+	    	<textarea placeholder='stdin' rows=20 cols=38></textarea>
+	    	<textarea placeholder='stdout' rows=20 cols=39 disabled></textarea>
+	    </div>
+	</body>
 </html>
