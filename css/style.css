@@ -1,0 +1,79 @@
+* {
+  -webkit-transition: all 1.4s;
+  -moz-transition: all 1.4s;
+  transition: all 1.4s; }
+
+html, body {
+  height: 99%;
+  width: 99%; }
+
+.scope {
+  float: left; }
+  .scope .banner {
+    text-align: center;
+    width: calc(100% - 10px);
+    border-bottom: solid 1px black; }
+  .scope .scp {
+    display: flex;
+    flex-wrap: wrap; }
+
+.newborn {
+  position: relative;
+  width: 0px;
+  height: 0px;
+  left: 90%;
+  top: 0%; }
+
+.var {
+  position: relative;
+  left: 0px;
+  height: 70px;
+  border: solid 1px black;
+  border-radius: 5px; }
+  .var .tagTop, .var .tagBot {
+    height: 35%; }
+  .var .tagTop {
+    display: flex; }
+    .var .tagTop .name, .var .tagTop .type {
+      height: 100%;
+      text-align: center;
+      float: left;
+      border-bottom: solid 1px black;
+      padding-bottom: 0px;
+      padding-top: 0px; }
+    .var .tagTop .name {
+      border-right: solid 1px black; }
+  .var .tagBot {
+    text-align: center; }
+
+#ace1 {
+  height: 50%;
+  width: 50%;
+  float: right; }
+
+#ace1 * {
+  transition: none; }
+
+#editor {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  font-family: "Source Code Pro", "Courier New", Courier, monospace;
+  transition: auto; }
+
+#input {
+  position: relative;
+  clear: both;
+  float: right;
+  height: 50%;
+  width: 50%; }
+
+.txt {
+  height: 100%;
+  width: 48.7%; }
+
+/*# sourceMappingURL=style.css.map */
