@@ -3,11 +3,10 @@
     <head>
         <title>Simulation</title>
         <script src="./js/jquery-1.11.3.min.js"></script>
-        <script src="./js/gui.js"></script>
         <script src="./ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
         <link rel="stylesheet" type="text/css" href="./css/style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script src="./js/server.js">
+        <script src="./js/gui.js"></script>
 		</script>
     </head>
     <body id='body'>
@@ -16,10 +15,11 @@
 	    </div>
 	    <div id="input">
 	    	<textarea placeholder='stdin' class='txt' id='stdin'></textarea>
-	    	<textarea placeholder='stdout' class='txt' readonly></textarea>
+	    	<textarea placeholder='stdout' class='txt' id='stdout' readonly></textarea>
 	    </div>
         <div>
             <button type="button" onclick="compile()">Submit</button>
         </div>
+        <script>editor = ace.edit('editor')</script>
 	</body>
 </html>
