@@ -3,7 +3,7 @@ import re
 import functions
 from functions import pass_to_func
 from globals import is_num, print1, print2, print3
-from Vars import get_val, set_val
+from Vars import get_val, set_val, get_type
 import random
 import Runtime
 import Exceptions
@@ -157,17 +157,20 @@ def unary_handle(separated_tokens):
     return separated_tokens
 
 
-def add(arr, token, ctr):
+def add(arr, token, ctr, scope):
+    print2("tok:", token)
     if type(token) is tuple:
         arr.append(token)
     else:
         if token == '||' or token == '&&':
             arr.append((token, ctr))
-        else:
+        elif token in globals.ops + ('&0', '|1'):
             arr.append((token,))
+        else:
+            arr.append((token,get_type(token, scope)))
 
 
-def to_postfix(tokens):
+def to_postfix(tokens, scope):
     stack = []
     postfix = []
     ctr = 0
@@ -176,44 +179,44 @@ def to_postfix(tokens):
         tk = tokens[i]
         if tk in globals.ops:
             if tk == '(':
-                add(stack, tk, ctr)
+                add(stack, tk, ctr, scope)
             elif tk == ')':
                 while stack[-1][0] != '(':
-                    add(postfix, stack.pop(), ctr)
+                    add(postfix, stack.pop(), ctr, scope)
                 stack.pop()
             elif len(stack) == 0 or stack[-1][0] == '(':
-                add(stack, tk, ctr)
+                add(stack, tk, ctr, scope)
             else:
                 if globals.priority[tk] < globals.priority[stack[-1][0]]:
-                    add(postfix, stack.pop(), ctr)
+                    add(postfix, stack.pop(), ctr, scope)
                     continue
                 if globals.priority[tk] > globals.priority[stack[-1][0]]:
-                    add(stack, tk, ctr)
+                    add(stack, tk, ctr, scope)
                 elif globals.priority[tk] == globals.priority[stack[-1][0]]:
                     if globals.priority[tk] % 2 == 0:
-                        add(postfix, stack.pop(), ctr)
-                        add(stack, tk, ctr)
+                        add(postfix, stack.pop(), ctr, scope)
+                        add(stack, tk, ctr, scope)
                     else:
-                        add(stack, tk, ctr)
+                        add(stack, tk, ctr, scope)
             if tk == '&&':
-                add(postfix, ('&0', ctr), ctr)
+                add(postfix, ('&0', ctr), ctr, scope)
                 ctr += 1
             elif tk == '||':
-                add(postfix, ('|1', ctr), ctr)
+                add(postfix, ('|1', ctr), ctr, scope)
                 ctr += 1
         else:
             tag = 0
             for types in globals.data_types:
                 if tk.startswith(types):
                     stack.pop()
-                    add(stack, ('#type#', tk), ctr)
+                    add(stack, ('#type#', tk), ctr, scope)
                     i += 1
                     tag = 1
             if tag == 0:
-                add(postfix, tk, ctr)
+                add(postfix, tk, ctr, scope)
         i += 1
     while len(stack) > 0:
-        add(postfix, stack.pop(), ctr)
+        add(postfix, stack.pop(), ctr, scope)
     return postfix
 
 
@@ -230,23 +233,25 @@ def calculate(expr, scope, vartable=globals.var_table):
     separated_tokens = unary_handle(separated_tokens) # Fix unary operators
     print2("after handling unary_ops: ", separated_tokens)
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
-    postfix = to_postfix(separated_tokens)
+    postfix = to_postfix(separated_tokens, scope)
 
     print3("vartable: ")
     print3(globals.var_table)
     print3("mem: ")
     print3(globals.memory)
 
+    all_type = 'number'
     stack = []
-    for k in postfix:
-        if 'Error' == is_num(k[0]):
-            if k:
-                stack.append(k)
-        else:
-            m = is_num(k[0])
-            stack.append((m,))
-    postfix = stack
+    #for k in postfix:
+        #if 'Error' == is_num(k[0]):
+            #if k:
+                #stack.append(k)
+        #else:
+            #m = is_num(k[0])
+            #stack.append((m,'number'))
+    #postfix = stack
     var_stack = []
+    print1("postfix:", postfix)
     l = lambda: len(var_stack) - 1
     idx = 0
     for i, tk in enumerate(postfix):
@@ -441,21 +446,22 @@ def calculate(expr, scope, vartable=globals.var_table):
 
             elif token == "#type#":
                 new_type = tk[1]
-                if new_type in ['float', 'double', 'long double']:
+                if new_type in [r'float', r'double', r'long\s*double']:
                     if type(var_stack[l()]) is 'str':
                         raise Exceptions.any_user_error("Trying to convert string to float.")
                     else:
                         var_stack[l()] =  float(get_val(var_stack[l()], scope))
-                elif new_type in ['int', 'long', 'long int', 'long long int', 'long long']:
+                elif new_type in [r'int', r'long', r'long\s*int', r'long\s*long\s*int', r'long\s*long']:
                     if type(var_stack[l()]) is 'str':
                         var_stack[l()] =  ord(get_val(var_stack[l()], scope))
                     else:
                         var_stack[l()] = int(get_val(var_stack[l()], scope))
                 elif new_type is 'char':
-                    if type(var_stack[l()]) in ['float', 'double', 'long double']:
+                    if type(var_stack[l()]) in [r'float', r'double', r'long\s*double']:
                         raise Exceptions.any_user_error("Trying to convert float to string.")
                     else:
                         var_stack[l()] = chr(get_val(var_stack[l()], scope))
+        print1("stack:", var_stack)
     r = get_val(var_stack.pop(), scope)
     print2("calculate in Calc.py returned:", r, "\n")
     return r
