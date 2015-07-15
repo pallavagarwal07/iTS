@@ -1,11 +1,17 @@
 from globals import print1, print2, print3
+import signal
 import sys
 import globals
 import PreProcessing
 import Runtime
 import Exceptions
 import stringDiff
-#import Gui
+
+def timeout(signum, frame):
+    raise Exceptions.timeout_error("TIME UP!")
+
+signal.signal(signal.SIGALRM, timeout)
+signal.alarm(10)
 
 print1("ARGS", sys.argv)
 
@@ -58,4 +64,6 @@ print1(code)
 try:
     Runtime.traverse(code, Access)
 except Exceptions.main_executed as e:
-    print3(e.message)
+    sys.stderr.write(e.message)
+except Exceptions.timeout_error:
+    sys.stderr.write("__TIMEOUT__"+globals.gui)

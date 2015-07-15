@@ -1,6 +1,5 @@
 from globals import print1, print2, print3
 from globals import Value
-import inspect
 import re
 import globals
 import Calc

@@ -16,3 +16,6 @@ class coding_bug(Exception):
 
 class main_executed(Exception):
     pass
+
+class timeout_error(Exception):
+    pass
