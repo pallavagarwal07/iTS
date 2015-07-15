@@ -40,11 +40,9 @@
 
 
 
+    exec('../iTS/its -c '.$randkey.'.c -i '.$randkey.'.in -o '.$randkey.'.txt 2>'.$randkey.'.its');
+    $ret_val['its_out'] = file_get_contents($randkey.'.txt');
+    $ret_val['its_cmd'] = file_get_contents($randkey.'.its');
     print_r($ret_val);
-    echo ini_get('max_execution_time');
-    echo ini_get('memory_limit');
-
-    //exec('../iTS/its -c '.$randkey.'.c -i '.$randkey.'.in -o '.$randkey.'.txt');
-    //echo file_get_contents($randkey.'.txt');
-    exec('rm '.$randkey.'.c '.$randkey.'.txt '.$randkey.'.in '.$randkey.'.out '.$randkey.'.key');
+    exec('rm '.$randkey.'.c '.$randkey.'.txt '.$randkey.'.in '.$randkey.'.out '.$randkey.'.key '.$randkey.'.its');
 ?>
