@@ -1,11 +1,17 @@
-* {
+#simulation * {
   -webkit-transition: all 1.4s;
   -moz-transition: all 1.4s;
   transition: all 1.4s; }
 
 html, body {
-  height: 99%;
-  width: 99%; }
+  height: 100%;
+  width: 100%; }
+
+textarea {
+  resize: none; }
+
+.container-fluid {
+  height: 100%; }
 
 .scope {
   float: left; }
@@ -23,6 +29,9 @@ html, body {
   height: 0px;
   left: 90%;
   top: 0%; }
+
+.navbar-brand {
+  padding: 5px !important; }
 
 .var {
   position: relative;
@@ -46,10 +55,15 @@ html, body {
   .var .tagBot {
     text-align: center; }
 
+#simulation {
+  height: 100%; }
+
+#sb-btn {
+  width: 100%; }
+
 #ace1 {
   height: 50%;
-  width: 50%;
-  float: right;
+  width: 100%;
   transition: none; }
 
 #ace1 * {
@@ -57,19 +71,19 @@ html, body {
 
 #editor {
   position: relative;
+  border: 1px solid #BBB;
+  border-radius: 7px;
+  min-height: 400px;
   height: 100%;
   width: 100%;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  font-family: "Source Code Pro", "Courier New", Courier, monospace;
-  transition: auto; }
+  font-family: "Source Code Pro", "Courier New", Courier, monospace; }
 
 #input {
   position: relative;
-  clear: both;
-  float: right;
   height: 50%;
   width: 50%; }
 

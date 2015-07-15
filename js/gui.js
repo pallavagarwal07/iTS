@@ -49,10 +49,11 @@ delete_scope = function(id) {
 $('#ace1').ready(function() {
   var k, str;
   editor.resize(true);
-  editor.setTheme("ace/theme/tomorrow_night_bright");
+  editor.setTheme("ace/theme/dawn");
   editor.getSession().setMode("ace/mode/c_cpp");
   editor.setAutoScrollEditorIntoView(true);
   editor.setHighlightActiveLine(true);
+  editor.setShowPrintMargin(false);
   str = editor.getValue();
   return k = hljs.highlightAuto(str);
 });
@@ -63,7 +64,7 @@ compile = function() {
   input = $('#stdin').val();
   code = window.btoa(code);
   input = window.btoa(input);
-  return $.get("compile.php", {
+  return $.get("php/compile.php", {
     "code": code,
     "input": input
   }, function(obj) {

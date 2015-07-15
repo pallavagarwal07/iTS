@@ -33,11 +33,11 @@ delete_scope = (id) ->
 
 $('#ace1').ready(->
     editor.resize(true)
-    editor.setTheme("ace/theme/tomorrow_night_bright")
+    editor.setTheme("ace/theme/dawn")
     editor.getSession().setMode("ace/mode/c_cpp")
-    #editor.setReadOnly(true)
     editor.setAutoScrollEditorIntoView(true)
     editor.setHighlightActiveLine(true)
+    editor.setShowPrintMargin(false)
     str =  editor.getValue()
     k = hljs.highlightAuto(str)
 )
@@ -47,7 +47,7 @@ compile = ->
     input = $('#stdin').val()
     code = window.btoa(code)
     input = window.btoa(input)
-    $.get("compile.php"
+    $.get("php/compile.php"
         "code": code
         "input": input
     (obj)->
