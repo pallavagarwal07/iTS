@@ -1,5 +1,4 @@
 import globals
-import inspect
 import re
 import functions
 from functions import pass_to_func
@@ -237,12 +236,6 @@ def calculate(expr, scope, vartable=globals.var_table):
     print3(globals.var_table)
     print3("mem: ")
     print3(globals.memory)
-#DEBUGGING
-    curframe = inspect.currentframe()
-    calframe = inspect.getouterframes(curframe, 2)
-    print1("postfix : ", postfix, "CALLER: ", calframe[1][3])
-#--DEBUGGING
-
 
     stack = []
     for k in postfix:
@@ -264,6 +257,7 @@ def calculate(expr, scope, vartable=globals.var_table):
         if token not in globals.ops + ('&0', '|1'):
             var_stack.append(token)
         else:
+
             if token == '---':
                 key = Runtime.get_key(var_stack[l()], scope)
                 val = get_val(key, scope) - 1
