@@ -67,7 +67,9 @@ compile = function() {
   return $.get("php/compile.php", {
     "code": code,
     "input": input
-  }, function(obj) {
-    return $('#stdout').val(obj);
+  }, function(json_text) {
+    var obj;
+    obj = JSON.parse(json_text);
+    return $('#stdout').val(obj['its_out']);
   });
 };

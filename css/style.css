@@ -13,6 +13,10 @@ textarea {
 .container-fluid {
   height: 100%; }
 
+.backdrop {
+  background-color: #EEE;
+  border-radius: 6px; }
+
 .scope {
   float: left; }
   .scope .banner {

@@ -27,7 +27,7 @@
             $ret_val["gcc_warning"] = implode("\n", $gcc_stdout);
         }
 
-        exec('timeout --kill-after=2s 2s ./'.$randkey.'.out 2>&1 1>'.$randkey.'.key', $gcc_out, $out_ret);
+        exec('timeout --kill-after=2s 2s ./'.$randkey.'.out <'.$randkey.'.in 2>&1 1>'.$randkey.'.key', $gcc_out, $out_ret);
 
         if($out_ret == 124 || $out_ret == 137){
             $ret_val["gcc_out"] = "Time Limit Exceeded in GCC executable..";
@@ -40,9 +40,9 @@
 
 
 
-    exec('../iTS/its -c '.$randkey.'.c -i '.$randkey.'.in -o '.$randkey.'.txt 2>'.$randkey.'.its');
+    exec('../iTS/its -c '.$randkey.'.c -i '.$randkey.'.in -o '.$randkey.'.txt -e '.$randkey.'.its');
     $ret_val['its_out'] = file_get_contents($randkey.'.txt');
     $ret_val['its_cmd'] = file_get_contents($randkey.'.its');
-    print_r($ret_val);
+    echo json_encode($ret_val);
     exec('rm '.$randkey.'.c '.$randkey.'.txt '.$randkey.'.in '.$randkey.'.out '.$randkey.'.key '.$randkey.'.its');
 ?>

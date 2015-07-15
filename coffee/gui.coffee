@@ -50,6 +50,7 @@ compile = ->
     $.get("php/compile.php"
         "code": code
         "input": input
-    (obj)->
-        $('#stdout').val(obj)
+    (json_text)->
+        obj = JSON.parse(json_text)
+        $('#stdout').val(obj['its_out'])
     )
