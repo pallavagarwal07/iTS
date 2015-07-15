@@ -305,7 +305,7 @@ def execute(code, scope):
     if code == []:
         return
     gui_parent = '-'.join(scope.split()[:-1]) if '-'.join(scope.split()[:-1]) \
-            else 'body'
+            else 'simulation'
     gui_str = "\ncreate_scope(\'"+gui_parent+"\',\'"+'-'.join(scope.split())+"\');"
     if not globals.gui.endswith(gui_str):
         globals.gui += gui_str

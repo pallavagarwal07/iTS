@@ -26,16 +26,18 @@ echo $BASEDIR
 # i input file
 # o output file
 # c code file
+# e cmd file
 
 input=stdin
-output=stderr
+output=stdout
 code=$BASEDIR/assets/code.c
+cmd=stderr
 
 vLevel=0
 iFlag=0
 oFlag=0
 
-while getopts vi:o:c: myVar; do
+while getopts vi:o:c:e: myVar; do
     case $myVar in
         v) vLevel=$((vLevel+1))
             ;;
@@ -47,6 +49,8 @@ while getopts vi:o:c: myVar; do
             ;;
         c) code=$(abspath $OPTARG)
             ;;
+        e) cmd=$(abspath $OPTARG)
+            ;;
     esac
 done
 
@@ -54,11 +58,12 @@ echo Code is : $code
 echo Verbosity is : $vLevel
 echo Input file is : $input
 echo Output file is : $output
+echo Command file is : $cmd
 
 
 # Now the python script would be run with the given arguments
 EXECUTE_SCRIPT=$PYTHONCMD" ""$BASEDIR""/src/Main.py "
-EXECUTE_SCRIPT=$EXECUTE_SCRIPT"$code $vLevel $input $output"
+EXECUTE_SCRIPT=$EXECUTE_SCRIPT"$code $vLevel $input $output $cmd"
 
 echo $EXECUTE_SCRIPT
 $EXECUTE_SCRIPT

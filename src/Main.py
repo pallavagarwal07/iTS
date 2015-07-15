@@ -26,10 +26,15 @@ else:
     globals.inp = open(sys.argv[3]).read()
 
 # out variable is where c code's output is posted
-if sys.argv[4] == 'stderr':
+if sys.argv[4] == 'stdout':
     globals.out = sys.stderr
 else:
     globals.out = open(sys.argv[4], 'w')
+
+if sys.argv[5] == 'stderr':
+    cmd = sys.stderr
+else:
+    cmd = open(sys.argv[5], 'w')
 
 # priority variable is a dictionary of operators and their priorities.
 priority = globals.priority
@@ -64,6 +69,6 @@ print1(code)
 try:
     Runtime.traverse(code, Access)
 except Exceptions.main_executed as e:
-    sys.stderr.write(e.message)
+    cmd.write(e.message)
 except Exceptions.timeout_error:
-    sys.stderr.write("__TIMEOUT__"+globals.gui)
+    cmd.write("__TIMEOUT__"+globals.gui)
