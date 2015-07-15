@@ -27,6 +27,10 @@ priority = {
     ',': 10
 }
 
+priority_type = {
+    'number': 0, 'char': 1, 'int': 2, 'long': 3, 'long int': 3, 'long long': 4, 'long long int': 4
+}
+
 # Operators sorted in order of length. Do not change.
 ops = (
     '#type#', '`*`', '`&`', '`-`', '`+`', '---', '? :', '+++', '<<=', '>>=', '*=', '|=', '>=', '>>', '==', '<<',
@@ -103,6 +107,8 @@ def setup():
     for types in ['char', 'int', 'long', 'long long', 'long long int']:
         temp = 1 << ((8 * size_of[types])-1)
         type_range[types] = (-temp, temp-1)
+    
+    print1("ranges: ", type_range)
 
 
 # Get key tuple from variable name and scope

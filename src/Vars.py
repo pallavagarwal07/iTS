@@ -5,6 +5,33 @@ import Runtime
 import re
 import Exceptions
 
+def get_type(key, scope):
+    print2("key: ", key)
+    if type(key) is not tuple:
+        n = is_num(key)
+        print2("n: ", n)
+        if 'Error' == n:
+            k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', key)
+            if k:
+                return globals.functions[k[0][0]][0] 
+                #hnadle function return types properly
+            else:
+                key = Runtime.get_key(key, scope)
+                if type(key) is int:
+                    return 'number'
+        else:
+            return 'number'
+    if len(key) != 1:
+        t = globals.in_var_table(key[0], key[1])
+        if t:
+            return globals.var_table[t][1]
+    else:
+        if key in globals.memory:
+            print2("get_type3:", globals.memory[key][1])
+            return globals.memory[key][1]
+        else:
+            raise Exceptions.any_user_error("Invalid Memory location", key)
+
 
 def get_val(key, scope):
     print2("key: ", key)
