@@ -159,6 +159,7 @@ def unary_handle(separated_tokens):
 
 def add(arr, token, ctr, scope):
     print2("tok:", token)
+    print get_val(Runtime.get_key("j", scope), scope), "WOAH"
     if type(token) is tuple:
         arr.append(token)
     else:
@@ -168,6 +169,7 @@ def add(arr, token, ctr, scope):
             arr.append((token,))
         else:
             arr.append((token,get_type(token, scope)))
+    print get_val(Runtime.get_key("j", scope), scope), "WOAH2"
 
 
 def to_postfix(tokens, scope):
@@ -175,6 +177,7 @@ def to_postfix(tokens, scope):
     postfix = []
     ctr = 0
     i = 0
+    print tokens, "1"
     while i < len(tokens):
         tk = tokens[i]
         if tk in globals.ops:
@@ -212,11 +215,14 @@ def to_postfix(tokens, scope):
                     add(stack, ('#type#', tk), ctr, scope)
                     i += 1
                     tag = 1
+                    break
             if tag == 0:
                 add(postfix, tk, ctr, scope)
         i += 1
+    print tokens, "5"
     while len(stack) > 0:
         add(postfix, stack.pop(), ctr, scope)
+    print tokens, "9"
     return postfix
 
 
@@ -269,10 +275,14 @@ def calculate(expr, scope, vartable=globals.var_table):
                 set_val(key, val, scope)
                 var_stack[l()] = val
             elif token == '+++':
+                print "J should be ", get_val(Runtime.get_key("j", scope), scope), postfix
+                print var_stack[l()]
                 key = Runtime.get_key(var_stack[l()], scope)
+                print key, get_val(key, scope)
                 val = get_val(key, scope) + 1
                 set_val(key, val, scope)
                 var_stack[l()] = val
+                print var_stack
             elif token == '`*`':
                 var_stack[l()] = (get_val(var_stack[l()], scope),) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':

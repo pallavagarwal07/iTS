@@ -13,10 +13,10 @@ def get_type(key, scope):
         if 'Error' == n:
             k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', key)
             if k:
-                return globals.functions[k[0][0]][0] 
-                #hnadle function return types properly
+                return globals.functions[k[0][0]][0]
+                #handle function return types properly
             else:
-                key = Runtime.get_key(key, scope)
+                key = Runtime.get_key_first(key, scope)
                 if type(key) is int:
                     return 'number'
         else:

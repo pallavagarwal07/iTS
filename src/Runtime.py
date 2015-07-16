@@ -113,12 +113,26 @@ def get_matching_brace(val, i):
 
 
 def get_key(var, scope):
-
     var = globals.get_details(var)
     name = var[0]
     indices = var[1]
     if indices:
         indices = [Calc.calculate(ind, scope) for ind in indices]
+        key = globals.in_var_table(name, scope)
+        return resolve(key, indices, scope)
+    else:
+        name = name.decode('string_escape')
+        if re.match(r"'.'", name):
+            return ord(name.replace("'", ''))
+        return globals.in_var_table(name, scope)
+
+
+def get_key_first(var, scope):
+    var = globals.get_details(var)
+    name = var[0]
+    indices = var[1]
+    if indices:
+        indices = [0 for ind in indices]
         key = globals.in_var_table(name, scope)
         return resolve(key, indices, scope)
     else:
