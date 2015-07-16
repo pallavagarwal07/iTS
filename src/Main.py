@@ -11,7 +11,7 @@ def timeout(signum, frame):
     raise Exceptions.timeout_error("TIME UP!")
 
 signal.signal(signal.SIGALRM, timeout)
-signal.alarm(10)
+signal.alarm(10000)
 
 print1("ARGS", sys.argv)
 

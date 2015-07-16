@@ -6,13 +6,15 @@ import re
 import Exceptions
 
 def get_type(key, scope):
-    print2("key: ", key)
+    #print2("key: ", key)
     if type(key) is not tuple:
         n = is_num(key)
-        print2("n: ", n)
+        #print2("n: ", n)
         if 'Error' == n:
             k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', key)
             if k:
+                if k[0][0] in globals.predefined_funcs:
+                    return 'double'
                 return globals.functions[k[0][0]][0] 
                 #hnadle function return types properly
             else:
@@ -27,34 +29,39 @@ def get_type(key, scope):
             return globals.var_table[t][1]
     else:
         if key in globals.memory:
-            print2("get_type3:", globals.memory[key][1])
-            return globals.memory[key][1]
+            #print2("get_type3:", globals.memory[key][0].type[0])
+            return globals.memory[key][0].type[0]
         else:
             raise Exceptions.any_user_error("Invalid Memory location", key)
 
 
 def get_val(key, scope):
-    print2("key: ", key)
+    print1("key:", key)
     if type(key) is not tuple:
         n = is_num(key)
-        print2("n: ", n)
+        #print2("n: ", n)
         if 'Error' == n:
             k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', key)
             if k:
                 val = Calc.pass_to_func(k[0], scope)
+                print1("get_val1:", val)
                 return val
             else:
                 key = Runtime.get_key(key, scope)
                 if type(key) is int:
+                    print1("get_val2:", key)
                     return key
         else:
+            print1("get_val3:", key)
             return eval(str(key))
     if len(key) != 1:
         t = globals.in_var_table(key[0], key[1])
         if t:
+            print1("get_val4:", globals.var_table[t][0].v)
             return globals.var_table[t][0].v
     else:
         if key in globals.memory:
+            print1("get_val5:", globals.memory[key][0].v)
             return globals.memory[key][0].v
         else:
             raise Exceptions.any_user_error("Invalid Memory location", key)

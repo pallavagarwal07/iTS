@@ -28,7 +28,7 @@ priority = {
 }
 
 priority_type = {
-    'number': 0, 'char': 1, 'int': 2, 'long': 3, 'long int': 3, 'long long': 4, 'long long int': 4
+        'number': 0, 'void':0, 'char': 1, 'int': 2, 'long': 3, 'long int': 3, 'long long': 4, 'long long int': 4, 'float': 5, 'double': 6, 'long double': 7
 }
 
 # Operators sorted in order of length. Do not change.
@@ -46,8 +46,12 @@ bin_ops = (
 )
 
 unary_ops = {
-    '+': '`+`', '-': '`-`', '*': '`*`', '&': '`&`'
+        '+': '`+`', '-': '`-`', '*': '`*`', '&': '`&`', '++': '++', '--': '--', '+++': '+++', '---': '---', '#type#': '#type#', '~': '~'
 }
+
+un_ops = ('`+`', '`-`', '`*`', '`&`', '++', '--', '+++', '---', '~', '#type#')
+
+ternary_ops = (':')
 
 size_of = {}
 data_types = [
