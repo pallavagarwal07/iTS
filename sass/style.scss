@@ -1,7 +1,4 @@
 @import "bourbon/bourbon";
-#sim * {
-    @include transition(all 1.4s);
-}
 
 html, body {
     height: 100%;
@@ -21,18 +18,25 @@ textarea {
     border-radius: 6px;
 }
 
-.scope{
-	float: left;
-	.banner {
-		text-align: center;
-		width: calc(100% - 10px);
-		border-bottom: solid 1px black;
-	}
+.highlight-line {
+    background: rgba(255, 50, 50, 0.1);
+    position: absolute;
+    width: 100% !important;
+    left: 0 !important;
+}
 
-	.scp {
-		display: flex;
-		flex-wrap: wrap;
-	}
+.scope{
+    float: left;
+    .banner {
+        text-align: center;
+        width: calc(100% - 10px);
+        border-bottom: solid 1px black;
+    }
+
+    .scp {
+        display: flex;
+        flex-wrap: wrap;
+    }
 }
 
 .newborn {
@@ -57,7 +61,7 @@ textarea {
         height: 35%;
     }
     .tagTop {
-        
+
         display: flex;
         .name, .type{
             height: 100%;
@@ -101,6 +105,10 @@ textarea {
 
 #sim {
     min-height: 100%;
+}
+
+#slider {
+    width: 200px;
 }
 
 #sb-btn {

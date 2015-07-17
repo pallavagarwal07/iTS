@@ -1,8 +1,33 @@
 this.resize_list = []
 cmd_number = 0
 cmd = []
+marker = null
+time = 1000
+scale = 1
+speed =
+    0  : 50
+    1  : 10
+    2  : 7
+    3  : 4
+    4  : 2
+    5  : 1
+    6  : 0.5
+    7  : 0.25
+    8  : 0.14
+    9  : 0.1
+    10 : 0
+
+$(->
+    $('#slider').slider(
+        animate: true
+        value: 5
+        max: 10
+        change: -> (scale = speed[$('#slider').slider("value")])
+    )
+)
 
 define_variable = (type, scp, name, val, id = scp+"-"+name) ->
+    # Do not delete just yet
     #scope = $('#'+scp+" .scp")
     #console.log(scope)
     #scope.append('<div id=\''+id+'\'></div>')
@@ -21,12 +46,25 @@ define_variable = (type, scp, name, val, id = scp+"-"+name) ->
         <h3 class="panel-title">'+name+"\t|\t"+type+'</h3></div>
         <div class="panel-body" id="'+id+'-body">'+val+'</div></div>'
     $('#'+scp+'-body').append(panel)
-    $('#'+id).show(1000)
+    $('#'+id).show(400*scale)
+    time = 1000
+
+
+highlight_line = (line_num) ->
+    console.log(marker)
+    console.log("HERE")
+    editor.getSession().removeMarker(marker)
+    require(["ace/range"], (range) ->
+        marker = editor.getSession().addMarker(new
+            range.Range(line_num, 0, line_num, 2000), "highlight-line", "line", true)
+    )
+    time = 10
 
 
 update_variable = (id, val) ->
     variable = $('#'+id+'-body')
     variable.text(val)
+    time = 1000
 
 create_scope = (scp, id) ->
     l = $('.var').length
@@ -34,10 +72,12 @@ create_scope = (scp, id) ->
         <h3 class="panel-title">'+id+'</h3> </div>
         <div class="panel-body" id="'+id+'-body"></div></div>'
     $('#'+scp+'-body').append(panel)
-    $('#'+id).show(1000)
+    $('#'+id).show(400*scale)
+    time = 1000
 
 delete_scope = (id) ->
     $('#'+id).remove()
+    time = 1000
 
 $('#ace1').ready(->
     editor.resize(true)
@@ -66,8 +106,9 @@ simulate = ->
     cmd_number += 1
     if cmd_number == cmd.length
         cmd_number = 0
+        editor.getSession().removeMarker(marker)
     else
-        window.setTimeout(simulate, 1000)
+        window.setTimeout(simulate, time*scale)
 
 
 start_sim = (obj) ->
@@ -97,9 +138,10 @@ compile = ->
     $.get("php/compile.php"
         "code": code
         "input": input
-    (json_text)->
-        $('#submit-btn').text('Submit')
-        $('#submit-btn').removeClass('active')
-        obj = JSON.parse(json_text)
-        start_sim(obj)
+        (json_text)->
+            $('#submit-btn').text('Submit')
+            $('#submit-btn').removeClass('active')
+            obj = JSON.parse(json_text)
+            console.log(obj)
+            start_sim(obj)
     )
