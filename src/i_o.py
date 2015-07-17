@@ -236,4 +236,10 @@ def handle_output(line, scope):
             #format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)
     #format_string = format_string % tuple(format_vars)
     globals.out.write(format_string)
+
+
+    import base64
+    gui_out = base64.b64encode(format_string)
+    globals.gui += "\nstdout_print('"+gui_out+"');"
+
     return True
