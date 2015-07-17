@@ -1,7 +1,9 @@
 this.resize_list = []
 cmd_number = 0
 cmd = []
+prev_out = ""
 marker = null
+curRunning = null
 time = 1000
 scale = 1
 speed =
@@ -25,6 +27,25 @@ $(->
         change: -> (scale = speed[$('#slider').slider("value")])
     )
 )
+
+$(->
+    $('#stdout').text("")
+)
+
+
+stdout_print = (b64str) ->
+    $('#stdout').css('background-color', '#CE6')
+    setTimeout(->
+        $('#stdout').css('background-color', '#FFF')
+    , 40)
+    stdoutStr = window.atob(b64str)
+    final_out = $('#stdout').val()+stdoutStr
+    $('#stdout').val(final_out)
+    $('#stdout').animate(
+        scrollTop: $('#stdout')[0].scrollHeight - $('#stdout').height()
+    , 500)
+    time = 1000
+
 
 define_variable = (type, scp, name, val, id = scp+"-"+name) ->
     # Do not delete just yet
@@ -61,6 +82,23 @@ highlight_line = (line_num) ->
     time = 10
 
 
+reset = ->
+    $('#reset').switchClass('btn-primary', 'btn-success')
+    $('#reset').text('Success')
+    window.setTimeout(->
+        $('#reset').switchClass('btn-success', 'btn-primary', 700)
+        $('#reset').text('Reset')
+    , 2000)
+    cmd_number = 0
+    editor.getSession().removeMarker(marker)
+    window.clearTimeout(curRunning)
+    $('#stdin').prop('disabled', false)
+    editor.setReadOnly(false)
+    $('#stdout').val(prev_out)
+    console.log("PREV TEXT "+prev_out)
+    delete_scope('global')
+
+
 update_variable = (id, val) ->
     variable = $('#'+id+'-body')
     variable.text(val)
@@ -76,7 +114,7 @@ create_scope = (scp, id) ->
     time = 1000
 
 delete_scope = (id) ->
-    $('#'+id).remove()
+    $('#'+id).hide('slow', -> $('#'+id).remove())
     time = 1000
 
 $('#ace1').ready(->
@@ -86,6 +124,9 @@ $('#ace1').ready(->
     editor.setAutoScrollEditorIntoView(true)
     editor.setHighlightActiveLine(true)
     editor.setShowPrintMargin(false)
+    editor.setOptions(
+        fontFamily: "Source Code Pro", "monospace"
+    )
 )
 
 createAlert = (name, str, type) ->
@@ -107,8 +148,10 @@ simulate = ->
     if cmd_number == cmd.length
         cmd_number = 0
         editor.getSession().removeMarker(marker)
+        $('#stdin').prop('disabled', false)
+        editor.setReadOnly(false)
     else
-        window.setTimeout(simulate, time*scale)
+        curRunning = window.setTimeout(simulate, time*scale)
 
 
 start_sim = (obj) ->
@@ -119,7 +162,6 @@ start_sim = (obj) ->
         createAlert("GCC Warning: ", obj.gcc_warning, "warning")
     if obj.gcc_out == obj.its_out
         createAlert("", "Simulation made successfully!", "success")
-        $('#stdout').val(obj.gcc_out)
         cmd = obj.its_cmd.split("\n")
         console.log(cmd)
         simulate()
@@ -129,6 +171,8 @@ compile = ->
     clearAll()
     $('#submit-btn').text('Loading...')
     $('#submit-btn').addClass('active')
+    $('#stdin').prop('disabled', true)
+    editor.setReadOnly(true)
 
     code = editor.getValue()
     input = $('#stdin').val()
@@ -142,6 +186,7 @@ compile = ->
             $('#submit-btn').text('Submit')
             $('#submit-btn').removeClass('active')
             obj = JSON.parse(json_text)
+            prev_out = obj.gcc_out
             console.log(obj)
             start_sim(obj)
     )

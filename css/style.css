@@ -81,7 +81,12 @@ textarea {
   vertical-align: top; }
 
 #sim {
-  min-height: 100%; }
+  min-height: 100%;
+  font-family: 'Source Code Pro', monospace; }
+
+#reset {
+  float: right;
+  margin-top: 10px; }
 
 #slider {
   width: 200px; }

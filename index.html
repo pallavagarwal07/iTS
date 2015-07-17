@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="./css/style.css">
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+        <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
@@ -22,15 +23,21 @@
                         <div class="navbar-header">
                         </div>
                         <div class="collapse navbar-collapse">
-                            <ul class="nav navbar-nav">
+                            <ul class="nav navbar-nav" style="width:100%;">
                                 <a class="navbar-brand" href="#">
                                     <img alt="iTS logo" src="assets/iTS.svg" class="img-responsive" style="max-height:100%;">
                                 </a>
                                 <form class="navbar-form navbar-left" style="padding-top:10px;">
-                                    <ul class="nav navbar-nav">
+                                    <ul class="nav navbar-nav" style="padding-top:3px;">
                                         <div id="slider"></div>
                                     </ul>
+                                    <div class="nav navbar-nav" style="font-style:italic;margin-left:10px;">
+                                        Speed
+                                    </div>
                                 </form>
+                                <button type="button" class="btn btn-primary" onclick="reset();" id="reset">
+                                    Reset
+                                </button>
                             </ul>
                         </div>
                     </div>
