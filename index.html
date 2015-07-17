@@ -2,14 +2,15 @@
 <html lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
         <title>Simulation</title>
-        <script src="./js/jquery-1.11.3.min.js"></script>
-        <script src="./ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-        <link rel="stylesheet" type="text/css" href="./css/style.css">
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="./css/style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js" type="text/javascript" charset="utf-8"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script src="./js/gui.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script></script>
+        <script src="./js/gui.js"></script>
     </head>
     <body id='body'>
         <div class="container-fluid">
@@ -29,8 +30,10 @@
                 </nav>
             </div>
             <div class="row" style="height:100%;">
-                <div id="simulation" class="col-md-7" style="height:100%; overflow:hidden;">
+                <div class="col-md-7" id="sim" style="height:100%; overflow:hidden;">
                     <div class="backdrop" style="height:100%;">
+                        <div class="col-md-12" id="simulation-body">
+                        </div>
 
                     </div>
                 </div>
@@ -50,9 +53,15 @@
                         </div>
                     </div>
                     <br />
-                    <div class="row">
+                    <div class="row" id="sbt-row">
                         <div class="col-md-12">
-                            <button type="button" onclick="compile()" class="btn btn-info" id="sb-btn">Submit</button>
+                            <div class="progress">
+                                <button class="progress-btn progress-bar progress-bar-striped" role="progressbar"
+                                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+                                                          onclick="compile()" style="width: 100%" id="submit-btn">
+                                    Submit
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,5 +1,5 @@
 @import "bourbon/bourbon";
-#simulation * {
+#sim * {
     @include transition(all 1.4s);
 }
 
@@ -76,8 +76,31 @@ textarea {
     }
 }
 
-#simulation {
-    height: 100%;
+.progress, .progress-btn {
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    line-height: 20px;
+    height: 35px;
+}
+
+.progress-bar {
+    background-color: #299AFB;
+}
+
+.panel {
+    display: inline-block;
+    margin-top: 10px;
+    border-radius: 8px;
+    vertical-align: top;
+}
+
+#sim {
+    min-height: 100%;
 }
 
 #sb-btn {

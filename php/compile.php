@@ -20,11 +20,11 @@
     exec('gcc -Wall -o '.$randkey.'.out '.$randkey.'.c 2>&1', $gcc_stdout, $return_code);
 
     if($return_code != 0) {
-        $ret_val["gcc_error"] = $gcc_stdout;
+        $ret_val["gcc_error"] = str_replace($randkey, 'code', $gcc_stdout);
     } else {
 
         if(sizeof($gcc_stdout) != 0) {
-            $ret_val["gcc_warning"] = implode("\n", $gcc_stdout);
+            $ret_val["gcc_warning"] = str_replace($randkey, 'code', implode("\n", $gcc_stdout));
         }
 
         exec('timeout --kill-after=2s 2s ./'.$randkey.'.out <'.$randkey.'.in 2>&1 1>'.$randkey.'.key', $gcc_out, $out_ret);
