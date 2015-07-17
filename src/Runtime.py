@@ -12,7 +12,7 @@ import Exceptions
 
 def makeMemory(mem, indices, l, type, val, scope):
     mem = (mem, )
-    step = globals.size_of[type if l == 0 else 'pointer']
+    step = globals._size_of(type if l == 0 else 'pointer')
     globals.memory[mem][0].v = malloc(indices[0] if indices else 1, step, l, val, scope, type)
     if indices[1:]:
         for i in range(0, indices[0]):
@@ -49,14 +49,14 @@ def decl(var, val, cast, scope, tags):
     newKey = (var, scope, globals.curr_mem)
     globals.var_table[newKey] = [Value(val, (cast, level), tags), cast, level, globals.curr_mem]
     if level:
-        size = globals.size_of['pointer']
+        size = globals._size_of('pointer')
     else:
-        size = globals.size_of[cast]
+        size = globals._size_of(cast)
     globals.memory[(globals.curr_mem,)] = [globals.var_table[newKey][0], size, level+1]
     if level == 0:
-        globals.curr_mem += globals.size_of[cast]
+        globals.curr_mem += globals._size_of(cast)
     else:
-        globals.curr_mem += globals.size_of['pointer']
+        globals.curr_mem += globals._size_of('pointer')
     if indices:
         if val is not '':
             val = val.strip()
@@ -69,7 +69,7 @@ def decl(var, val, cast, scope, tags):
                 indices[0] = dim[0]
                 #raise Exceptions.any_user_error("Dimensions of array and initialized value don't match")
             # check if input matches with dimension of array, else raise user_error Exception
-        makeMemory(globals.curr_mem - globals.size_of['pointer'], indices, level - 1, cast, val, scope)
+        makeMemory(globals.curr_mem - globals._size_of('pointer'), indices, level - 1, cast, val, scope)
 
 
 def dimension_list(val):
@@ -200,23 +200,21 @@ def halter(line):
 
 def run_through(code, num):
     i = num
+
     while i < len(code):
         line = code[i]
         i += 1
         if type(line) != str:
             continue
-        k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char|void)\s+'
-                       '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
+        k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int'
+                r'|long|int|float|double|char|void)\s+'
+                r'([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
         if k:
             assert len(k) == 1
             k = k[0]
             params = [a.strip() for a in k[2].split(',')]
             for index, par in enumerate(params):
-                for data_type in globals.data_types:
-                    if par.startswith(data_type):
-                        rep = re.sub(data_type + r'\s*', '', par)
-                        params[index] = (data_type, rep)
-                        break
+                params[index] = globals.separate_def(par)
             if len(params[0]) > 0:
                 type_key = tuple([temp[0] for temp in params])
             else:
@@ -227,8 +225,9 @@ def run_through(code, num):
 
 
 def decl_func(line):
-    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char|void)\s+'
-                   '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
+    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int'
+            r'|long|int|float|double|char|void)\s+'
+            r'([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*;\s*$', line)
     if k:
         assert len(k) == 1
         k = k[0]
@@ -250,7 +249,7 @@ def decl_func(line):
 
 def def_func(line, code, num):
     k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char|void)\s+'
-                   '([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
+                   r'([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
     if k:
         assert len(k) == 1
         k = k[0]
@@ -263,10 +262,6 @@ def def_func(line, code, num):
             type_key = ''
         if k[1] == 'main':
             run_through(code, num + 1)
-                #if par.startswith(data_type):
-                    #rep = re.sub(data_type + r'\s*', '', par)
-                    #params[index] = (data_type, rep)
-                    #break
             execute(code[num], 'global')
             raise Exceptions.main_executed(globals.gui)
         if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):
@@ -293,6 +288,8 @@ def traverse(code, scope):
             continue
         if is_updation(line):
             Calc.calculate(line, scope, globals.var_table)
+            continue
+        if decl_func(line):
             continue
         if def_func(line, code, i):
             continue

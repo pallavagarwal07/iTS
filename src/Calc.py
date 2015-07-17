@@ -19,11 +19,11 @@ def pass_to_funcNO(detail, scope):
     if name == 'sizeof':
         t = re.findall(r'\*', detail[1])
         if t:
-            return globals.size_of['pointer']
+            return globals._size_of('pointer')
         else:
             detail = globals.toplevelsplit(detail[1], ',')
             assert len(detail) == 1
-            return globals.size_of[detail[0].strip()]
+            return globals._size_of(detail[0].strip())
     elif name == 'malloc':
         size = calculate(detail[1].strip(), scope)
         raise Exceptions.unimplemented_error("Request for", size,
@@ -159,7 +159,6 @@ def unary_handle(separated_tokens):
 
 def add(arr, token, ctr, scope):
     print2("tok:", token)
-    print get_val(Runtime.get_key("j", scope), scope), "WOAH"
     if type(token) is tuple:
         arr.append(token)
     else:
@@ -169,7 +168,6 @@ def add(arr, token, ctr, scope):
             arr.append((token,))
         else:
             arr.append((token,get_type(token, scope)))
-    print get_val(Runtime.get_key("j", scope), scope), "WOAH2"
 
 
 def to_postfix(tokens, scope):
@@ -177,7 +175,6 @@ def to_postfix(tokens, scope):
     postfix = []
     ctr = 0
     i = 0
-    print tokens, "1"
     while i < len(tokens):
         tk = tokens[i]
         if tk in globals.ops:
@@ -219,10 +216,8 @@ def to_postfix(tokens, scope):
             if tag == 0:
                 add(postfix, tk, ctr, scope)
         i += 1
-    print tokens, "5"
     while len(stack) > 0:
         add(postfix, stack.pop(), ctr, scope)
-    print tokens, "9"
     return postfix
 
 
@@ -298,10 +293,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 set_val(key, val, scope)
                 var_stack[l()] = (val, max_type(t1))
             elif token == '+++':
-                print "J should be ", get_val(Runtime.get_key("j", scope), scope), postfix
-                print var_stack[l()]
                 key = Runtime.get_key(var_stack[l()], scope)
-                print key, get_val(key, scope)
                 val = get_val(key, scope) + 1
                 set_val(key, val, scope)
                 var_stack[l()] = (val, max_type(t1))
@@ -407,7 +399,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                     raise Exceptions.any_user_error("Division by 0 not allowed!")
                 val = get_val(key, scope) / get_val(var_stack[l()], scope)
                 set_val(key, val, scope)
-                var_stack[l()-1] = (val, max_type(t2))  
+                var_stack[l()-1] = (val, max_type(t2))
                 var_stack.pop()
             elif token == '%=':
                 if t1 in [r'float', r'double', r'long\s*double'] or t2 in [r'float', r'double', r'long\s*double']:

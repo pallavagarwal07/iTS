@@ -56,8 +56,8 @@ ternary_ops = (':')
 
 size_of = {}
 data_types = [
-    'long long int', 'long int', 'long double', 'long long', 'char',
-    'int', 'long', 'float', 'double', 'pointer'
+    'long long int', 'long int', 'long double', 'long long',
+    'char', 'int', 'long', 'float', 'double', 'pointer'
 ]
 type_range = {}
 memory = {}
@@ -129,6 +129,13 @@ def in_var_table(var, scope):
     if len(probables) == 0:
         return 0
     return max(probables, key=lambda v: len(v[1]))
+
+
+def _size_of(type):
+    if type in size_of:
+        return size_of[type]
+    if "[" in type or "*" in type:
+        return size_of['pointer']
 
 
 # Get value of variable from memory only
