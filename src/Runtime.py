@@ -262,7 +262,7 @@ def def_func(line, code, num):
             type_key = ''
         if k[1] == 'main':
             run_through(code, num + 1)
-            execute(code[num], 'global')
+            execute(code[num], 'global main')
             raise Exceptions.main_executed(globals.gui)
         if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):
             raise Exceptions.any_user_error("Error!! Multiple declaration of function")
@@ -276,6 +276,7 @@ def def_func(line, code, num):
 
 
 def traverse(code, scope):
+    globals.gui += "create_scope('simulation', 'global');"
     i = 0
     while i < len(code):
         line = code[i]
@@ -355,11 +356,13 @@ def execute(code, scope):
         if len(line) < 1:
             continue
 
-        code[i-1] = "__PALLAV_FLAG__"+code[i-1]
-        diff_index = str(globals.code).find("__PALLAV_FLAG__")
+        code[i-1] = "__ITS_FLAG__"+code[i-1]
+        diff_index = str(globals.code).find("__ITS_FLAG__")
         from stringDiff import getIndex
         diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
-        code[i-1] = code[i-1].replace("__PALLAV_FLAG__", '')
+        code[i-1] = code[i-1].replace("__ITS_FLAG__", '')
+        line_number = globals.raw_code.count("\n", 0, diff_index)
+        globals.gui += "\nhighlight_line("+str(line_number)+")"
 
         if chk_decl(line, scope):
             continue

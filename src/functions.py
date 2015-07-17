@@ -42,13 +42,13 @@ def eval_user_function(name, params, scope):
     params = [Calc.calculate(str(k), scope) for k in params]
 
     # we need a unique scope for every instance of function
-    hash = '-inst'+str(unique_id)+'-'
+    hash = 'inst'+str(unique_id)
     unique_id += 1
 
     # GUI string
-    globals.gui += "\ncreate_scope(\'global\',\'"+"global "+name+"\');"
-    globals.gui += "\ncreate_scope(\'global "+name+"\',\'"+\
-            "global "+name+" "+hash+"\');"
+    globals.gui += "\ncreate_scope(\'global\',\'"+"global-"+name+"\');"
+    globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+\
+            "global-"+name+"-"+hash+"\');"
 
 
     if target[3]:
@@ -56,7 +56,7 @@ def eval_user_function(name, params, scope):
             Runtime.decl(d[1], params[i], d[0], "global " + name + " " + hash, None)
 
     return Runtime.execute(globals.functions[name][2], \
-            "global " + name + " " + hash)
+            "global "+name+" "+hash)
 
 
 def pass_to_func(detail, scope):

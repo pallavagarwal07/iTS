@@ -69,8 +69,6 @@ print1(code)
 try:
     Runtime.traverse(code, Access)
 except Exceptions.main_executed as e:
-    pass
-    #cmd.write(e.message)
+    cmd.write(e.message + "\ndelete_scope('global');")
 except Exceptions.timeout_error:
-    pass
-    #cmd.write("__TIMEOUT__"+globals.gui)
+    cmd.write("__TIMEOUT__" + globals.gui + "\ndelete_scope('global');")
