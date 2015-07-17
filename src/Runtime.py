@@ -232,13 +232,9 @@ def decl_func(line):
     if k:
         assert len(k) == 1
         k = k[0]
-        params = [a.strip() for a in k[2].split(',')]
+        params = [a.strip() for a in globals.toplevelsplit(k[2], ',')]
         for index, par in enumerate(params):
-            for data_type in globals.data_types:
-                if par.startswith(data_type):
-                    rep = re.sub(data_type + r'\s*', '', par)
-                    params[index] = (data_type, rep)
-                    break
+            params[index] = globals.separate_def(par)
         if len(params[0]) > 0:
             type_key = tuple([temp[0] for temp in params])
         else:
@@ -258,19 +254,19 @@ def def_func(line, code, num):
     if k:
         assert len(k) == 1
         k = k[0]
-        params = [a.strip() for a in k[2].split(',')]
+        params = [a.strip() for a in globals.toplevelsplit(k[2], ',')]
         for index, par in enumerate(params):
-            for data_type in globals.data_types:
-                if par.startswith(data_type):
-                    rep = re.sub(data_type + r'\s*', '', par)
-                    params[index] = (data_type, rep)
-                    break
+            params[index] = globals.separate_def(par)
         if len(params[0]) > 0:
             type_key = tuple([temp[0] for temp in params])
         else:
             type_key = ''
         if k[1] == 'main':
             run_through(code, num + 1)
+                #if par.startswith(data_type):
+                    #rep = re.sub(data_type + r'\s*', '', par)
+                    #params[index] = (data_type, rep)
+                    #break
             execute(code[num], 'global')
             raise Exceptions.main_executed(globals.gui)
         if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):

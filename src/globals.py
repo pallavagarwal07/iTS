@@ -1,4 +1,5 @@
 import weave
+import re
 
 global var_table
 global inp
@@ -111,7 +112,7 @@ def setup():
     for types in ['char', 'int', 'long', 'long long', 'long long int']:
         temp = 1 << ((8 * size_of[types])-1)
         type_range[types] = (-temp, temp-1)
-    
+
     print1("ranges: ", type_range)
 
 
@@ -300,3 +301,51 @@ def is_num(s):
         return eval(str(s))
     except ValueError:
         return 'Error'
+
+
+def separate_def(input): # input is like "int a" or "int b[]" or "long long ** g[56]" or "int"
+    # Target is to return ('int', 'a'), ('int[]', 'b'), ('long long**[56]', g), ('int', '')
+    import Exceptions
+
+    keyword = input
+    if input == '': return ('')
+    type=""
+    for data_type in data_types:
+        if re.match('^'+data_type+r"([^A-Za-z0-9_]|$)", keyword):
+            type = data_type
+            break
+    else:
+        raise Exceptions.any_user_error("Type not given in Function Declaration", input)
+
+    keyword = re.sub(r'^'+type+r'\s*', '', keyword).strip()
+    # keyword is now "a", "b[]", "** g[56]", ''
+
+    while True:
+        k = re.findall(r'^\*\s*', keyword)
+        if not k:
+            break
+        type += r'*'
+        keyword = re.sub(r'^\*\s*', '', keyword)
+    # keyword is now "a", "b[]", "g[56]", ''
+
+    k = re.findall(r'^([a-zA-Z_]+[a-zA-Z0-9_]*)', keyword)
+    if not k and keyword.strip() == '':
+        return (type, '')
+    if not k and keyword.strip() != '':
+        raise Exceptions.any_user_error("Something seems wrong while parsing ", input)
+    var = k[0]
+    keyword = re.sub(r'^'+var+r'\s*', '', keyword)
+
+    k = re.findall(r'^\[\s*\]\s*', keyword)
+    if k:
+        type += "[]"
+        keyword = re.sub(r'^\[\s*\]\s*', '', keyword)
+
+    while True:
+        k = re.findall(r'^(\[.*?\])\s*', keyword)
+        if not k:
+            break
+        type += k[0]
+        keyword = re.sub(r'^\[.*?\]\s*', '', keyword)
+
+    return type, var
