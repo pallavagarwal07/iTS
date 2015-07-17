@@ -9,7 +9,7 @@ gui = ""
 var_table = {}
 vLevel = 0
 
-curr_mem = 1000000000
+curr_mem = 1000000000**3
 
 # priority of operators. Even values have left to right associativity and vice versa
 priority = {
@@ -112,7 +112,9 @@ def setup():
     for types in ['char', 'int', 'long', 'long long', 'long long int']:
         temp = 1 << ((8 * size_of[types])-1)
         type_range[types] = (-temp, temp-1)
-
+    type_range['float'] = (-3.4*(10**38), 3.4*(10**38))
+    type_range['double'] = (-1.7*(10**308), 1.7*(10**308))
+    type_range['long double'] = type_range['double']
     print1("ranges: ", type_range)
 
 

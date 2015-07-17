@@ -454,8 +454,13 @@ def calculate(expr, scope, vartable=globals.var_table):
                         var_stack[l()] = (chr(get_val(var_stack[l()], scope)), new_type)
         print1("stack:", var_stack)
         temp = var_stack[l()]
-        if temp[1] not in ['float', 'number', 'double', 'long double', 'void']:
-            print2(temp, globals.type_range[temp[1]])
+        if temp[1] not in ['number', 'void']:
+            m1 = globals.type_range[temp[1]][0]
+            m2 = globals.type_range[temp[1]][1]
+            temp = get_val(temp[0], scope, 2)
+            print2(temp, m1, m2)
+            if not (temp is '' or temp is None or (m1 <= temp and temp <= m2)):
+                raise Exceptions.any_user_error("Out of bounds!", temp, m1, m2)
     r = get_val(var_stack.pop()[0], scope)
     print2("calculate in Calc.py returned:", r, "\n")
     return r
