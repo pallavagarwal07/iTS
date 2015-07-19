@@ -7,7 +7,7 @@ curRunning = null
 time = 1000
 scale = 1
 speed =
-    0  : 50
+    0  : 5000
     1  : 10
     2  : 7
     3  : 4
@@ -67,7 +67,7 @@ define_variable = (type, scp, name, val, id = scp+"-"+name) ->
         <h3 class="panel-title">'+name+"\t|\t"+type+'</h3></div>
         <div class="panel-body" id="'+id+'-body">'+val+'</div></div>'
     $('#'+scp+'-body').append(panel)
-    $('#'+id).show(400*scale)
+    $('#'+id).show(400)
     time = 1000
 
 
@@ -110,7 +110,7 @@ create_scope = (scp, id) ->
         <h3 class="panel-title">'+id+'</h3> </div>
         <div class="panel-body" id="'+id+'-body"></div></div>'
     $('#'+scp+'-body').append(panel)
-    $('#'+id).show(400*scale)
+    $('#'+id).show(400)
     time = 1000
 
 delete_scope = (id) ->
@@ -158,6 +158,7 @@ start_sim = (obj) ->
     cmd_number = 0
     if obj.gcc_error
         createAlert("GCC ERROR: ", obj.gcc_error, "danger")
+        editor.setReadOnly(false)
     if obj.gcc_warning
         createAlert("GCC Warning: ", obj.gcc_warning, "warning")
     if obj.gcc_out == obj.its_out
@@ -190,3 +191,5 @@ compile = ->
             console.log(obj)
             start_sim(obj)
     )
+
+$(->$("#pause").button())

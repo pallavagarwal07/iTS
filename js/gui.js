@@ -18,7 +18,7 @@ time = 1000;
 scale = 1;
 
 speed = {
-  0: 50,
+  0: 5000,
   1: 10,
   2: 7,
   3: 4,
@@ -68,7 +68,7 @@ define_variable = function(type, scp, name, val, id) {
   }
   panel = '<div class="panel panel-success" id="' + id + '" style="display:none;"><div class="panel-heading"> <h3 class="panel-title">' + name + "\t|\t" + type + '</h3></div> <div class="panel-body" id="' + id + '-body">' + val + '</div></div>';
   $('#' + scp + '-body').append(panel);
-  $('#' + id).show(400 * scale);
+  $('#' + id).show(400);
   return time = 1000;
 };
 
@@ -111,7 +111,7 @@ create_scope = function(scp, id) {
   l = $('.var').length;
   panel = '<div class="panel panel-warning" id="' + id + '" style="display:none;"><div class="panel-heading"> <h3 class="panel-title">' + id + '</h3> </div> <div class="panel-body" id="' + id + '-body"></div></div>';
   $('#' + scp + '-body').append(panel);
-  $('#' + id).show(400 * scale);
+  $('#' + id).show(400);
   return time = 1000;
 };
 
@@ -162,6 +162,7 @@ start_sim = function(obj) {
   cmd_number = 0;
   if (obj.gcc_error) {
     createAlert("GCC ERROR: ", obj.gcc_error, "danger");
+    editor.setReadOnly(false);
   }
   if (obj.gcc_warning) {
     createAlert("GCC Warning: ", obj.gcc_warning, "warning");
@@ -199,3 +200,7 @@ compile = function() {
     return start_sim(obj);
   });
 };
+
+$(function() {
+  return $("#pause").button();
+});
