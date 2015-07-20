@@ -371,10 +371,11 @@ def execute(code, scope):
         code[i-1] = code[i-1].replace("__ITS_FLAG__", '')
         line_number = globals.raw_code.count("\n", 0, diff_index)
         globals.gui += "\nhighlight_line("+str(line_number)+")"
-
-        if chk_decl(line, scope):
+        inp = i_o.handle_input(line, scope)
+        if inp:
+            globals.gui+="\nstdin_write("+str(inp)+")"
             continue
-        if i_o.handle_input(line, scope):
+        if chk_decl(line, scope):
             continue
         if i_o.handle_output(line, scope):
             continue

@@ -114,6 +114,7 @@ def is_same(str1, str2):
 
 def extract(regex_arr, type_arr):
     values = []
+    l = 0
     for tup in regex_arr:
         reg = '^' + tup[1]
         num = tup[2] if tup[2] else 999999
@@ -121,15 +122,16 @@ def extract(regex_arr, type_arr):
         if not k:
             raise Exceptions.any_user_error("Incorrect Input (probably)", reg, globals.inp[:num], num)
 
+        l1 = len(globals.inp)
         if tup not in type_arr:
             k = re.sub(reg, '', globals.inp[:num])
             globals.inp = k + globals.inp[num:]
         else:
             globals.inp = re.sub(reg, '', globals.inp[:num]) + globals.inp[num:]
             values.append(k[0])
-
+        l +=  (l1 - len(globals.inp))
     #print2("INPUT EXTRACTED the following values: ", values)
-    return values
+    return values, l
 
 
 def handle_input(statement, scope):
@@ -141,7 +143,7 @@ def handle_input(statement, scope):
     #print2("sep: ", sep)
 
     if len(sep) == 0:
-        return False
+        return 0
     elif len(sep) > 1:
         return Exceptions.any_user_error("I think you might be missing a semicolon")
 
@@ -154,7 +156,7 @@ def handle_input(statement, scope):
     variables.append(sep[0][2])
     # now, variables = ['&a', '&b', '&c']
 
-    values = extract(regex_arr, type_arr)
+    values, len_inp = extract(regex_arr, type_arr)
 
     assert len(type_arr) == len(values)
     #print2("type array: ", type_arr)
@@ -181,7 +183,8 @@ def handle_input(statement, scope):
                 Vars.set_val((v[0]+len(vals)*globals.memory[v][1],), 0)
             else:
                 Vars.set_val(v, vals)
-    return True
+    print len_inp
+    return len_inp
 
 
 def handle_output(line, scope):
