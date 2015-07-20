@@ -112,9 +112,14 @@ def setup():
     for types in ['char', 'int', 'long', 'long long', 'long long int']:
         temp = 1 << ((8 * size_of[types])-1)
         type_range[types] = (-temp, temp-1)
+    type_range['long int'] = type_range['long']
+    #type_range['longint'] = type_range['long int']
+    #type_range['longlong'] = type_range['long long']
+    #type_range['longlongint'] = type_range['long long int']
     type_range['float'] = (-3.4*(10**38), 3.4*(10**38))
     type_range['double'] = (-1.7*(10**308), 1.7*(10**308))
     type_range['long double'] = type_range['double']
+    #type_range['longdouble'] = type_range['long double']
     print1("ranges: ", type_range)
 
 

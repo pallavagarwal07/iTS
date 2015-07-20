@@ -201,6 +201,7 @@ def calculate(expr, scope, vartable=globals.var_table):
     separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
     postfix = to_postfix(separated_tokens, scope)
 
+    print1("postfix:", postfix)
     print3("vartable: ")
     print3(globals.var_table)
     print3("mem: ")
@@ -216,8 +217,8 @@ def calculate(expr, scope, vartable=globals.var_table):
             #m = is_num(k[0])
             #stack.append((m,'number'))
     #postfix = stack
-    var_stack = []
     print1("postfix:", postfix)
+    var_stack = []
     l = lambda: len(var_stack) - 1
     idx = 0
     for i, tk in enumerate(postfix):
@@ -359,7 +360,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l()-1] = (val, max_type(t2))
                 var_stack.pop()
             elif token == '%=':
-                if t1 in [r'float', r'double', r'long\s*double'] or t2 in [r'float', r'double', r'long\s*double']:
+                if t1 in ['float', 'double', 'long double', 'longdouble'] or t2 in ['float', 'double', 'long double', 'longdouble']:
                     raise Exceptions.any_user_error("Modulo not allowed with floating point numbers.")
                 key = Runtime.get_key(var_stack[l()-1], scope)
                 val = get_val(key, scope) % get_val(var_stack[l()], scope)
@@ -437,23 +438,34 @@ def calculate(expr, scope, vartable=globals.var_table):
 
             elif token == "#type#":
                 new_type = tk[1]
-                if new_type in [r'float', r'double', r'long\s*double']:
+                print2("new_type before:", new_type, type(new_type))
+                if new_type == 'longlong':
+                    new_type = 'long long'
+                elif new_type == 'longint':
+                    new_type = 'long int'
+                elif new_type == 'longlongint':
+                    new_type = 'long long int'
+                elif new_type == 'longdouble':
+                    new_type = 'long double'
+                print2("new_type:", new_type)
+                if new_type in ['float', 'double', 'long double']:
                     if type(var_stack[l()]) is 'str':
                         raise Exceptions.any_user_error("Trying to convert string to float.")
                     else:
                         var_stack[l()] =  (float(get_val(var_stack[l()], scope)), new_type)
-                elif new_type in [r'int', r'long', r'long\s*int', r'long\s*long\s*int', r'long\s*long']:
+                elif new_type in ['int', 'long', 'long int', 'long long int', 'long long']:
                     if type(var_stack[l()]) is 'char':
                         var_stack[l()] =  (ord(get_val(var_stack[l()], scope)), new_type)
                     else:
                         var_stack[l()] = (int(get_val(var_stack[l()], scope)), new_type)
                 elif new_type is 'char':
-                    if type(var_stack[l()]) in [r'float', r'double', r'long\s*double']:
+                    if type(var_stack[l()]) in ['float', 'double', 'long double']:
                         raise Exceptions.any_user_error("Trying to convert float to string.")
                     else:
                         var_stack[l()] = (chr(get_val(var_stack[l()], scope)), new_type)
         print1("stack:", var_stack)
         temp = var_stack[l()]
+        print2("temp:", temp)
         if temp[1] not in ['number', 'void']:
             m1 = globals.type_range[temp[1]][0]
             m2 = globals.type_range[temp[1]][1]

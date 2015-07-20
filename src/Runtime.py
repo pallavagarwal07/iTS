@@ -159,13 +159,21 @@ def chk_decl(line, scope):
         r'*((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*;)',
         line)
     if len(r) != 0:
+        print2("r:", r)
         r = r[0]
         cast = r[2]
+        print2("r:", r)
         tags = (r[0], r[1])
-        a = re.sub(r'^.*' + cast, '', line)
+        print2("cast:", cast, "tags:", tags)
+        print2(line)
+        a = re.sub(r'^(?s)\s*(static\s+)?(const\s+)?' + cast, '', line)
+        print2("decl:", a)
         a = re.sub(';', '', a)
+        print2("decl:", a)
         a = globals.toplevelsplit(a, ',')
+        print2("decl:", a)
         a = [k.strip().split('=') for k in a]
+        print2("decl:", a)
         for variables in a:
             if len(variables) == 1:
                 decl(variables[0].strip(), '', cast, scope, tags)
