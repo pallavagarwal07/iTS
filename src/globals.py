@@ -29,7 +29,7 @@ priority = {
 }
 
 priority_type = {
-        'number': 0, 'void':0, 'char': 1, 'int': 2, 'long': 3, 'long int': 3, 'long long': 4, 'long long int': 4, 'float': 5, 'double': 6, 'long double': 7
+        'number': 0, 'void':0, 'char': 1, 'int': 2, 'long': 3, 'long int': 3, 'long long': 4, 'long long int': 4, 'pointer': 5, 'float': 6, 'double': 7, 'long double': 8
 }
 
 # Operators sorted in order of length. Do not change.
@@ -66,7 +66,7 @@ startDict = {
 '!': ['!=', '!'], '#': ['#type#'], '%': ['%=', '%'], "'": ["'"],
 '&': ['&=', '&&', '&'], ')': [')'], '(': ['('], '+': ['+++', '++', '+=', '+'],
 '*': ['*=', '*'], '-': ['---', '--', '-=', '->', '-'], ',': [','], '/': ['/=', '/'],
-'=': ['==', '='], '<': ['<<=', '<<', '<=', '<'],
+'=': ['==', '='], '<': ['<<=', '<<', '<=', '<'], '"': ['"'],
 '>': ['>>=', '>=', '>>', '>'], '[': ['['], '^': ['^=', '^'],
 '`': ['`*`', '`&`', '`-`', '`+`'], '|': ['|=', '||', '|'], '~': ['~'], '?':['?'], ':':[':']
 }
@@ -119,8 +119,7 @@ def setup():
     type_range['float'] = (-3.4*(10**38), 3.4*(10**38))
     type_range['double'] = (-1.7*(10**308), 1.7*(10**308))
     type_range['long double'] = type_range['double']
-    #type_range['longdouble'] = type_range['long double']
-    print1("ranges: ", type_range)
+    type_range['pointer'] = (0, 10**100)
 
 
 # Get key tuple from variable name and scope

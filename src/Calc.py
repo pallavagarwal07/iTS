@@ -9,18 +9,7 @@ import Runtime
 import Exceptions
 import fake_math
 
-
-#globals.gui += "\ncreate_scope(\'global\',\'"+"global-"+name+"\');"
-#globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+\
-        #"global-"+name+"-"+RandomHash+"\');"
-#if l:
-    #for i, declarations in enumerate(globals.functions[name][1]):
-        #Runtime.decl(declarations[1], detail[i], declarations[0],
-                #"global " + name + " " + RandomHash, None)
-#return Runtime.execute(globals.functions[name][2], "global " + \
-        #name + " " + RandomHash)
-
-
+# Differentate between postfix and prefix increment operators.
 def pre_post_handle(tokens):
     for i, tk in enumerate(tokens):
         if tk == '--':
@@ -32,13 +21,14 @@ def pre_post_handle(tokens):
     return tokens
 
 
+# Separate out the tokens from an expression. i.e something like
+# '5 + 4' would become ['5', '+', '4']
 def sep(expr):
-    i = 0
-    token = []
-    sep_tokens = []
+    i, token, sep_tokens = 0, [], []
 
-    while i < len(expr) and expr[i] != ';':
-        while i < len(expr) and expr[i] == ' ':
+    while i < len(expr) and expr[i] != ';' :
+
+        while i < len(expr) and expr[i] == ' ' :
             i += 1
 
         checkOps = globals.startDict
@@ -89,6 +79,16 @@ def sep(expr):
                         expression += expr[j]
                         i += len(expression) - 1
                         token += expression
+                    elif ex == '\"':
+                        assert token == []
+                        j = i + 1
+                        expression = ['\"']
+                        while expr[j] != '\"' or expr[j-1] == '\\':
+                            expression += expr[j]
+                            j += 1
+                        expression += expr[j]
+                        i += len(expression) - 1
+                        token += expression
                     else:
                         sep_tokens.append(ex)
                     i += len(ex) - 1
@@ -101,21 +101,27 @@ def sep(expr):
     return sep_tokens
 
 
+# Convert operators like '+' which have overloaded binary and unary
+# functions into differentiated unary counterparts, '`+`' for example.
 def unary_handle(separated_tokens):
     flag = 1
     for i, token in enumerate(separated_tokens):
+
         if token in globals.unary_ops and flag:
             separated_tokens[i] = globals.unary_ops[token]
             continue
+
         if token in globals.bin_ops or token == '(':
             flag = 1
             continue
         flag = 0
+
     return separated_tokens
 
 
+# Add token to stack, taking extra care of && and || shortcircuiting
+# operators. (Using &0 , counter substitution)
 def add(arr, token, ctr, scope):
-    print2("tok:", token)
     if type(token) is tuple:
         arr.append(token)
     else:
@@ -127,34 +133,41 @@ def add(arr, token, ctr, scope):
             arr.append((token,get_type(token, scope)))
 
 
+# Convert separated token list to postfix token list.
+# Example: ['4', '+', '5'] to ['4', '5', '+']
 def to_postfix(tokens, scope):
-    stack = []
-    postfix = []
-    ctr = 0
-    i = 0
+
+    stack, postfix, ctr, i = [], [], 0, 0
+
     while i < len(tokens):
         tk = tokens[i]
         if tk in globals.ops:
             if tk == '(':
                 add(stack, tk, ctr, scope)
+
             elif tk == ')':
                 while stack[-1][0] != '(':
                     add(postfix, stack.pop(), ctr, scope)
                 stack.pop()
+
             elif len(stack) == 0 or stack[-1][0] == '(':
                 add(stack, tk, ctr, scope)
+
             else:
                 if globals.priority[tk] < globals.priority[stack[-1][0]]:
                     add(postfix, stack.pop(), ctr, scope)
                     continue
+
                 if globals.priority[tk] > globals.priority[stack[-1][0]]:
                     add(stack, tk, ctr, scope)
+
                 elif globals.priority[tk] == globals.priority[stack[-1][0]]:
                     if globals.priority[tk] % 2 == 0:
                         add(postfix, stack.pop(), ctr, scope)
                         add(stack, tk, ctr, scope)
                     else:
                         add(stack, tk, ctr, scope)
+
             if tk == '&&':
                 add(postfix, ('&0', ctr), ctr, scope)
                 ctr += 1
@@ -178,47 +191,63 @@ def to_postfix(tokens, scope):
     return postfix
 
 
+
+# Return the type with highest priority in coersion.
+# Eg. Lf>lf>f>lld>ld>d etc.
 def max_type(t1, t2='number', t3='number'):
-    if(globals.priority_type[t1] >= globals.priority_type[t2] and globals.priority_type[t1] >= globals.priority_type[t3]):
+
+    p_t = globals.priority_type
+
+    if(p_t[t1] >= p_t[t2] and p_t[t1] >= p_t[t3]):
         return t1
-    elif(globals.priority_type[t2] >= globals.priority_type[t1] and globals.priority_type[t2] >= globals.priority_type[t3]):
+
+    elif(p_t[t2] >= p_t[t1] and p_t[t2] >= p_t[t3]):
         return t2
-    elif(globals.priority_type[t3] >= globals.priority_type[t1] and globals.priority_type[t3] >= globals.priority_type[t2]):
+
+    elif(p_t[t3] >= p_t[t1] and p_t[t3] >= p_t[t2]):
         return t3
 
-def calculate(expr, scope, vartable=globals.var_table):
-    print2("calculate in Calc.py got: \%"+str(expr)+"%", scope, "\n")
-    if re.match(r"^(?s)\s*$", expr):
-        return 0
-    # If string has nothing, return 0. This will be removed
-    # later when uninitialised vars are handled
-    if re.match(r"^(?s)\s*{\s*", expr):
-        return expr
-    separated_tokens = sep(expr.strip()) # Separate out all tokens
-    print2("separated_tokens: ",separated_tokens)
-    separated_tokens = unary_handle(separated_tokens) # Fix unary operators
-    print2("after handling unary_ops: ", separated_tokens)
-    separated_tokens = pre_post_handle(separated_tokens) # Replace pre increment ++ and --
-    postfix = to_postfix(separated_tokens, scope)
 
-    print1("postfix:", postfix)
-    print3("vartable: ")
-    print3(globals.var_table)
-    print3("mem: ")
-    print3(globals.memory)
+# Debugging only function. Slows down code considerably.
+def caller_name():
+    import inspect
+    frame=inspect.currentframe()
+    frame=frame.f_back.f_back
+    code=frame.f_code
+    return code.co_filename
+
+
+
+
+# Backbone function of the whole project. Evaluates any
+# expression, assigns variables, looks up memory addresses,
+# everything. Can get input like '5+(a=4)+(a==4)?1:2'.
+
+def calculate(expr, scope, vartable=globals.var_table):
+
+
+    if re.match(r'^(?s)\s*$', expr):
+        return 0
+    # If string has nothing, return 0. *TODO: Fix this "tape"
+
+    if re.match(r'^(?s)\s*{\s*', expr):
+        return expr
+    # Not sure what this did. *TODO: Ask Kapila
+
+    separated_tokens = sep(expr.strip())
+    # Separate out all tokens
+
+    separated_tokens = unary_handle(separated_tokens)
+    # Fix unary operators like +, - etc.
+
+    separated_tokens = pre_post_handle(separated_tokens)
+    # Replace pre increment ++ and --
+
+    postfix = to_postfix(separated_tokens, scope)
+    # Convert to postfix
 
     all_type = 'number'
-    stack = []
-    #for k in postfix:
-        #if 'Error' == is_num(k[0]):
-            #if k:
-                #stack.append(k)
-        #else:
-            #m = is_num(k[0])
-            #stack.append((m,'number'))
-    #postfix = stack
-    print1("postfix:", postfix)
-    var_stack = []
+    stack, var_stack = [], []
     l = lambda: len(var_stack) - 1
     idx = 0
     for i, tk in enumerate(postfix):
@@ -237,14 +266,15 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token in globals.un_ops + ('&0', '|1'):
                 t1 = var_stack[l()][1]
                 var_stack[l()] = var_stack[l()][0]
-                #print1("var:", var_stack[l()])
-            elif token is '?':
+            elif token == '?':
                 t1 = var_stack[l()][1]
                 var_stack[l()] = var_stack[l()][0]
                 t2 = var_stack[l()-1][1]
                 var_stack[l()-1] = var_stack[l()-1][0]
                 t3 = var_stack[l()-2][1]
                 var_stack[l()-2] = var_stack[l()-2][0]
+
+
             if token == '---':
                 key = Runtime.get_key(var_stack[l()], scope)
                 val = get_val(key, scope) - 1
@@ -342,7 +372,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '++':
                 key = Runtime.get_key(var_stack[l()], scope)
-                #print1("key:", get_val(key, scope))
                 val = get_val(key, scope) + 1
                 set_val(key, val, scope)
                 var_stack[l()] = (val - 1, max_type(t1))
@@ -400,7 +429,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l() - 1] = (get_val(var_stack[l() - 1], scope) & get_val(var_stack[l()], scope), max_type(t1, t2))
                 var_stack.pop()
             elif token == '+':
-                print1("STACK!!:", get_val(var_stack[l()], scope), var_stack[l()-1])
                 var_stack[l() - 1] = (get_val(var_stack[l() - 1], scope) + get_val(var_stack[l()], scope), max_type(t1, t2))
                 var_stack.pop()
             elif token == '*':
@@ -438,7 +466,6 @@ def calculate(expr, scope, vartable=globals.var_table):
 
             elif token == "#type#":
                 new_type = tk[1]
-                print2("new_type before:", new_type, type(new_type))
                 if new_type == 'longlong':
                     new_type = 'long long'
                 elif new_type == 'longint':
@@ -447,7 +474,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                     new_type = 'long long int'
                 elif new_type == 'longdouble':
                     new_type = 'long double'
-                print2("new_type:", new_type)
                 if new_type in ['float', 'double', 'long double']:
                     if type(var_stack[l()]) is 'str':
                         raise Exceptions.any_user_error("Trying to convert string to float.")
@@ -463,16 +489,16 @@ def calculate(expr, scope, vartable=globals.var_table):
                         raise Exceptions.any_user_error("Trying to convert float to string.")
                     else:
                         var_stack[l()] = (chr(get_val(var_stack[l()], scope)), new_type)
-        print1("stack:", var_stack)
         temp = var_stack[l()]
-        print2("temp:", temp)
         if temp[1] not in ['number', 'void']:
             m1 = globals.type_range[temp[1]][0]
             m2 = globals.type_range[temp[1]][1]
-            temp = get_val(temp[0], scope, 2)
-            print2(temp, m1, m2)
-            if not (temp is '' or temp is None or (m1 <= temp and temp <= m2)):
+            if type(temp[0]) is int:
+                temp = temp[0]
+            else:
+                temp = 0
+            if not (temp == '' or temp is None or (m1 <= temp and temp <= m2)):
                 raise Exceptions.any_user_error("Out of bounds!", temp, m1, m2)
-    r = get_val(var_stack.pop()[0], scope)
-    print2("calculate in Calc.py returned:", r, "\n")
+    ret = var_stack.pop()
+    r = get_val(ret[0], scope)
     return r

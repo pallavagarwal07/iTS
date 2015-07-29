@@ -27,6 +27,29 @@ def makeMemory(mem, indices, l, type, val, scope):
 dim = []
 
 
+def malloc(num, step, level, val, scope, cast):
+    assert level >= 0
+    ret = globals.curr_mem
+    for i in range(0, num):
+        if level or val is '':
+            globals.memory[(globals.curr_mem,)] = [Value('', (cast, level)), step, level + 1]
+        else:
+            globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope), (cast, level)) if i < len(val) else Value(0, (cast, level)), step, level + 1]
+        globals.curr_mem += step
+    return ret
+
+
+def str_to_mem(str, scope):
+    str_size = len(str)+1
+    mem = globals.curr_mem
+    globals.curr_mem += globals._size_of('pointer')
+    globals.memory[( mem, )] = [ globals.Value(type=('char', 1)), globals._size_of('pointer'), 2]
+    ret_mem = globals.curr_mem
+    makeMemory(mem, [str_size], 0, 'char', ["'"+ch+"'" for ch in str] + ["'\000'"], scope)
+    return ( mem, )
+
+
+
 def decl(var, val, cast, scope, tags):
     pointers = re.findall('\*+', var)
     if pointers:
@@ -64,7 +87,6 @@ def decl(var, val, cast, scope, tags):
             global dim
             dim = []
             dimension_list(val)
-            print2("dim: ",dim, " indices: ", indices)
             if indices[0] is 0:
                 indices[0] = dim[0]
                 #raise Exceptions.any_user_error("Dimensions of array and initialized value don't match")
@@ -112,6 +134,7 @@ def get_matching_brace(val, i):
     return i
 
 
+
 def get_key(var, scope):
     var = globals.get_details(var)
     name = var[0]
@@ -122,12 +145,15 @@ def get_key(var, scope):
         return resolve(key, indices, scope)
     else:
         name = name.decode('string_escape')
-        if re.match(r"'.'", name):
-            return ord(name.replace("'", ''))
+        if re.match(r"^'.'$", name):
+            return ord(name[1:-1])
+        if re.match(r"^\".*\"$", name):
+            return str_to_mem(name[1:-1], scope)
         return globals.in_var_table(name, scope)
 
 
 def get_key_first(var, scope):
+    print "FRT: ", var
     var = globals.get_details(var)
     name = var[0]
     indices = var[1]
@@ -152,33 +178,28 @@ def resolve(key, indices, scope):
 
 
 def chk_decl(line, scope):
+
     r = re.findall(
         r'^(?s)\s*(static\s+)?(const\s+)?(long\s+double|long\s+long\s+int|'
         r'long\s+long|long\s+int|long|int|float|double|char)\s+'
         r'((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*,)'
         r'*((\s*\**\s*[a-zA-Z_]+[a-zA-Z0-9_]*(\[.*\])*)(\s*=\s*(.*?))?\s*;)',
         line)
+
     if len(r) != 0:
-        print2("r:", r)
         r = r[0]
         cast = r[2]
-        print2("r:", r)
         tags = (r[0], r[1])
-        print2("cast:", cast, "tags:", tags)
-        print2(line)
         a = re.sub(r'^(?s)\s*(static\s+)?(const\s+)?' + cast, '', line)
-        print2("decl:", a)
         a = re.sub(';', '', a)
-        print2("decl:", a)
         a = globals.toplevelsplit(a, ',')
-        print2("decl:", a)
-        a = [k.strip().split('=') for k in a]
-        print2("decl:", a)
+        a = [globals.toplevelsplit(k.strip(), '=') for k in a]
         for variables in a:
             if len(variables) == 1:
                 decl(variables[0].strip(), '', cast, scope, tags)
             else:
-                decl(variables[0].strip(), Calc.calculate(variables[1], scope, globals.var_table), cast, scope, tags)
+                decl(variables[0].strip(), Calc.calculate(variables[1], scope,\
+                        globals.var_table), cast, scope, tags)
         return True
     else:
         return False
@@ -256,7 +277,8 @@ def decl_func(line):
 
 
 def def_func(line, code, num):
-    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long|long\s+int|long|int|float|double|char|void)\s+'
+    k = re.findall(r'^(?s)\s*(long\s+double|long\s+long\s+int|long\s+long'
+                   r'|long\s+int|long|int|float|double|char|void)\s+'
                    r'([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', line)
     if k:
         assert len(k) == 1
@@ -302,19 +324,6 @@ def traverse(code, scope):
             continue
         if def_func(line, code, i):
             continue
-
-
-def malloc(num, step, level, val, scope, cast):
-    assert level >= 0
-    ret = globals.curr_mem
-    for i in range(0, num):
-        if level or val is '':
-            globals.memory[(globals.curr_mem,)] = [Value('', (cast, level)), step, level + 1]
-        else:
-            globals.memory[(globals.curr_mem,)] = [Value(Calc.calculate(val[i], scope), (cast, level)) if i < len(val) else Value(0, (cast, level)), step, level + 1]
-            print3("mem", globals.memory, "\nvar_table", globals.var_table)
-        globals.curr_mem += step
-    return ret
 
 
 def execute(code, scope):

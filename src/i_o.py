@@ -183,40 +183,25 @@ def handle_input(statement, scope):
                 Vars.set_val((v[0]+len(vals)*globals.memory[v][1],), 0)
             else:
                 Vars.set_val(v, vals)
-    print len_inp
     return len_inp
 
 
 def handle_output(line, scope):
     line = line.decode('string_escape')
     sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
-    # sep = [('Hello %d %lf', ', 45, 67')]
-    #print2("STATEMENT TO OUTPUT:", line, "WITH", scope)
-    #print2("sep:", sep)
     if len(sep) == 0:
         return False
-    #if type(sep[0]) is str:
-        #sep = [[sep[0]]]
     type_arr, regex_arr = var_types(sep[0][0])
-    #print2("req arrays:", type_arr,"\n", regex_arr)
     format_vars = globals.toplevelsplit(sep[0][1][1:], ',')
-    #print2("variables:", format_vars)
-    #if len(format_vars) != len(type_arr):
-        #raise Exceptions.any_user_error("Incorrect number of arguments")
     format_string = ''
     j = 0
     for i, ch in enumerate(regex_arr):
-        #print2(ch)
         if ch[0] in ['literal', 'whitespace']:
             format_string += ch[3]
         else:
             while format_vars[j] == '':
                 j += 1
-            #key = Runtime.get_key(format_vars[j], scope)
             v = Calc.calculate(format_vars[j].strip(), scope, globals.var_table)
-            #print2("key: ", key, "var_table:", globals.var_table[key], "val = ", globals.var_table[key][0].v, "k=", v)
-            #if not is_same(globals.var_table[key][1], ch[0]):
-                #raise Exceptions.any_user_error("Variable type not same as output!!")
             if ch[0] is 'char':
                 format_string +=  chr(v)
             elif ch[0] is 'string':
@@ -225,7 +210,6 @@ def handle_output(line, scope):
                 while globals.memory[(v + c*step,)][0].v is not 0:
                     format_string += chr(globals.memory[(v+c*step,)][0].v)
                     c += 1
-                #print2(globals.memory[(v,)])
             else:
                 st = '%' + str(ch[2])
                 if ch[0] in ['int', 'long', 'long long']:
@@ -234,12 +218,7 @@ def handle_output(line, scope):
                     st += 'f'
                 format_string += st % v
             j += 1
-        #print2("format_string:", format_string)
-        #if format_vars[i] != '':
-            #format_vars[i] = Calc.calculate(format_vars[i].strip(), scope, globals.var_table)
-    #format_string = format_string % tuple(format_vars)
     globals.out.write(format_string)
-
 
     import base64
     gui_out = base64.b64encode(format_string)
