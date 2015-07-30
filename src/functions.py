@@ -2,6 +2,7 @@ from globals import is_num, print1, print2, print3, toplevelsplit
 import fake_default
 import Exceptions
 import fake_math
+import fake_stdio
 import globals
 import re
 

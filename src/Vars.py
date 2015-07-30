@@ -13,7 +13,8 @@ def get_type(key, scope):
             if k:
                 if k[0][0] in globals.predefined_funcs:
                     return 'double'
-                return globals.functions[k[0][0]][0]
+               #return globals.functions[k[0][0]][0]
+                return 'int'
             else:
                 key = Runtime.get_key_first(key, scope)
                 if type(key) is int:

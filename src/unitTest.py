@@ -30,7 +30,6 @@ def test(code, input, propOut, output):
     # code = PreProcessing.get_code(CodeFile)
     code = PreProcessing.nest(code)
     # Gui.make_ui(code)
-    # print globals.type_range
     # Access is used to keep track of current scope
     Access = ['global']
     globals.setup()

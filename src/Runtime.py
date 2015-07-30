@@ -45,7 +45,7 @@ def str_to_mem(str, scope):
     globals.curr_mem += globals._size_of('pointer')
     globals.memory[( mem, )] = [ globals.Value(type=('char', 1)), globals._size_of('pointer'), 2]
     ret_mem = globals.curr_mem
-    makeMemory(mem, [str_size], 0, 'char', ["'"+ch+"'" for ch in str] + ["'\000'"], scope)
+    makeMemory(mem, [str_size], 0, 'char', ["'"+ch.encode('string_escape')+"'" for ch in str] + ["'\000'"], scope)
     return ( mem, )
 
 
@@ -62,8 +62,8 @@ def decl(var, val, cast, scope, tags):
     if scope.endswith("-invalid-"):
         raise Exceptions.any_user_error("Variable declaration not allowed within switch case")
     data = globals.get_details(var)
-    var = data[0]
-    indices = data[1]
+    var, indices = data[0], data[1]
+
     indices = [Calc.calculate(ind, scope) for ind in indices]
     level += len(indices)
     key = globals.in_var_table(var, scope)
@@ -145,15 +145,17 @@ def get_key(var, scope):
         return resolve(key, indices, scope)
     else:
         name = name.decode('string_escape')
-        if re.match(r"^'.'$", name):
-            return ord(name[1:-1])
-        if re.match(r"^\".*\"$", name):
-            return str_to_mem(name[1:-1], scope)
-        return globals.in_var_table(name, scope)
+        if re.match(r"^(?s)'.'$", name):
+            ret = ord(name[1:-1])
+            return ret
+        if re.match(r"^(?s)\".*\"$", name):
+            ret = str_to_mem(name[1:-1], scope)
+            return ret
+        ret = globals.in_var_table(name, scope)
+        return ret
 
 
 def get_key_first(var, scope):
-    print "FRT: ", var
     var = globals.get_details(var)
     name = var[0]
     indices = var[1]
@@ -164,7 +166,7 @@ def get_key_first(var, scope):
     else:
         name = name.decode('string_escape')
         if re.match(r"'.'", name):
-            return ord(name.replace("'", ''))
+            return ord(name[1:-1])
         return globals.in_var_table(name, scope)
 
 
@@ -386,8 +388,8 @@ def execute(code, scope):
             continue
         if chk_decl(line, scope):
             continue
-        if i_o.handle_output(line, scope):
-            continue
+    #   if i_o.handle_output(line, scope):
+    #       continue
         if is_updation(line):
             Calc.calculate(line, scope, globals.var_table)
             continue

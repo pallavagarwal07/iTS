@@ -3,7 +3,8 @@
 CURRPATH=$(pwd)
 SOURCE=$0
 
-# We need to resolve the path to the actual code directory (Running executable could be a symlink)
+# We need to resolve the path to the actual code directory
+# (Running executable could be a symlink)
 while [ -h "$SOURCE" ]; do
     BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
     SOURCE="$(readlink "$SOURCE")"
@@ -131,7 +132,7 @@ run_test()
             $BASEDIR/gcc_out/$filename"
     eval $CMD
     CMD="$BASEDIR/../its -i $BASEDIR/inputs/$filename
-            -o $BASEDIR/its_out/$filename -c $BASEDIR/c_codes/${filename}.c > /dev/null"
+            -o $BASEDIR/its_out/$filename -c $BASEDIR/c_codes/${filename}.c -e /dev/null > /dev/null"
     eval $CMD
 
     local val1="`cat $BASEDIR/gcc_out/$filename; printf "a"`"

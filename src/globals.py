@@ -362,3 +362,15 @@ def separate_def(input): # input is like "int a" or "int b[]" or "long long ** g
         keyword = re.sub(r'^\[.*?\]\s*', '', keyword)
 
     return type, var
+
+
+def get_str(mem):
+    chr_arr, chr_str, key = [], '', (mem, )
+
+    while memory[key][0].v != 0:
+        chr_arr.append(chr(memory[key][0].v))
+        key = (key[0] + memory[key][1], )
+
+    chr_str = ''.join(chr_arr)
+
+    return chr_str

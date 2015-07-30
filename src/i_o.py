@@ -130,7 +130,6 @@ def extract(regex_arr, type_arr):
             globals.inp = re.sub(reg, '', globals.inp[:num]) + globals.inp[num:]
             values.append(k[0])
         l +=  (l1 - len(globals.inp))
-    #print2("INPUT EXTRACTED the following values: ", values)
     return values, l
 
 
@@ -184,44 +183,3 @@ def handle_input(statement, scope):
             else:
                 Vars.set_val(v, vals)
     return len_inp
-
-
-def handle_output(line, scope):
-    line = line.decode('string_escape')
-    sep = re.findall(r'(?s)printf\s*\(\s*\"(.*)\"\s*(,.+)*\s*\)', line)
-    if len(sep) == 0:
-        return False
-    type_arr, regex_arr = var_types(sep[0][0])
-    format_vars = globals.toplevelsplit(sep[0][1][1:], ',')
-    format_string = ''
-    j = 0
-    for i, ch in enumerate(regex_arr):
-        if ch[0] in ['literal', 'whitespace']:
-            format_string += ch[3]
-        else:
-            while format_vars[j] == '':
-                j += 1
-            v = Calc.calculate(format_vars[j].strip(), scope, globals.var_table)
-            if ch[0] is 'char':
-                format_string +=  chr(v)
-            elif ch[0] is 'string':
-                step = globals.memory[(v,)][1]
-                c = 0;
-                while globals.memory[(v + c*step,)][0].v is not 0:
-                    format_string += chr(globals.memory[(v+c*step,)][0].v)
-                    c += 1
-            else:
-                st = '%' + str(ch[2])
-                if ch[0] in ['int', 'long', 'long long']:
-                    st += 'd'
-                else:
-                    st += 'f'
-                format_string += st % v
-            j += 1
-    globals.out.write(format_string)
-
-    import base64
-    gui_out = base64.b64encode(format_string)
-    globals.gui += "\nstdout_print('"+gui_out+"');"
-
-    return True
