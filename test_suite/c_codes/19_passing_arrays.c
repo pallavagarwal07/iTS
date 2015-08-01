@@ -8,7 +8,7 @@ int main()
     for(i=0; i<54; i++)
         arr[i] = i;
 
-    printf("%d\n", func(arr));
+    printf("%lld\n", func(arr));
 
     for(i=0; i<27; i++)
         printf("%d\t", arr[i]);

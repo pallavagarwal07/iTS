@@ -55,6 +55,7 @@ def decl(var, val, cast, scope, tags):
     if pointers:
         level = len(pointers[0])
         var = re.sub('\*', '', var)
+        var = re.sub('\s', '', var)
     else:
         level = 0
 
@@ -181,6 +182,11 @@ def resolve(key, indices, scope):
 
 def chk_decl(line, scope):
 
+    r = re.findall(
+        r'^(?s)\s*(static\s+)?(const\s+)?(long\s+double|long\s+long\s+int|'
+        r'long\s+long|long\s+int|long|int|float|double|char)', line)
+    if len(r) != 0:
+        line = re.sub(r[0][2], r[0][2] + ' ', line)
     r = re.findall(
         r'^(?s)\s*(static\s+)?(const\s+)?(long\s+double|long\s+long\s+int|'
         r'long\s+long|long\s+int|long|int|float|double|char)\s+'

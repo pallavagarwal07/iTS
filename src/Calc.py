@@ -225,7 +225,6 @@ def caller_name():
 
 def calculate(expr, scope, vartable=globals.var_table):
 
-
     if re.match(r'^(?s)\s*$', expr):
         return 0
     # If string has nothing, return 0. *TODO: Fix this "tape"
@@ -246,7 +245,6 @@ def calculate(expr, scope, vartable=globals.var_table):
     postfix = to_postfix(separated_tokens, scope)
     # Convert to postfix
 
-    all_type = 'number'
     stack, var_stack = [], []
     l = lambda: len(var_stack) - 1
     idx = 0
@@ -286,7 +284,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 set_val(key, val, scope)
                 var_stack[l()] = (val, max_type(t1))
             elif token == '`*`':
-                var_stack[l()] = (get_val(var_stack[l()], scope), get_type(var_stack[l()], scope)) # Do not remove the comma. It forces formation of a tuple
+                var_stack[l()] = ((get_val(var_stack[l()], scope), ), get_type(var_stack[l()], scope)) # Do not remove the comma. It forces formation of a tuple
             elif token == '`&`':
                 key = Runtime.get_key(var_stack[l()], scope)
                 if type(key) is not tuple:
