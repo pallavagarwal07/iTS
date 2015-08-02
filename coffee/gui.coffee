@@ -6,6 +6,8 @@ marker = null
 curRunning = null
 time = 1000
 scale = 1
+input_processed = 0
+prev_scale = 0
 speed =
     0  : 5000
     1  : 10
@@ -28,8 +30,25 @@ $(->
     )
 )
 
+$(->$('#pause').change(->
+    console.log("Here")
+    if $('#pause').prop('checked') == true
+        $('#pause_label span').text("Play")
+        $('#slider').slider("disable")
+        prev_scale = scale
+        scale = 5000
+    else
+        $('#pause_label span').text("Pause")
+        $('#slider').slider("enable")
+        scale = prev_scale
+        window.clearTimeout(curRunning)
+        simulate()
+))
+
 $(->
     $('#stdout').text("")
+    $('#stdin_highlight').hide()
+    $('#pause_label').css('height', $('#reset').css('height'))
 )
 
 
@@ -43,6 +62,22 @@ stdout_print = (b64str) ->
     $('#stdout').val(final_out)
     $('#stdout').animate(
         scrollTop: $('#stdout')[0].scrollHeight - $('#stdout').height()
+    , 500)
+    time = 1000
+
+
+stdin_write = (n)->
+    s = $('#stdin_highlight').html()
+    if input_processed == 0
+        s = "<samp><span id='highlight_input'>" + s.substr(6)
+        s = s.substr(0, n + 33) + "</span>" + s.substr(n + 33)
+    else
+        s = s.replace("</span>", "")
+        s = s.substr(0, input_processed + n + 33) + "</span>" + s.substr(input_processed + n + 33)
+    input_processed += n
+    $('#stdin_highlight').html(s)
+    $('#stdin_highlight').animate(
+        scrollTop: (($('#highlight_input').text().match(/\n/g)||[]).length)*parseInt($('#highlight_input').css('line-height'))
     , 500)
     time = 1000
 
@@ -93,6 +128,8 @@ reset = ->
     editor.getSession().removeMarker(marker)
     window.clearTimeout(curRunning)
     $('#stdin').prop('disabled', false)
+    $('#stdin').show()
+    $('#stdin_highlight').hide()
     editor.setReadOnly(false)
     $('#stdout').val(prev_out)
     console.log("PREV TEXT "+prev_out)
@@ -150,6 +187,8 @@ simulate = ->
         editor.getSession().removeMarker(marker)
         $('#stdin').prop('disabled', false)
         editor.setReadOnly(false)
+        $('#stdin').show()
+        $('#stdin_highlight').hide()
     else
         curRunning = window.setTimeout(simulate, time*scale)
 
@@ -177,6 +216,10 @@ compile = ->
 
     code = editor.getValue()
     input = $('#stdin').val()
+    $('#stdin').hide()
+    $('#stdin_highlight').show()
+    $('#stdin_highlight').height($('#stdout').height())
+    $('#stdin_highlight').html("<samp>"+input+"</samp>")
     code = window.btoa(code)
     input = window.btoa(input)
     $('#sbt_row .btn').button('toggle')
@@ -193,3 +236,18 @@ compile = ->
     )
 
 $(->$("#pause").button())
+        #primary: "ui-icon-play"
+        #secondary: "ui-icon-pause"
+      #}))
+
+#$("#pause").button(
+      #text: false,
+      #icons:
+        #primary: "ui-icon-play"
+    #).click(->
+        #if $(this).text() == "play"
+            #options = label: "pause", icons: primary: "ui-icon-pause"
+        #else
+            #options = label: "play", icons: primary: "ui-icon-play"
+        #$(this).button("option", options)
+    #)

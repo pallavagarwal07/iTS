@@ -11,8 +11,8 @@
         <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
         <script src="./js/gui.js"></script>
     </head>
     <body id='body'>
@@ -35,11 +35,11 @@
                                         Speed
                                     </div>
                                 </form>
-                                <input type="checkbox" id="pause">
-                                    <label for="pause">Pause</label>
                                 <button type="button" class="btn btn-primary" onclick="reset();" id="reset">
                                     Reset
                                 </button>
+                                <input type="checkbox" id="pause" class="btn btn-primary">
+                                    <label for="pause" id="pause_label">Pause</label>
                             </ul>
                         </div>
                     </div>
@@ -63,6 +63,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <textarea placeholder='stdin' rows="5" class='form-control' id='stdin'></textarea>
+                            <div id='stdin_highlight' class='form-control'></div>
                         </div>
                         <div class="col-md-6">
                             <textarea placeholder='stdout' rows="5" class='form-control' id='stdout' readonly></textarea>

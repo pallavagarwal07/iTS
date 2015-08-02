@@ -124,4 +124,18 @@ textarea {
   height: 100%;
   width: 48.7%; }
 
+#stdin_highlight {
+  height: 100%;
+  white-space: pre;
+  overflow: auto; }
+
+#highlight_input {
+  background-color: #F45;
+  /*color: ;*/ }
+
+#pause_label {
+  margin-top: 10px;
+  margin-right: 5px;
+  float: right; }
+
 /*# sourceMappingURL=style.css.map */
