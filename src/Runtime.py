@@ -45,7 +45,8 @@ def str_to_mem(str, scope):
     globals.curr_mem += globals._size_of('pointer')
     globals.memory[( mem, )] = [ globals.Value(type=('char', 1)), globals._size_of('pointer'), 2]
     ret_mem = globals.curr_mem
-    makeMemory(mem, [str_size], 0, 'char', ["'"+ch.encode('string_escape')+"'" for ch in str] + ["'\000'"], scope)
+    makeMemory(mem, [str_size], 0, 'char',
+            ["'"+ch.encode('string_escape')+"'" for ch in str] + ["'\000'"], scope)
     return ( mem, )
 
 
@@ -59,9 +60,9 @@ def decl(var, val, cast, scope, tags):
     else:
         level = 0
 
-    globals.gui += "\ndefine_variable(\'"+cast+"\',\'"+'-'.join(scope.split())+"\',\'"+var+"\',\'"+str( val )+"\');"
     if scope.endswith("-invalid-"):
         raise Exceptions.any_user_error("Variable declaration not allowed within switch case")
+
     data = globals.get_details(var)
     var, indices = data[0], data[1]
 
@@ -70,17 +71,25 @@ def decl(var, val, cast, scope, tags):
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
         raise Exceptions.any_user_error("Error 101: Multiple declaration of variable " + var + "\n")
+
     newKey = (var, scope, globals.curr_mem)
     globals.var_table[newKey] = [Value(val, (cast, level), tags), cast, level, globals.curr_mem]
+
     if level:
         size = globals._size_of('pointer')
     else:
         size = globals._size_of(cast)
+
     globals.memory[(globals.curr_mem,)] = [globals.var_table[newKey][0], size, level+1]
+
+    globals.gui += "\ndefine_variable('{0}', '{1}', '{2}', '{3}', '{4}')".format(
+            cast, '-'.join(scope.split()), var, str(val), globals.curr_mem )
+
     if level == 0:
         globals.curr_mem += globals._size_of(cast)
     else:
         globals.curr_mem += globals._size_of('pointer')
+
     if indices:
         if val is not '':
             val = val.strip()
@@ -337,9 +346,11 @@ def traverse(code, scope):
 def execute(code, scope):
     if code == []:
         return
+
     gui_parent = '-'.join(scope.split()[:-1]) if '-'.join(scope.split()[:-1]) \
             else 'simulation'
-    gui_str = "\ncreate_scope(\'"+gui_parent+"\',\'"+'-'.join(scope.split())+"\');"
+    gui_str = "\ncreate_scope('{0}', '{1}')".format(gui_parent, '-'.join(scope.split()))
+
     if not globals.gui.endswith(gui_str):
         globals.gui += gui_str
     if type(code) is str:
@@ -394,8 +405,6 @@ def execute(code, scope):
             continue
         if chk_decl(line, scope):
             continue
-    #   if i_o.handle_output(line, scope):
-    #       continue
         if is_updation(line):
             Calc.calculate(line, scope, globals.var_table)
             continue

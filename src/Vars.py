@@ -69,6 +69,7 @@ def get_val(key, scope, mul = 1):
 
 
 def set_val(key, val, scope = '-none-'):
+
     if type(key) is not tuple:
         if scope == '-none-':
             raise Exceptions.any_user_error("Something wrong.")
@@ -76,13 +77,17 @@ def set_val(key, val, scope = '-none-'):
             key = Runtime.get_key(key, scope)
         else:
             raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable")
+
     if len(key) != 1:
         globals.gui += "\nupdate_variable(\'"+'-'.join(key[1].split())+ \
             "-"+key[0]+"\',\'"+str(val)+"\');"
+
         t = globals.in_var_table(key[0], key[1])
         if t:
             globals.var_table[t][0].v = val
     else:
+        globals.gui += "\nupdate_variable(\'"+str(key[0])+"\',\'"+str(val)+"\');"
+
         if key in globals.memory:
             globals.memory[key][0].v = val
         else:
