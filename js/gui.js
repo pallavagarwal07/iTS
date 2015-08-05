@@ -103,12 +103,10 @@ stdin_write = function(n) {
   return time = 1000;
 };
 
-define_variable = function(type, scp, name, val, id) {
-  var panel;
-  if (id == null) {
-    id = scp + "-" + name;
-  }
-  panel = '<div class="panel panel-success" id="' + id + '" style="display:none;"><div class="panel-heading"> <h3 class="panel-title">' + name + "\t|\t" + type + '</h3></div> <div class="panel-body" id="' + id + '-body">' + val + '</div></div>';
+define_variable = function(type, scp, name, val, mem) {
+  var id, panel;
+  id = scp + "-" + name;
+  panel = '<div class="panel panel-success" id="' + id + '" style="display:none;"><div class="panel-heading"> <h3 class="panel-title">' + name + "\t|\t" + type + '</h3></div> <div id="' + id + '-body" class="panel-body ' + mem + '-mem">' + val + '</div></div>';
   $('#' + scp + '-body').append(panel);
   $('#' + id).show(400);
   return time = 1000;
@@ -147,13 +145,15 @@ update_variable = function(id, val) {
   var variable;
   variable = $('#' + id + '-body');
   variable.text(val);
+  variable = $('.' + id + '-mem');
+  variable.text(val);
   return time = 1000;
 };
 
 create_scope = function(scp, id) {
   var l, panel;
   l = $('.var').length;
-  panel = '<div class="panel panel-warning" id="' + id + '" style="display:none;"><div class="panel-heading"> <h3 class="panel-title">' + id + '</h3> </div> <div class="panel-body" id="' + id + '-body"></div></div>';
+  panel = '<div class="panel panel-warning" id="' + id + '" style="display:none;"> <div class="panel-heading"><h3 class="panel-title">' + id + '</h3></div> <div class="panel-body" id="' + id + '-body"></div></div>';
   $('#' + scp + '-body').append(panel);
   $('#' + id).show(400);
   return time = 1000;

@@ -82,25 +82,11 @@ stdin_write = (n)->
     time = 1000
 
 
-define_variable = (type, scp, name, val, id = scp+"-"+name) ->
-    # Do not delete just yet
-    #scope = $('#'+scp+" .scp")
-    #console.log(scope)
-    #scope.append('<div id=\''+id+'\'></div>')
-    #variable = $('#'+id)
-    #console.log(variable)
-    #variable.append('<div class=\'tagTop\'></div>')
-    #variable.append('<div class=\'tagBot\'></div>')
-    #variable.children('.tagBot').html(val)
-    #variable.children('.tagTop').append('<div class="name"></div>')
-    #variable.children('.tagTop').append('<div class="type"></div>')
-    #variable.children('.tagTop').children('.name').html(name)
-    #variable.children('.tagTop').children('.type').html(type)
-    #variable.addClass('newborn')
-    #setTimeout((->variable.addClass('var').removeClass('newborn')), 10)
+define_variable = (type, scp, name, val, mem) ->
+    id = scp+"-"+name
     panel = '<div class="panel panel-success" id="'+id+'" style="display:none;"><div class="panel-heading">
         <h3 class="panel-title">'+name+"\t|\t"+type+'</h3></div>
-        <div class="panel-body" id="'+id+'-body">'+val+'</div></div>'
+        <div id="'+id+'-body" class="panel-body '+mem+'-mem">'+val+'</div></div>'
     $('#'+scp+'-body').append(panel)
     $('#'+id).show(400)
     time = 1000
@@ -139,12 +125,14 @@ reset = ->
 update_variable = (id, val) ->
     variable = $('#'+id+'-body')
     variable.text(val)
+    variable = $('.'+id+'-mem')
+    variable.text(val)
     time = 1000
 
 create_scope = (scp, id) ->
     l = $('.var').length
-    panel = '<div class="panel panel-warning" id="'+id+'" style="display:none;"><div class="panel-heading">
-        <h3 class="panel-title">'+id+'</h3> </div>
+    panel = '<div class="panel panel-warning" id="'+id+'" style="display:none;">
+        <div class="panel-heading"><h3 class="panel-title">'+id+'</h3></div>
         <div class="panel-body" id="'+id+'-body"></div></div>'
     $('#'+scp+'-body').append(panel)
     $('#'+id).show(400)

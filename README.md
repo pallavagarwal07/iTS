@@ -17,8 +17,9 @@ find . -type f -exec chmod 664 {} \;
 3. Type `setfacl -d -m u::rwX,g::rwX,o::- html`. Note the capitalization. Replace `html` with
 the actual name of the html folder. This will ensure that any subfolders, subfiles created will
 automatically have the required permissions.
-4. Finally, make the `its` file executable.
+4. Finally, make the `its`, and `test_all` file executable.
 ```
 chmod 774 html/iTS/its
+chmod 774 html/iTS/test_suite/test_all
 ```
 5. Try to run the program online to see if it works.
