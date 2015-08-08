@@ -7,7 +7,7 @@ curRunning = null
 time = 1000
 scale = 1
 input_processed = 0
-prev_scale = 0
+prev_scale = 1
 speed =
     0  : 5000
     1  : 10
@@ -30,8 +30,8 @@ $(->
     )
 )
 
+
 $(->$('#pause').change(->
-    console.log("Here")
     if $('#pause').prop('checked') == true
         $('#pause_label span').text("Play")
         $('#slider').slider("disable")
@@ -45,11 +45,19 @@ $(->$('#pause').change(->
         simulate()
 ))
 
+
 $(->
     $('#stdout').text("")
     $('#stdin_highlight').hide()
     $('#pause_label').css('height', $('#reset').css('height'))
 )
+
+
+user_error = (b64error) ->
+    error = window.atob(b64error)
+    $('#modal-msg').html(error)
+    $('#myModal').modal('show')
+    scale = 5000
 
 
 stdout_print = (b64str) ->
@@ -104,21 +112,32 @@ highlight_line = (line_num) ->
 
 
 reset = ->
+    # Actions if paused
+    $('#pause_label span').text("Pause")
+    $('#slider').slider("enable")
+    scale = prev_scale
+
+    # Button color change
     $('#reset').switchClass('btn-primary', 'btn-success')
     $('#reset').text('Success')
     window.setTimeout(->
         $('#reset').switchClass('btn-success', 'btn-primary', 700)
         $('#reset').text('Reset')
     , 2000)
+
+    # Reset simulation
     cmd_number = 0
     editor.getSession().removeMarker(marker)
     window.clearTimeout(curRunning)
+
+    # Enable STDin, STDout, editor etc.
     $('#stdin').prop('disabled', false)
     $('#stdin').show()
     $('#stdin_highlight').hide()
     editor.setReadOnly(false)
     $('#stdout').val(prev_out)
-    console.log("PREV TEXT "+prev_out)
+
+    # Clear simulation
     delete_scope('global')
 
 
@@ -171,12 +190,14 @@ simulate = ->
     eval(cmd[cmd_number])
     cmd_number += 1
     if cmd_number == cmd.length
-        cmd_number = 0
-        editor.getSession().removeMarker(marker)
-        $('#stdin').prop('disabled', false)
-        editor.setReadOnly(false)
-        $('#stdin').show()
-        $('#stdin_highlight').hide()
+        window.setTimeout(->
+            cmd_number = 0
+            editor.getSession().removeMarker(marker)
+            $('#stdin').prop('disabled', false)
+            editor.setReadOnly(false)
+            $('#stdin').show()
+            $('#stdin_highlight').hide()
+        , time*scale)
     else
         curRunning = window.setTimeout(simulate, time*scale)
 
@@ -190,6 +211,12 @@ start_sim = (obj) ->
         createAlert("GCC Warning: ", obj.gcc_warning, "warning")
     if obj.gcc_out == obj.its_out
         createAlert("", "Simulation made successfully!", "success")
+        cmd = obj.its_cmd.split("\n")
+        console.log(cmd)
+        simulate()
+    else
+        createAlert("", "GCC output, and the interpreter output were not the same.",\
+            "warning")
         cmd = obj.its_cmd.split("\n")
         console.log(cmd)
         simulate()
@@ -238,4 +265,4 @@ $(->$("#pause").button())
         #else
             #options = label: "play", icons: primary: "ui-icon-play"
         #$(this).button("option", options)
-    #)
+    #)global
