@@ -57,7 +57,13 @@ def get_val(key, scope, mul = 1):
             if mul != 1:
                 if globals.var_table[t][0].type[1] != 0:
                     return 0
+            ret = globals.var_table[t][0].v
+            if ret == '':
+                raise Exceptions.any_user_error("Variable " + key[0] + " used "
+                        "without initialisation in current line.")
             return globals.var_table[t][0].v
+        else:
+            raise Exceptions.any_user_error("Invalid variable used in current line.")
     else:
         if key in globals.memory:
             if mul != 1:

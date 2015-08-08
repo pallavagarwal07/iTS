@@ -1,13 +1,10 @@
 #include <stdio.h>
-
 int main()
 {
-    printf("Hello World!!\n");
-    char* c, b, * a;
-    b = 'a';
-    c=&b;
-    a=c;
-    int d = *c;
-    printf("%c %d %c", *a, b, *c);
+    int i;
+    for(i; i<10; i++)
+    {
+        printf("%d\n", i);
+    }
     return 0;
 }
