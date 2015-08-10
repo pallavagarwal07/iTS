@@ -31,13 +31,36 @@ $(->
 )
 
 
+setCodeFromURL = ->
+    code = window.atob(getQuery('code'))
+    inp  = window.atob(getQuery('input'))
+    $('#stdin').text(inp)
+    editor.setValue(code)
+
+
+$(setCodeFromURL)
+
+
+getQuery = (variable) ->
+    query = window.location.search.substring(1)
+    vars = query.split('&')
+    for term in vars
+        pair = term.split('=')
+        if pair[0] == variable
+            return pair[1]
+    return ''
+
+
 $(->$('#pause').change(->
     if $('#pause').prop('checked') == true
         $('#pause_label span').text("Play")
         $('#slider').slider("disable")
+        $('#submit-btn').prop('disabled', false)
+        $('#submit-btn').text('Step forward >>')
         prev_scale = scale
-        scale = 5000
+        window.clearTimeout(curRunning)
     else
+        $('#submit-btn').prop('disabled', true)
         $('#pause_label span').text("Pause")
         $('#slider').slider("enable")
         scale = prev_scale
@@ -102,7 +125,6 @@ define_variable = (type, scp, name, val, mem) ->
 
 highlight_line = (line_num) ->
     console.log(marker)
-    console.log("HERE")
     editor.getSession().removeMarker(marker)
     require(["ace/range"], (range) ->
         marker = editor.getSession().addMarker(new
@@ -116,6 +138,10 @@ reset = ->
     $('#pause_label span').text("Pause")
     $('#slider').slider("enable")
     scale = prev_scale
+
+    # Reset Submit Button
+    $('#submit-btn').prop('disabled', false)
+    $('#submit-btn').text('Submit')
 
     # Button color change
     $('#reset').switchClass('btn-primary', 'btn-success')
@@ -139,6 +165,8 @@ reset = ->
 
     # Clear simulation
     delete_scope('global')
+
+$(reset)
 
 
 update_variable = (id, val) ->
@@ -202,53 +230,87 @@ simulate = ->
         curRunning = window.setTimeout(simulate, time*scale)
 
 
+step_forward = ->
+    flag = 1
+    while 1
+        exe = cmd[cmd_number]
+        cmd_number += 1
+        if cmd_number == cmd.length
+            cmd_number = 0
+            window.setTimeout(->
+                editor.getSession().removeMarker(marker)
+                $('#stdin').prop('disabled', false)
+                editor.setReadOnly(false)
+                $('#stdin').show()
+                $('#stdin_highlight').hide()
+            , time*scale)
+            break
+
+        if flag and exe.indexOf('highlight_line') == 0
+            flag = 0
+            console.log('Evaluating ' + exe)
+            eval(exe)
+        else
+            console.log("Here " + exe)
+            if exe.indexOf('highlight_line') == -1
+                console.log('Evaluating ' + exe)
+                eval(exe)
+            else
+                cmd_number -= 1
+                break
+
+
 start_sim = (obj) ->
     cmd_number = 0
     if obj.gcc_error
         createAlert("GCC ERROR: ", obj.gcc_error, "danger")
         editor.setReadOnly(false)
-    if obj.gcc_warning
-        createAlert("GCC Warning: ", obj.gcc_warning, "warning")
-    if obj.gcc_out == obj.its_out
-        createAlert("", "Simulation made successfully!", "success")
-        cmd = obj.its_cmd.split("\n")
-        console.log(cmd)
-        simulate()
     else
-        createAlert("", "GCC output, and the interpreter output were not the same.",\
-            "warning")
-        cmd = obj.its_cmd.split("\n")
-        console.log(cmd)
-        simulate()
+        if obj.gcc_warning
+            createAlert("GCC Warning: ", obj.gcc_warning, "warning")
+        if obj.gcc_out == obj.its_out
+            createAlert("", "Simulation made successfully!", "success")
+            cmd = obj.its_cmd.split("\n")
+            console.log(cmd)
+            simulate()
+        else
+            createAlert("", "GCC output, and the interpreter output were not the same.",\
+                "warning")
+            cmd = obj.its_cmd.split("\n")
+            console.log(cmd)
+            simulate()
 
 
 compile = ->
-    clearAll()
-    $('#submit-btn').text('Loading...')
-    $('#submit-btn').addClass('active')
-    $('#stdin').prop('disabled', true)
-    editor.setReadOnly(true)
+    if $('#submit-btn').text().trim() == 'Step forward >>'
+        step_forward()
+    if $('#submit-btn').text().trim() == 'Submit'
+        clearAll()
+        $('#submit-btn').text('Loading...')
+        $('#submit-btn').addClass('active')
+        $('#stdin').prop('disabled', true)
+        editor.setReadOnly(true)
 
-    code = editor.getValue()
-    input = $('#stdin').val()
-    $('#stdin').hide()
-    $('#stdin_highlight').show()
-    $('#stdin_highlight').height($('#stdout').height())
-    $('#stdin_highlight').html("<samp>"+input+"</samp>")
-    code = window.btoa(code)
-    input = window.btoa(input)
-    $('#sbt_row .btn').button('toggle')
-    $.get("php/compile.php"
-        "code": code
-        "input": input
-        (json_text)->
-            $('#submit-btn').text('Submit')
-            $('#submit-btn').removeClass('active')
-            obj = JSON.parse(json_text)
-            prev_out = obj.gcc_out
-            console.log(obj)
-            start_sim(obj)
-    )
+        code = editor.getValue()
+        input = $('#stdin').val()
+        $('#stdin').hide()
+        $('#stdin_highlight').show()
+        $('#stdin_highlight').height($('#stdout').height())
+        $('#stdin_highlight').html("<samp>"+input+"</samp>")
+        code = window.btoa(code)
+        input = window.btoa(input)
+        $('#sbt_row .btn').button('toggle')
+        $.get("php/compile.php"
+            "code": code
+            "input": input
+            (json_text)->
+                $('#submit-btn').text('Submit')
+                $('#submit-btn').removeClass('active')
+                obj = JSON.parse(json_text)
+                prev_out = obj.gcc_out
+                console.log(obj)
+                start_sim(obj)
+        )
 
 $(->$("#pause").button())
         #primary: "ui-icon-play"
