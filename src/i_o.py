@@ -158,7 +158,7 @@ def handle_input(statement, scope):
     assert len(type_arr) == len(values)
 
     if len(values) != len(variables):
-        raise Exceptions.any_user_error("Incorrect number of argument", values, variables)
+        raise Exceptions.any_user_error("Incorrect number of argument in ", statement)
     else:
 
         for i in range(0, len(variables)):

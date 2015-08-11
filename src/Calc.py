@@ -288,7 +288,7 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '`&`':
                 key = Runtime.get_key(var_stack[l()], scope)
                 if type(key) is not tuple:
-                    raise Exceptions.any_user_error("Something Wrong")
+                    raise Exceptions.any_user_error("Something Wrong in the interpreter. Bug report filed.")
                 elif len(key) == 1:
                     mem = key[0]
                 else:
@@ -388,7 +388,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '%=':
                 if t1 in ['float', 'double', 'long double', 'longdouble'] or t2 in ['float', 'double', 'long double', 'longdouble']:
-                    raise Exceptions.any_user_error("Modulo not allowed with floating point numbers.")
+                    raise Exceptions.any_user_error("Modulo operation not allowed with floating point numbers.")
                 key = Runtime.get_key(var_stack[l()-1], scope)
                 val = get_val(key, scope) % get_val(var_stack[l()], scope)
                 set_val(key, val, scope)
@@ -437,7 +437,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack.pop()
             elif token == '/':
                 if get_val(var_stack[l()], scope) == 0:
-                    raise Exceptions.any_user_error("Error: Division by 0 not permitted.")
+                    raise Exceptions.any_user_error("Division by 0 not allowed!")
                 var_stack[l() - 1] = (get_val(var_stack[l() - 1], scope) / get_val(var_stack[l()], scope), max_type(t1, t2))
                 var_stack.pop()
             elif token == '=':
@@ -474,7 +474,7 @@ def calculate(expr, scope, vartable=globals.var_table):
                     new_type = 'long double'
                 if new_type in ['float', 'double', 'long double']:
                     if type(var_stack[l()]) is 'str':
-                        raise Exceptions.any_user_error("Trying to convert string to float.")
+                        raise Exceptions.any_user_error("User trying to convert", get_val(var_stack[l()], scope),"to float.")
                     else:
                         var_stack[l()] =  (float(get_val(var_stack[l()], scope)), new_type)
                 elif new_type in ['int', 'long', 'long int', 'long long int', 'long long']:
@@ -484,11 +484,12 @@ def calculate(expr, scope, vartable=globals.var_table):
                         var_stack[l()] = (int(get_val(var_stack[l()], scope)), new_type)
                 elif new_type is 'char':
                     if type(var_stack[l()]) in ['float', 'double', 'long double']:
-                        raise Exceptions.any_user_error("Trying to convert float to string.")
+                        raise Exceptions.any_user_error("User trying to convert", get_val(var_stack[l()], scope) ,"to string.")
                     else:
                         var_stack[l()] = (chr(get_val(var_stack[l()], scope)), new_type)
         temp = var_stack[l()]
         if temp[1] not in ['number', 'void']:
+            type_check = temp[1]
             m1 = globals.type_range[temp[1]][0]
             m2 = globals.type_range[temp[1]][1]
             if type(temp[0]) is int:
@@ -496,7 +497,7 @@ def calculate(expr, scope, vartable=globals.var_table):
             else:
                 temp = 0
             if not (temp == '' or temp is None or (m1 <= temp and temp <= m2)):
-                raise Exceptions.any_user_error("Out of bounds!", temp, m1, m2)
+                raise Exceptions.any_user_error("Value", temp, "out of bounds of the type", type_check, "which can store values from", m1, "to", m2,".")
     ret = var_stack.pop()
     r = get_val(ret[0], scope)
     return r

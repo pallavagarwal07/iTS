@@ -70,7 +70,7 @@ def decl(var, val, cast, scope, tags):
     level += len(indices)
     key = globals.in_var_table(var, scope)
     if key and key[1] == scope:
-        raise Exceptions.any_user_error("Error 101: Multiple declaration of variable " + var + "\n")
+        raise Exceptions.any_user_error("Multiple declaration of variable " + var)
 
     newKey = (var, scope, globals.curr_mem)
     globals.var_table[newKey] = [Value(val, (cast, level), tags), cast, level, globals.curr_mem]
@@ -312,7 +312,7 @@ def def_func(line, code, num):
             execute(code[num], 'global main')
             raise Exceptions.main_executed(globals.gui)
         if k[1] in globals.functions and (globals.functions[k[1]][2] != '' or globals.functions[k[1]][3] != type_key):
-            raise Exceptions.any_user_error("Error!! Multiple declaration of function")
+            raise Exceptions.any_user_error("Error! Multiple declaration of function")
         else:
             globals.functions[k[1]] = [k[0], params, code[num], type_key]
         return 1

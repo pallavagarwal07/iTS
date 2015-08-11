@@ -82,7 +82,7 @@ def set_val(key, val, scope = '-none-'):
         if is_num(key) == 'Error':
             key = Runtime.get_key(key, scope)
         else:
-            raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable")
+            raise Exceptions.any_user_error("Trying to assign value to a non-variable")
 
     if len(key) != 1:
         globals.gui += "\nupdate_variable(\'"+'-'.join(key[1].split())+ \
