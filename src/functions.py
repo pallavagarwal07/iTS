@@ -68,6 +68,20 @@ def pass_to_func(detail, scope):
     if length == 0:
         params = []
 
+    if name == "_DEBUG_":
+        if params == []:
+            pause = True
+        else:
+            pause = False
+            params = [Calc.calculate(t, scope) for t in params]
+            for a in params:
+                if not a:
+                    pause = True
+                    break
+            if pause:
+                gui += "$('#pause').click()"
+        return 0
+
     for lib in func:
         arr = func[lib]
         if name in arr:
