@@ -1,4 +1,5 @@
 this.resize_list = []
+stop = 0
 cmd_number = 0
 cmd = []
 prev_out = ""
@@ -77,7 +78,7 @@ pause_simulation = ->
     $('#submit-btn').text('Step forward >>')
     prev_scale = scale
     window.clearTimeout(curRunning)
-    return "STOP"
+    stop = "STOP"
 
 
 $(->
@@ -241,9 +242,9 @@ clearAll = ->
 
 
 simulate = ->
-    s = eval('('+ ( ->cmd[cmd_number] ) + ')')
-    console.log("s is " + s)
-    if s == "STOP"
+    eval(cmd[cmd_number])
+    if stop == "STOP"
+        stop = 0
         return
     cmd_number += 1
     if cmd_number == cmd.length
