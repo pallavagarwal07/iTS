@@ -14,6 +14,16 @@ def if_conditionals(code, scope):
     else:
         expr = re.findall(r'^(?s)if\s*\((.*)\)', line)
     if len(expr) != 0:
+
+        # Try to get line number
+        code[0] = "__ITS_FLAG__"+code[0]
+        diff_index = str(globals.code).find("__ITS_FLAG__")
+        from stringDiff import getIndex
+        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        code[0] = code[0].replace("__ITS_FLAG__", '')
+        line_number = globals.raw_code.count("\n", 0, diff_index)
+        globals.gui += "\nhighlight_line("+str(line_number)+")"
+
         flag = Calc.calculate(expr[0], scope, globals.var_table)
         ret = None
         if flag:
@@ -32,6 +42,16 @@ def if_for(code, scope):
     else:
         expr = re.findall(r'^(?s)for\s*\((.*);(.*);(.*)\)', line)
     if len(expr) != 0:
+
+        # Try to get line number
+        code[0] = "__ITS_FLAG__"+code[0]
+        diff_index = str(globals.code).find("__ITS_FLAG__")
+        from stringDiff import getIndex
+        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        code[0] = code[0].replace("__ITS_FLAG__", '')
+        line_number = globals.raw_code.count("\n", 0, diff_index)
+        globals.gui += "\nhighlight_line("+str(line_number)+")"
+
         Calc.calculate(expr[0][0], scope, globals.var_table)
         flag = Calc.calculate(expr[0][1], scope, globals.var_table)
         ret = None
@@ -59,8 +79,17 @@ def if_switch(code, scope):
     else:
         expr = re.findall(r'^(?s)switch\s*\((.+)\)', line)
 
-
     if len(expr) != 0:
+
+        # Try to get line number
+        code[0] = "__ITS_FLAG__"+code[0]
+        diff_index = str(globals.code).find("__ITS_FLAG__")
+        from stringDiff import getIndex
+        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        code[0] = code[0].replace("__ITS_FLAG__", '')
+        line_number = globals.raw_code.count("\n", 0, diff_index)
+        globals.gui += "\nhighlight_line("+str(line_number)+")"
+
         print2("if_switch got: ", code[0], scope, expr[0])
         switch_val = Calc.calculate(expr[0], scope)
         ret = None
@@ -106,6 +135,16 @@ def if_while(code, scope):
     else:
         expr = re.findall(r'^(?s)while\s*\((.*)\)', line)
     if len(expr) != 0:
+
+        # Try to get line number
+        code[0] = "__ITS_FLAG__"+code[0]
+        diff_index = str(globals.code).find("__ITS_FLAG__")
+        from stringDiff import getIndex
+        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        code[0] = code[0].replace("__ITS_FLAG__", '')
+        line_number = globals.raw_code.count("\n", 0, diff_index)
+        globals.gui += "\nhighlight_line("+str(line_number)+")"
+
         ret = None
         flag = Calc.calculate(expr[0], scope, globals.var_table)
         while flag:
@@ -131,6 +170,16 @@ def if_do_while(code, scope):
     else:
         expr = re.findall(r'^(?s)do', line)
     if len(expr) != 0:
+
+        # Try to get line number
+        code[0] = "__ITS_FLAG__"+code[0]
+        diff_index = str(globals.code).find("__ITS_FLAG__")
+        from stringDiff import getIndex
+        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        code[0] = code[0].replace("__ITS_FLAG__", '')
+        line_number = globals.raw_code.count("\n", 0, diff_index)
+        globals.gui += "\nhighlight_line("+str(line_number)+")"
+
         condition = re.findall(r'^(?s)while\s*\((.*)\)\s*;', code[2]);
         if len(condition) == 0:
             raise Exceptions.any_user_error("Error: do_while has no condition.")
