@@ -1,8 +1,11 @@
 #include <stdio.h>
 int main()
 {
-    _DEBUG_();
-    if(4 == 4)
-        printf("Hello World!!\n");
-    return 0;
+	int i =10;
+	while(i--)
+	{
+		_DEBUG_(i > 5);
+		printf("Hello World.\n");
+	}
+	return 0;
 }

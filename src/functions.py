@@ -61,6 +61,8 @@ def eval_user_function(name, params, scope):
 
 
 def pass_to_func(detail, scope):
+    import Calc
+
     # detail is like ('pow', 'a, b')
     name = detail[0]
     params = tuple(a.strip() for a in toplevelsplit(detail[1], ','))
@@ -78,8 +80,8 @@ def pass_to_func(detail, scope):
                 if not a:
                     pause = True
                     break
-            if pause:
-                gui += "$('#pause').click()"
+        if pause:
+	    globals.gui += "\npause_simulation();"
         return 0
 
     for lib in func:
