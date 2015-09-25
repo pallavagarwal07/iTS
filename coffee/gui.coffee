@@ -68,6 +68,16 @@ $(->$('#pause').change(->
         simulate()
 ))
 
+pause_simulation = ->
+    $('#pause').prop('checked', true)
+    $('#pause').button('refresh')
+    $('#pause_label span').text("Play")
+    $('#slider').slider("disable")
+    $('#submit-btn').prop('disabled', false)
+    $('#submit-btn').text('Step forward >>')
+    prev_scale = scale
+    window.clearTimeout(curRunning)
+
 
 $(->
     $('#stdout').text("")
