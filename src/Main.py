@@ -78,4 +78,5 @@ except Exceptions.timeout_error:
             "the program with smaller inputs."
     cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(msg)))
 except Exceptions.any_user_error as e:
-    cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(e.message)))
+    print "e is ", e, type(e)
+    cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(' '.join(e.args))))
