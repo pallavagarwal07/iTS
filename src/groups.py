@@ -27,9 +27,12 @@ def if_conditionals(code, scope):
         flag = Calc.calculate(expr[0], scope, globals.var_table)
         ret = None
         if flag:
+            globals.gui += "\ncustom_highlight("+str(line_number)+", green)"
             ret = Runtime.execute(code[1], scope + ' 1')
-        elif len(code) > 2:
-            ret = Runtime.execute(code[3], scope + ' 3')
+        else:
+            globals.gui += "\ncustom_highlight("+str(line_number)+", red)"
+            if len(code) > 2:
+                ret = Runtime.execute(code[3], scope + ' 3')
         return ret
     else:
         return "NO"
