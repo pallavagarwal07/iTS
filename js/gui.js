@@ -255,11 +255,11 @@ clearAll = function() {
 
 simulate = function() {
   eval(cmd[cmd_number]);
+  cmd_number += 1;
   if (stop === "STOP") {
     stop = 0;
     return;
   }
-  cmd_number += 1;
   if (cmd_number === cmd.length) {
     return window.setTimeout(function() {
       cmd_number = 0;
