@@ -17,7 +17,7 @@
     $ret_val = array("gcc_error"=>"", "gcc_warning"=>"",
         "gcc_out"=>"", "out_ret"=>"", "its_out"=>"", "its_cmd"=>"");
 
-    exec('gcc -Wall -o '.$randkey.'.out '.$randkey.'.c 2>&1', $gcc_stdout, $return_code);
+    exec('gcc -D "_DEBUG_(h)=(void)0" -Wall -o '.$randkey.'.out '.$randkey.'.c 2>&1', $gcc_stdout, $return_code);
 
     if($return_code != 0) {
         $ret_val["gcc_error"] = str_replace($randkey, 'code', $gcc_stdout);
@@ -40,7 +40,7 @@
 
 
 
-    exec('../iTS/its -c '.$randkey.'.c -i '.$randkey.'.in -o '.$randkey.'.txt -e '.$randkey.'.its');
+    exec('its -c '.$randkey.'.c -i '.$randkey.'.in -o '.$randkey.'.txt -e '.$randkey.'.its');
     $ret_val['its_out'] = file_get_contents($randkey.'.txt');
     $ret_val['its_cmd'] = file_get_contents($randkey.'.its');
     echo json_encode($ret_val);
