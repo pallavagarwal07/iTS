@@ -98,7 +98,8 @@ pause_simulation = function() {
   $('#submit-btn').prop('disabled', false);
   $('#submit-btn').text('Step forward >>');
   prev_scale = scale;
-  return window.clearTimeout(curRunning);
+  window.clearTimeout(curRunning);
+  return "STOP";
 };
 
 $(function() {
@@ -251,7 +252,14 @@ clearAll = function() {
 };
 
 simulate = function() {
-  eval(cmd[cmd_number]);
+  var s;
+  s = eval('(' + (function() {
+    return cmd[cmd_number];
+  }) + ')');
+  console.log("s is " + s);
+  if (s === "STOP") {
+    return;
+  }
   cmd_number += 1;
   if (cmd_number === cmd.length) {
     return window.setTimeout(function() {

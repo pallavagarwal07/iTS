@@ -77,6 +77,7 @@ pause_simulation = ->
     $('#submit-btn').text('Step forward >>')
     prev_scale = scale
     window.clearTimeout(curRunning)
+    return "STOP"
 
 
 $(->
@@ -240,7 +241,10 @@ clearAll = ->
 
 
 simulate = ->
-    eval(cmd[cmd_number])
+    s = eval('('+ ( ->cmd[cmd_number] ) + ')')
+    console.log("s is " + s)
+    if s == "STOP"
+        return
     cmd_number += 1
     if cmd_number == cmd.length
         window.setTimeout(->
