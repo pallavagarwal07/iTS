@@ -57,7 +57,13 @@ def get_val(key, scope, mul = 1):
             if mul != 1:
                 if globals.var_table[t][0].type[1] != 0:
                     return 0
+            ret = globals.var_table[t][0].v
+            if ret == '':
+                raise Exceptions.any_user_error("Variable " + key[0] + " used "
+                        "without initialisation in current line.")
             return globals.var_table[t][0].v
+        else:
+            raise Exceptions.any_user_error("Invalid variable used in current line.")
     else:
         if key in globals.memory:
             if mul != 1:
@@ -69,20 +75,25 @@ def get_val(key, scope, mul = 1):
 
 
 def set_val(key, val, scope = '-none-'):
+
     if type(key) is not tuple:
         if scope == '-none-':
             raise Exceptions.any_user_error("Something wrong.")
         if is_num(key) == 'Error':
             key = Runtime.get_key(key, scope)
         else:
-            raise Exceptions.any_user_error("Error: Trying to assign value to a non-variable")
+            raise Exceptions.any_user_error("Trying to assign value to a non-variable")
+
     if len(key) != 1:
         globals.gui += "\nupdate_variable(\'"+'-'.join(key[1].split())+ \
             "-"+key[0]+"\',\'"+str(val)+"\');"
+
         t = globals.in_var_table(key[0], key[1])
         if t:
             globals.var_table[t][0].v = val
     else:
+        globals.gui += "\nupdate_variable(\'"+str(key[0])+"\',\'"+str(val)+"\');"
+
         if key in globals.memory:
             globals.memory[key][0].v = val
         else:

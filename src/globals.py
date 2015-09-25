@@ -9,7 +9,7 @@ gui = ""
 var_table = {}
 vLevel = 0
 
-curr_mem = 1000000000**3
+curr_mem = 10000000000**3
 
 # priority of operators. Even values have left to right associativity and vice versa
 priority = {
@@ -120,6 +120,8 @@ def setup():
     type_range['double'] = (-1.7*(10**308), 1.7*(10**308))
     type_range['long double'] = type_range['double']
     type_range['pointer'] = (0, 10**100)
+    temp = type_range['char']
+    type_range['char'] = (0, temp[1] - temp[0])
 
 
 # Get key tuple from variable name and scope

@@ -1,4 +1,5 @@
 from globals import print1, print2, print3
+from base64 import b64encode as b64
 import signal
 import sys
 import globals
@@ -6,6 +7,7 @@ import PreProcessing
 import Runtime
 import Exceptions
 import stringDiff
+
 
 def timeout(signum, frame):
     raise Exceptions.timeout_error("TIME UP!")
@@ -71,4 +73,9 @@ try:
 except Exceptions.main_executed as e:
     cmd.write(e.message + "\ndelete_scope('global');")
 except Exceptions.timeout_error:
-    cmd.write("__TIMEOUT__" + globals.gui + "\ndelete_scope('global');")
+    msg = "Your program timed out at this position. If this happened at an array" + \
+            "declaration, declare a smaller array, and try again. Otherwise, try" + \
+            "the program with smaller inputs."
+    cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(msg)))
+except Exceptions.any_user_error as e:
+    cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(e.message)))
