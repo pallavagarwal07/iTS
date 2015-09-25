@@ -25,6 +25,19 @@ textarea {
     left: 0 !important;
 }
 
+.highlight-green {
+  background: rgba(0, 255, 0, 0.1);
+  position: absolute;
+  width: 100% !important;
+  left: 0 !important; }
+
+.highlight-red {
+  background: rgba(255, 0, 0, 0.1);
+  position: absolute;
+  width: 100% !important;
+  left: 0 !important; }
+
+
 .scope{
     float: left;
     .banner {
