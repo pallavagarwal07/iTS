@@ -241,7 +241,6 @@ def calculate(expr, scope, vartable=globals.var_table):
 
     separated_tokens = pre_post_handle(separated_tokens)
     # Replace pre increment ++ and --
-
     postfix = to_postfix(separated_tokens, scope)
     # Convert to postfix
 
@@ -500,4 +499,5 @@ def calculate(expr, scope, vartable=globals.var_table):
                 raise Exceptions.any_user_error("Value", temp, "out of bounds of the type", type_check, "which can store values from", m1, "to", m2,".")
     ret = var_stack.pop()
     r = get_val(ret[0], scope)
+    globals.calc_type = ret[1]
     return r

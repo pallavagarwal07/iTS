@@ -22,7 +22,7 @@ def get_type(key, scope):
         else:
             return 'number'
     if len(key) != 1:
-        t = globals.in_var_table(key[0], key[1])
+        t = globals.in_var_table(key[0], scope)
         if t:
             return globals.var_table[t][1] if globals.var_table[t][2]==0 else 'pointer'
     else:
@@ -52,7 +52,7 @@ def get_val(key, scope, mul = 1):
         else:
             return eval(str(key))
     if len(key) != 1:
-        t = globals.in_var_table(key[0], key[1])
+        t = globals.in_var_table(key[0], scope)
         if t:
             if mul != 1:
                 if globals.var_table[t][0].type[1] != 0:
@@ -88,7 +88,7 @@ def set_val(key, val, scope = '-none-'):
         globals.gui += "\nupdate_variable(\'"+'-'.join(key[1].split())+ \
             "-"+key[0]+"\',\'"+str(val)+"\');"
 
-        t = globals.in_var_table(key[0], key[1])
+        t = globals.in_var_table(key[0], scope)
         if t:
             globals.var_table[t][0].v = val
     else:

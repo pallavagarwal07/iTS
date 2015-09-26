@@ -10,7 +10,6 @@ def printf(params, scope):
     type_arr, regex_arr = i_o.var_types(fmt)
     format_vars, format_string = params[1:], ''
     j = 0
-
     for i, ch in enumerate(regex_arr):
         if ch[0] in ['literal', 'whitespace']:
             format_string += ch[3]
