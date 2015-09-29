@@ -150,12 +150,12 @@ custom_highlight = (line_num, color) ->
     console.log(marker)
     editor.getSession().removeMarker(marker)
     require(["ace/range"], (range) ->
-    if color == green
-        marker = editor.getSession().addMarker(new
-            range.Range(line_num, 0, line_num, 2000), "highlight-green", "line", true)
-    else if color == red
-        marker = editor.getSession().addMarker(new
-            range.Range(line_num, 0, line_num, 2000), "highlight-red", "line", true)
+        if color == green
+            marker = editor.getSession().addMarker(new
+                    range.Range(line_num, 0, line_num, 2000), "highlight-green", "line", true)
+        else if color == red
+            marker = editor.getSession().addMarker(new
+                range.Range(line_num, 0, line_num, 2000), "highlight-red", "line", true)
     )
     time = 400
 
