@@ -174,9 +174,14 @@ red = "red";
 green = "green";
 
 custom_highlight = function(line_num, color) {
-  console.log(marker);
   editor.getSession().removeMarker(marker);
-  require(["ace/range"], function(range) {}, color === green ? marker = editor.getSession().addMarker(new range.Range(line_num, 0, line_num, 2000), "highlight-green", "line", true) : color === red ? marker = editor.getSession().addMarker(new range.Range(line_num, 0, line_num, 2000), "highlight-red", "line", true) : void 0);
+  require(["ace/range"], function(range) {
+    if (color === green) {
+      return marker = editor.getSession().addMarker(new range.Range(line_num, 0, line_num, 2000), "highlight-green", "line", true);
+    } else if (color === red) {
+      return marker = editor.getSession().addMarker(new range.Range(line_num, 0, line_num, 2000), "highlight-red", "line", true);
+    }
+  });
   return time = 400;
 };
 
