@@ -65,6 +65,7 @@ $(->$('#pause').change(->
         $('#pause_label span').text("Pause")
         $('#slider').slider("enable")
         scale = prev_scale
+        $('#submit-btn').text('Submit')
         window.clearTimeout(curRunning)
         simulate()
 ))
