@@ -85,8 +85,8 @@ $(function() {
       $('#submit-btn').prop('disabled', true);
       $('#pause_label span').text("Pause");
       $('#slider').slider("enable");
-      $('#submit-btn').text('Submit');
       scale = prev_scale;
+      $('#submit-btn').text('Submit');
       window.clearTimeout(curRunning);
       return simulate();
     }
