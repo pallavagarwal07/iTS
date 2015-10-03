@@ -359,14 +359,14 @@ compile = function() {
     code = window.btoa(code);
     input = window.btoa(input);
     $('#sbt_row .btn').button('toggle');
-    return $.get("php/compile.php", {
+    return $.get("/compile_req", {
       "code": code,
       "input": input
     }, function(json_text) {
       var obj;
       $('#submit-btn').text('Submit');
       $('#submit-btn').removeClass('active');
-      obj = JSON.parse(json_text);
+      obj = json_text;
       prev_out = obj.gcc_out;
       console.log(obj);
       return start_sim(obj);
