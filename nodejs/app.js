@@ -16,7 +16,7 @@ var spawn = require('child_process').spawnSync;
 // Actual code for the server
 var express = require('express');
 var app = express();
-app.use(express.static('../'));
+app.use(express.static( __dirname + '/../' ));
 // Static files have been served by this point.
 // Requests requiring non-existent files pass through.
 
@@ -27,7 +27,7 @@ app.get('/compile_req', function (req, res) {
     input = new Buffer(req.query.input, 'base64').toString('ascii');
 
     // Write code, input to files
-    rand = makeid();
+    rand = __dirname + '/' + makeid();
     fs.writeFileSync(rand + '.c', code);
     fs.writeFileSync(rand + '.in', input);
 
@@ -54,7 +54,7 @@ app.get('/compile_req', function (req, res) {
         if(error.length != 0)
             ret_val.gcc_warning = error.replace(rand, 'code');
 
-        exec = spawn('./'+rand+'.out', [], {
+        exec = spawn(rand+'.out', [], {
             "input": fs.readFileSync(rand+'.in'),
             "timeout": 2000
         });
@@ -84,6 +84,23 @@ app.get('/compile_req', function (req, res) {
     fs.unlink(rand + '.txt');
     fs.unlink(rand + '.its');
 
+	var MongoClient = require('mongodb').MongoClient;
+	MongoClient.connect("mongodb://cimulatordb/codes", function(err, db) {
+	  if(!err) {
+	    console.log("We are connected");
+	  }
+	var collection = db.collection('records');
+	doc1 = {
+		'request' : {
+		'input': input,
+		'code': code
+		},
+		'response': ret_val,
+'timestamp': Math.floor(new Date()/1000)
+
+	};
+	  collection.insert(doc1, function(err){if(!err)console.log("Inserted!");});
+	});
     res.send(ret_val);
 });
 
