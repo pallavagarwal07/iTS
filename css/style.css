@@ -92,6 +92,31 @@ textarea {
   border-radius: 8px;
   vertical-align: top; }
 
+.txt {
+  height: 100%;
+  width: 48.7%; }
+
+#footer {
+  position: fixed;
+  z-index: 5;
+  bottom: 0px;
+  right: 15px;
+  height: 25px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 4px;
+  border-top: solid 1px #AAAACC;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #EEEEFF; }
+
+#footer:hover {
+  cursor: pointer;
+  background-color: #E0E0F0; }
+
+#footer:active {
+  background-color: #D8D8E8; }
+
 #sim {
   min-height: 100%;
   font-family: 'Source Code Pro', monospace; }
@@ -132,18 +157,13 @@ textarea {
   height: 50%;
   width: 50%; }
 
-.txt {
-  height: 100%;
-  width: 48.7%; }
-
 #stdin_highlight {
   height: 100%;
   white-space: pre;
   overflow: auto; }
 
 #highlight_input {
-  background-color: #F45;
-  /*color: ;*/ }
+  background-color: #F45; }
 
 #pause_label {
   margin-top: 10px;

@@ -32,6 +32,7 @@ $(->
 )
 
 
+
 setCodeFromURL = ->
     code = window.atob(getQuery('code'))
     inp  = window.atob(getQuery('input'))
@@ -311,6 +312,41 @@ start_sim = (obj) ->
             simulate()
 
 
+$(->
+    $('#reporter-name').val('')
+    $('#reporter-email').val('')
+    $('#message-text').val('')
+)
+
+reportbug = ->
+    code = window.btoa( editor.getValue() )
+    input = window.btoa( $('#stdin').val() )
+    name = window.btoa( $('#reporter-name').val() )
+    email = window.btoa( $('#reporter-email').val() )
+    bug = window.btoa( $('#message-text').val() )
+
+    $.get("/bug_report",
+        "code": code
+        "input": input
+        "name": name
+        "email": email
+        "bug": bug
+    ).done( (data) ->
+        if data == "thanks"
+            $('#myBugModal').modal('hide')
+            alert("Successfully sent the bug report. Thanks!")
+        else
+            $('#myBugModal').modal('hide')
+            alert("Sorry, some error occured. If this persists, send the
+            error report via email to pallavag@iitk.ac.in.")
+
+    ).fail(->
+        $('#myBugModal').modal('hide')
+        alert("Sorry, some error occured. If this persists, send the
+        error report via email to pallavag@iitk.ac.in.")
+    )
+
+
 compile = ->
     if $('#submit-btn').text().trim() == 'Step forward >>'
         step_forward()
@@ -330,13 +366,13 @@ compile = ->
         code = window.btoa(code)
         input = window.btoa(input)
         $('#sbt_row .btn').button('toggle')
-        $.get("php/compile.php"
+        $.get("/compile_req"
             "code": code
             "input": input
             (json_text)->
                 $('#submit-btn').text('Submit')
                 $('#submit-btn').removeClass('active')
-                obj = JSON.parse(json_text)
+                obj = json_text
                 prev_out = obj.gcc_out
                 console.log(obj)
                 start_sim(obj)

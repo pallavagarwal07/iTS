@@ -31,6 +31,14 @@
                                     <ul class="nav navbar-nav" style="padding-top:3px;">
                                         <div id="slider"></div>
                                     </ul>
+                                    <a href="http://www.varstack.com/2015/10/06/Introduction-to-Cimulator/" style="padding-left: 10px;
+                                                margin-left: 10px; ">
+                                        Documentation
+                                    </a>
+                                    <a data-toggle="modal" data-target="#myContactModal" style="padding-left: 7px;
+                                                padding-right: 10px; margin-left: 10px; cursor: pointer">
+                                        Contact
+                                    </a>
                                     <div class="nav navbar-nav" style="font-style:italic;margin-left:10px;">
                                         Speed
                                     </div>
@@ -39,7 +47,7 @@
                                     Reset
                                 </button>
                                 <input type="checkbox" id="pause" class="btn btn-primary">
-                                    <label for="pause" id="pause_label">Pause</label>
+                                <label for="pause" id="pause_label">Pause</label>
                             </ul>
                         </div>
                     </div>
@@ -74,8 +82,8 @@
                         <div class="col-md-12">
                             <div class="progress">
                                 <button class="progress-btn progress-bar progress-bar-striped" role="progressbar"
-                                         aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
-                                                          onclick="compile()" style="width: 100%" id="submit-btn">
+                                                                                               aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"
+                                                                                                                                     onclick="compile()" style="width: 100%" id="submit-btn">
                                     Submit
                                 </button>
                             </div>
@@ -86,11 +94,12 @@
             <script>editor = ace.edit('editor')</script>
         </div>
 
+        <div id="footer" data-toggle="modal" data-target="#myBugModal">&#9888; Report a bug</div>
 
-        <!-- Modal popup starts here -->
+
+        <!-- Modal popup for error messages starts here -->
         <div id="myModal" class="modal fade" role="dialog">
             <div class="modal-dialog">
-
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -109,6 +118,64 @@
         </div>
         <!-- Modal ends here -->
 
+        <!-- Modal popup for contact details starts here -->
+        <div id="myContactModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">CONTACT ME</h4>
+                    </div>
+                    <div class="modal-body" id="modal-msg">
+                        <p>In case of any queries, feel free to contact me:</p>
+                        <p>Pallav Agarwal <br/> A-311, Hall 2 <br /> Phone: 7408997854 <br /> Email: pallavag@cse.iitk.ac.in
+                        <br /> FB: pallavagarwal07</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Modal ends here -->
+        <!-- Modal popup for bug reporting starts here -->
+        <div id="myBugModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Thanks for informing us &#9786;</h4>
+                    </div>
+                    <div class="modal-body" id="modal-bug-msg">
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="name" class="control-label">Name:</label>
+                                    <input type="text" class="form-control" id="reporter-name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email" class="control-label">Email:</label>
+                                    <input type="text" class="form-control" id="reporter-email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="control-label">Problem <span style="color: red; font-weight:normal">* (required)</span>:</label>
+                                    <textarea class="form-control" id="message-text" required></textarea>
+                                </div>
+                            </form>
+                            <i>Your code and input will be sent along with the bug report.</i>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-warning" onclick="reportbug();">Send Bug Report</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Modal ends here -->
 
     </body>
 </html>

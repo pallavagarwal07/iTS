@@ -84,24 +84,50 @@ app.get('/compile_req', function (req, res) {
     fs.unlink(rand + '.txt');
     fs.unlink(rand + '.its');
 
-	var MongoClient = require('mongodb').MongoClient;
-	MongoClient.connect("mongodb://cimulatordb/codes", function(err, db) {
-	  if(!err) {
-	    console.log("We are connected");
-	  }
-	var collection = db.collection('records');
-	doc1 = {
-		'request' : {
-		'input': input,
-		'code': code
-		},
-		'response': ret_val,
-'timestamp': Math.floor(new Date()/1000)
+    var MongoClient = require('mongodb').MongoClient;
+    MongoClient.connect("mongodb://cimulatordb/codes", function(err, db) {
+        if(!err) {
+            console.log("We are connected");
+        }
+        var collection = db.collection('records');
+        doc1 = {
+            'request' : {
+                'input': input,
+                'code': code
+            },
+            'response': ret_val,
+            'timestamp': Math.floor(new Date()/1000)
 
-	};
-	  collection.insert(doc1, function(err){if(!err)console.log("Inserted!");});
-	});
+        };
+        collection.insert(doc1, function(err){if(!err)console.log("Inserted!");});
+    });
     res.send(ret_val);
+});
+
+app.get('/bug_report', function (req, res) {
+    // Decode base64 strings
+    code = new Buffer(req.query.code, 'base64').toString('ascii');
+    input = new Buffer(req.query.input, 'base64').toString('ascii');
+    name = new Buffer(req.query.name, 'base64').toString('ascii');
+    email = new Buffer(req.query.email, 'base64').toString('ascii');
+    bug = new Buffer(req.query.bug, 'base64').toString('ascii');
+
+    var MongoClient = require('mongodb').MongoClient;
+    MongoClient.connect("mongodb://cimulatordb/codes", function(err, db) {
+        if(!err) {
+            console.log("We are connected");
+        }
+        var collection = db.collection('bugs');
+        doc1 = {
+            'name': name,
+            'email': email,
+            'bug': bug,
+            'code': code,
+            'input': input
+        };
+        collection.insert(doc1, function(err){if(!err)console.log("Inserted!");});
+    });
+    res.send("thanks");
 });
 
 var server = app.listen(3000, function () {

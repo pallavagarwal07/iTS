@@ -26,16 +26,16 @@ textarea {
 }
 
 .highlight-green {
-  background: rgba(0, 255, 0, 0.1);
-  position: absolute;
-  width: 100% !important;
-  left: 0 !important; }
+    background: rgba(0, 255, 0, 0.1);
+    position: absolute;
+    width: 100% !important;
+left: 0 !important; }
 
 .highlight-red {
-  background: rgba(255, 0, 0, 0.1);
-  position: absolute;
-  width: 100% !important;
-  left: 0 !important; }
+    background: rgba(255, 0, 0, 0.1);
+    position: absolute;
+    width: 100% !important;
+left: 0 !important; }
 
 
 .scope{
@@ -116,6 +116,35 @@ textarea {
     vertical-align: top;
 }
 
+.txt {
+    height: 100%;
+    width: 48.7%;
+}
+
+#footer {
+    position: fixed;
+    z-index: 5;
+    bottom: 0px;
+    right: 15px;
+    height: 25px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 4px;
+    border-top: solid 1px #AAAACC;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-color: #EEEEFF;
+}
+
+#footer:hover {
+    cursor: pointer;
+    background-color: #E0E0F0;
+}
+
+#footer:active {
+    background-color: #D8D8E8;
+}
+
 #sim {
     min-height: 100%;
     font-family: 'Source Code Pro', monospace;
@@ -123,7 +152,7 @@ textarea {
 
 #reset {
     float:right;
-    margin-top:10px;   
+    margin-top:10px;
 }
 
 #slider {
@@ -144,7 +173,7 @@ textarea {
     transition: none;
 }
 
-#editor { 
+#editor {
     position: relative;
     border: 1px solid #BBB;
     border-radius: 7px;
@@ -164,11 +193,6 @@ textarea {
     width: 50%;
 }
 
-.txt {
-    height: 100%;
-    width: 48.7%;
-}
-
 #stdin_highlight {
     height: 100%;
     white-space: pre;
@@ -177,7 +201,6 @@ textarea {
 
 #highlight_input {
     background-color: #F45;
-    /*color: ;*/
 }
 
 #pause_label {
