@@ -60,7 +60,7 @@ app.get('/compile_req', function (req, res) {
         });
 
         if(exec.signal == "SIGTERM") {
-            ret_val.gcc_out = "TIME LIMIT exceeded in GCC executable";
+            ret_val.gcc_warning = "TIME LIMIT exceeded in GCC executable";
         }
         else {
             ret_val.gcc_out = exec.stdout.toString('utf-8');
@@ -72,7 +72,7 @@ app.get('/compile_req', function (req, res) {
     // End of all things concerned with GCC..
 
     its = spawn('its', [ '-c'+rand+'.c', '-i'+rand+'.in',
-            '-o'+rand+'.txt', '-e'+rand+'.its'], { "timeout": 10000});
+            '-o'+rand+'.txt', '-e'+rand+'.its'], { "timeout": 35000});
 
     ret_val.its_out = fs.readFileSync(rand+'.txt').toString('utf-8');
     ret_val.its_cmd = fs.readFileSync(rand+'.its').toString('utf-8');
