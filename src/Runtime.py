@@ -162,6 +162,8 @@ def get_key(var, scope):
             ret = str_to_mem(name[1:-1], scope)
             return ret
         ret = globals.in_var_table(name, scope)
+        if ret == 0:
+            raise Exceptions.any_user_error("Invalid variable", name, "used")
         return ret
 
 
@@ -341,14 +343,16 @@ def traverse(code, scope):
             continue
         if def_func(line, code, i):
             continue
+        print "Unrecognized something", line
+        exit(0)
 
 
 def execute(code, scope):
     if code == []:
         return
 
-    gui_parent = '-'.join(scope.split()[:-1]) if '-'.join(scope.split()[:-1]) \
-            else 'simulation'
+    gui_parent = '-'.join(scope.split()[:-1]) \
+            if '-'.join(scope.split()[:-1]) else 'simulation'
     gui_str = "\ncreate_scope('{0}', '{1}')".format(gui_parent, '-'.join(scope.split()))
 
     if not globals.gui.endswith(gui_str):

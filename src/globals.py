@@ -1,4 +1,4 @@
-import weave
+from scipy import weave
 import re
 
 global var_table

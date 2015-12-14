@@ -29,6 +29,9 @@ def sep(expr):
     while i < len(expr) and expr[i] != ';' :
 
         while i < len(expr) and expr[i] == ' ' :
+            if token:
+                sep_tokens.append(''.join(token))
+                token = []
             i += 1
 
         checkOps = globals.startDict
@@ -270,8 +273,6 @@ def calculate(expr, scope, vartable=globals.var_table):
                 var_stack[l()-1] = var_stack[l()-1][0]
                 t3 = var_stack[l()-2][1]
                 var_stack[l()-2] = var_stack[l()-2][0]
-
-
             if token == '---':
                 key = Runtime.get_key(var_stack[l()], scope)
                 val = get_val(key, scope) - 1
@@ -498,6 +499,8 @@ def calculate(expr, scope, vartable=globals.var_table):
             if not (temp == '' or temp is None or (m1 <= temp and temp <= m2)):
                 raise Exceptions.any_user_error("Value", temp, "out of bounds of the type", type_check, "which can store values from", m1, "to", m2,".")
     ret = var_stack.pop()
+    if var_stack:
+        raise Exceptions.any_user_error("I don't think the expression in current line makes any sense.")
     r = get_val(ret[0], scope)
     globals.calc_type = ret[1]
     return r

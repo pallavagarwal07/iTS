@@ -49,13 +49,16 @@ CodeFile = open(filename)
 
 globals.raw_code = CodeFile.read()
 
-# Preprocessor does some work here
+# Preprocessor does some work here like resolve define statements
+# and removing include statements and comments.
 code = PreProcessing.use_c_preprocessor(filename)
 
 # Change all scope brackets and content into nested lists
 code = PreProcessing.nest(code)
 globals.code = code
 
+# String difference found in the beginning is used to find the current
+# executing line during execution.
 stringDiff.init(str(globals.code), str(globals.raw_code))
 
 #Gui.make_ui(code)
