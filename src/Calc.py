@@ -102,7 +102,7 @@ def sep(expr):
         i += 1
     if token != []:
         sep_tokens.append(''.join(token))
-    print sep_tokens
+
     return sep_tokens
 
 
@@ -125,7 +125,8 @@ def unary_handle(separated_tokens):
 
 
 # Add token to stack, taking extra care of && and || shortcircuiting
-# operators. (Using &0 , counter substitution)
+# operators. (Using &0 , counter substitution). Also appends type
+# information wherever known.
 def add(arr, token, ctr, scope):
     if type(token) is tuple:
         arr.append(token)
@@ -135,12 +136,13 @@ def add(arr, token, ctr, scope):
         elif token in globals.ops + ('&0', '|1'):
             arr.append((token,))
         else:
-            arr.append((token,get_type(token, scope)))
+            arr.append((token, get_type(token, scope)))
 
 
 # Convert separated token list to postfix token list.
 # Example: ['4', '+', '5'] to ['4', '5', '+']
 def to_postfix(tokens, scope):
+    print "to_postfix", tokens
 
     stack, postfix, ctr, i = [], [], 0, 0
 
