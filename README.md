@@ -1,5 +1,6 @@
-intelligent Tutoring System (iTS)
-=================================
+# intelligent Tutoring System (iTS)
+
+[![Build Status](https://travis-ci.org/pallavagarwal07/iTS.svg?branch=master)](https://travis-ci.org/pallavagarwal07/iTS)
 
 ## Installation :
 
