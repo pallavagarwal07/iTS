@@ -402,6 +402,8 @@ def calculate(expr, scope, vartable=globals.var_table):
                 if t1 in ['float', 'double', 'long double', 'longdouble'] or t2 in ['float', 'double', 'long double', 'longdouble']:
                     raise Exceptions.any_user_error("Modulo operation not allowed with floating point numbers.")
                 key = Runtime.get_key(var_stack[l()-1], scope)
+                if get_val(var_stack[l()], scope) is 0:
+                    raise Exceptions.any_user_error("Modulo by 0 not allowed!")
                 val = get_val(key, scope) % get_val(var_stack[l()], scope)
                 set_val(key, val, scope)
                 var_stack[l()-1] = (val, max_type(t2))
@@ -433,6 +435,8 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '!':
                 var_stack[l()] = ((0, max_type(t1)) if get_val(var_stack[l()], scope) else (1, max_type(t1)))
             elif token == '%':
+                if get_val(var_stack[l()], scope) == 0:
+                    raise Exceptions.any_user_error("Modulo by 0 not allowed!")
                 var_stack[l() - 1] = (get_val(var_stack[l() - 1], scope) % get_val(var_stack[l()], scope), max_type(t1, t2))
                 var_stack.pop()
             elif token == '&':
