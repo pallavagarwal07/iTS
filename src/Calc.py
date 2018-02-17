@@ -24,6 +24,7 @@ def pre_post_handle(tokens):
 # Separate out the tokens from an expression. i.e something like
 # '5 + 4' would become ['5', '+', '4']
 def sep(expr):
+    print expr
     i, token, sep_tokens = 0, [], []
 
     while i < len(expr) and expr[i] != ';' :
@@ -101,6 +102,7 @@ def sep(expr):
         i += 1
     if token != []:
         sep_tokens.append(''.join(token))
+    print sep_tokens
     return sep_tokens
 
 
@@ -144,15 +146,24 @@ def to_postfix(tokens, scope):
 
     while i < len(tokens):
         tk = tokens[i]
+        print stack, tokens, "Current:", tk
         if tk in globals.ops:
             if tk == '(':
                 add(stack, tk, ctr, scope)
 
             elif tk == ')':
-                while stack[-1][0] != '(':
-                    add(postfix, stack.pop(), ctr, scope)
-                stack.pop()
-
+                print stack, tokens
+                tmptypes = []
+                if stack[-1][0] == '#type#':
+                    while stack[-1][0] != '(':
+                        tmptypes.append(stack.pop())
+                    stack.pop()
+                    tmptypes.reverse()
+                    add(stack, ('#type#', " ".join(k[1] for k in tmptypes)), ctr, scope)
+                else:
+                    while stack[-1][0] != '(':
+                        add(postfix, stack.pop(), ctr, scope)
+                    stack.pop()
             elif len(stack) == 0 or stack[-1][0] == '(':
                 add(stack, tk, ctr, scope)
 
@@ -181,9 +192,7 @@ def to_postfix(tokens, scope):
             tag = 0
             for types in globals.data_types:
                 if tk.startswith(types):
-                    stack.pop()
                     add(stack, ('#type#', tk), ctr, scope)
-                    i += 1
                     tag = 1
                     break
             if tag == 0:
@@ -191,6 +200,7 @@ def to_postfix(tokens, scope):
         i += 1
     while len(stack) > 0:
         add(postfix, stack.pop(), ctr, scope)
+    print "Returning", postfix
     return postfix
 
 

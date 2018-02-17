@@ -128,7 +128,7 @@ loading()
 
 run_test()
 {
-    gcc -o $BASEDIR/gcc_exec/$filename $BASEDIR/c_codes/$file
+    gcc -o $BASEDIR/gcc_exec/$filename $BASEDIR/c_codes/$file -w
     touch "$BASEDIR/inputs/$filename"
     CMD="$BASEDIR/gcc_exec/$filename < $BASEDIR/inputs/$filename >
             $BASEDIR/gcc_out/$filename"

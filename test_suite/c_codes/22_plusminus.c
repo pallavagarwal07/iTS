@@ -10,7 +10,7 @@ int main() {
     printf("%c ", x*=y+ch ); 
     printf("%d ", y+++-x );
     printf("%d ", y+++--x );
-    printf("%f ", (z, !z) );
+    printf("%f ", (!z, z) );
     printf("%d ", z>y>x );
 
     return 0;

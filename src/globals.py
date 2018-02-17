@@ -1,5 +1,9 @@
-from scipy import weave
 import re
+
+try:
+    from scipy import weave
+except Exception as e:
+    import weave
 
 global var_table
 global inp

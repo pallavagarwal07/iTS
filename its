@@ -1,8 +1,9 @@
-#!/bin/sh
+#!/usr/bin/env bash
 CURRPATH=$(pwd)
 SOURCE=$0
 
-# We need to resolve the path to the actual code directory (Running executable could be a symlink)
+# We need to resolve the path to the actual code directory (Running executable
+# could be a symlink).
 while [ -h "$SOURCE" ]; do
     BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
     SOURCE="$(readlink "$SOURCE")"

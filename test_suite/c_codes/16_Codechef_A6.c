@@ -39,6 +39,7 @@ int lmsutil(int n){
             }
         }
     }
+    return 0;
 }
 
 int kmp(int n){
