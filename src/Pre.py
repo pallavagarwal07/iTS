@@ -4,21 +4,28 @@ import globals
 
 def remove_non_string_newlines(code):
     code = list(code)
-    dblq = 0
-    sngq = 0
+    dblq = False
+    sngq = False
+
+    # Remove newlines not part of double quoted string or single quoted
+    # characters. Note that escaped newlines can be part of c strings,
+    # but c preprocessor will fix them. These escaped newlines do not
+    # actually appear as newlines, but as empty spaces.
     for i, char in enumerate(code):
         if char == '"' and code[i-1] != '\\' and not sngq:
-            dblq = 1 - dblq
+            dblq = not dblq
         elif char == "'" and code[i-1] != '\\' and not dblq:
-            sngq = 1 - sngq
+            sngq = not sngq
         elif not sngq and not dblq and char == '\n':
             code[i] = ' '
 
+    # Remove extra spaces in code (again, those which are not part of
+    # any strings or character literals).
     for i, char in enumerate(code):
         if char == '"' and code[i-1] != '\\' and not sngq:
-            dblq = 1 - dblq
+            dblq = not dblq
         elif char == "'" and code[i-1] != '\\' and not dblq:
-            sngq = 1 - sngq
+            sngq = not sngq
         elif not sngq and not dblq and char == ' ':
             j = i + 1
             while j < len(code) and ( code[j] == ' ' or code[j] == '\t' ):

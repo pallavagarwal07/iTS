@@ -23,7 +23,7 @@ func = {
             'puts', 'putchar'],
 
         'user': globals.functions
-        }
+}
 unique_id = 1
 
 
