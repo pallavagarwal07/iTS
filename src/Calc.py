@@ -390,9 +390,14 @@ def calculate(expr, scope, vartable=globals.var_table):
                 key = Runtime.get_key(var_stack[l()-1], scope)
                 if get_val(var_stack[l()], scope) is 0:
                     raise Exceptions.any_user_error("Division by 0 not allowed!")
+
                 val = get_val(key, scope) / get_val(var_stack[l()], scope)
+                max_t = max_type(t2)
+                if max_t in "number long long int":
+                    val = int(val)
+
                 set_val(key, val, scope)
-                var_stack[l()-1] = (val, max_type(t2))
+                var_stack[l()-1] = (val, max_t)
                 var_stack.pop()
             elif token == '%=':
                 if t1 in ['float', 'double', 'long double', 'longdouble'] or t2 in ['float', 'double', 'long double', 'longdouble']:
@@ -450,7 +455,11 @@ def calculate(expr, scope, vartable=globals.var_table):
             elif token == '/':
                 if get_val(var_stack[l()], scope) == 0:
                     raise Exceptions.any_user_error("Division by 0 not allowed!")
-                var_stack[l() - 1] = (get_val(var_stack[l() - 1], scope) / get_val(var_stack[l()], scope), max_type(t1, t2))
+                v1 = get_val(var_stack[l() - 1], scope)
+                v2 = get_val(var_stack[l()], scope)
+                var_stack[l() - 1] = (v1/v2, max_type(t1, t2))
+                if var_stack[l()-1][1] in "number long long int":
+                    var_stack[l()-1] = (int(var_stack[l()-1][0]), var_stack[l()-1][1])
                 var_stack.pop()
             elif token == '=':
                 key = Runtime.get_key(var_stack[l()-1], scope)
