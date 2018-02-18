@@ -74,12 +74,12 @@ print1(code)
 try:
     Runtime.traverse(code, Access)
 except Exceptions.main_executed as e:
-    cmd.write(e.message + "\ndelete_scope('global');")
+    cmd.write(str(e) + "\ndelete_scope('global');")
 except Exceptions.timeout_error:
     msg = "Your program timed out at this position. If this happened at an array" + \
             "declaration, declare a smaller array, and try again. Otherwise, try" + \
             "the program with smaller inputs."
     cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(msg)))
 except Exceptions.any_user_error as e:
-    print "e is ", e, type(e)
-    cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(' '.join(e.args))))
+    print("e is ", e, type(e))
+    cmd.write(globals.gui + "\nuser_error('{0}');".format(b64(bytes(' '.join(e.args), "UTF-8"))))

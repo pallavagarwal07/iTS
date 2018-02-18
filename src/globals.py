@@ -1,10 +1,5 @@
 import re
 
-try:
-    from scipy import weave
-except Exception as e:
-    import weave
-
 global var_table
 global inp
 
@@ -17,41 +12,55 @@ curr_mem = 10000000000**3
 
 # priority of operators. Even values have left to right associativity and vice versa
 priority = {
-    '->': 100, '++': 100, '--': 100,
-    '+++': 91, '---': 91, '`+`': 91, '`-`': 91, '!': 91, '~': 91, '#type#': 91, '`*`': 91, '`&`': 91,
-    '*': 80, '/': 80, '%': 80,
-    '+': 78, '-': 78,
-    '>>': 76, '<<': 76,
-    '<=': 70, '>=': 70, '>': 70, '<': 70,
-    '==': 66, '!=': 66,
-    '&': 58, '^': 56, '|': 54, '&&': 52, '||': 50,
-    '?':45, ':': 45,
-    '=': 41, '+=': 41, '-=': 41, '*=': 41, '/=': 41,
-    '%=': 41, '&=': 41, '^=': 41, '|=': 41,
-    '>>=': 41, '<<=': 41,
-    ',': 10
+    '->' : 100, '++' : 100, '--' : 100,
+    '+++': 91,  '---': 91,  '`+`': 91, '`-`': 91, '!' : 91, '~': 91, '#type#': 91, '`*`': 91, '`&`': 91,
+    '*'  : 80,  '/'  : 80,  '%'  : 80,
+    '+'  : 78,  '-'  : 78,
+    '>>' : 76,  '<<' : 76,
+    '<=' : 70,  '>=' : 70,  '>'  : 70, '<'  : 70,
+    '==' : 66,  '!=' : 66,
+    '&'  : 58,  '^'  : 56,  '|'  : 54, '&&' : 52, '||': 50,
+    '?'  : 45,  '    : '         : 45,
+    '='  : 41,  '+=' : 41,  '-=' : 41, '*=' : 41, '/=': 41,
+    '%=' : 41,  '&=' : 41,  '^=' : 41, '|=' : 41,
+    '>>=': 41,  '<<=': 41,
+    ','  : 10
 }
 
 priority_type = {
-        'number': 0, 'void':0, 'char': 1, 'int': 2, 'long': 3, 'long int': 3, 'long long': 4, 'long long int': 4, 'pointer': 5, 'float': 6, 'double': 7, 'long double': 8
+        'number'     : 0, 'void'         : 0,
+        'char'       : 1,
+        'int'        : 2,
+        'long'       : 3, 'long int'     : 3,
+        'long long'  : 4, 'long long int': 4,
+        'pointer'    : 5,
+        'float'      : 6,
+        'double'     : 7,
+        'long double': 8
 }
 
 # Operators sorted in order of length. Do not change.
 ops = (
-    '#type#', '`*`', '`&`', '`-`', '`+`', '---', '? :', '+++', '<<=', '>>=', '*=', '|=', '>=', '>>', '==', '<<',
-    '<=', '&=', '!=', '&&', '||', '^=', '++', '--', '/=', '%=', '-=', '->',
-    '+=', ',', '>', '|', '^', '!', '%', '&', '+', '*', '-', '/', '=',
-    '<', '~', '(', ')', '?', ':'
+    '#type#',
+
+    '`*`', '`&`', '`-`', '`+`', '---', '? :', '+++', '<<=', '>>=',
+
+    '*=', '|=', '>=', '>>', '==', '<<', '<=', '&=', '!=', '&&', '||', '^=',
+    '++', '--', '/=', '%=', '-=', '->', '+=',
+
+    ',', '>', '|', '^', '!', '%', '&', '+', '*', '-', '/', '=', '<', '~', '(',
+    ')', '?', ':'
 )
 
 bin_ops = (
-    '<<=', '>>=', '*=', '|=', '>=', '>>', '==', '<<', '<=', '&=',
-    '!=', '&&', '||', '^=', '/=', '%=', '-=', '->', '+=', ',', '>',
-    '|', '^', '%', '&', '+', '*', '-', '/', '=', '<'
+    '<<=', '>>=', '*=', '|=', '>=', '>>', '==', '<<', '<=', '&=', '!=', '&&',
+    '||', '^=', '/=', '%=', '-=', '->', '+=', ',', '>', '|', '^', '%', '&',
+    '+', '*', '-', '/', '=', '<'
 )
 
 unary_ops = {
-        '+': '`+`', '-': '`-`', '*': '`*`', '&': '`&`', '++': '++', '--': '--', '+++': '+++', '---': '---', '#type#': '#type#', '~': '~', '!': '!'
+    '+': '`+`', '-': '`-`', '*': '`*`', '&': '`&`', '++': '++', '--': '--',
+    '+++': '+++', '---': '---', '#type#': '#type#', '~': '~', '!': '!'
 }
 
 un_ops = ('`+`', '`-`', '`*`', '`&`', '++', '--', '+++', '---', '~', '#type#', '!')
@@ -90,42 +99,33 @@ def type_string():
     ret = ret.replace(' ', r'\s+')
     return ret
 
+size_of = {
+    'long double'   : 16,
+    'int'           : 4,
+    'double'        : 8,
+    'long long int' : 8,
+    'float'         : 4,
+    'long'          : 8,
+    'char'          : 1,
+    'long long'     : 8,
+    'long int'      : 8,
+    'pointer'       : 8,
+}
+
 
 # Run a c code to determine the sizeof() values
 def setup():
-    code = r"""
-    py::tuple res(10);
-    res[0] = (int)sizeof(long long int);
-    res[1] = (int)sizeof(long int);
-    res[2] = (int)sizeof(long double);
-    res[3] = (int)sizeof(long long);
-    res[4] = (int)sizeof(char);
-    res[5] = (int)sizeof(int);
-    res[6] = (int)sizeof(long);
-    res[7] = (int)sizeof(float);
-    res[8] = (int)sizeof(double);
-    res[9] = (int)sizeof(int*);
-    return_val = res;
-    """
-    result = weave.inline(code, [])
-    i = 0
-    for types in data_types:
-        size_of[types] = result[i]
-        i += 1
-
     for types in ['char', 'int', 'long', 'long long', 'long long int']:
         temp = 1 << ((8 * size_of[types])-1)
         type_range[types] = (-temp, temp-1)
-    type_range['long int'] = type_range['long']
-    #type_range['longint'] = type_range['long int']
-    #type_range['longlong'] = type_range['long long']
-    #type_range['longlongint'] = type_range['long long int']
-    type_range['float'] = (-3.4*(10**38), 3.4*(10**38))
-    type_range['double'] = (-1.7*(10**308), 1.7*(10**308))
+
+    type_range['long int']    = type_range['long']
+    type_range['float']       = (-3.4*(10**38), 3.4*(10**38))
+    type_range['double']      = (-1.7*(10**308), 1.7*(10**308))
     type_range['long double'] = type_range['double']
-    type_range['pointer'] = (0, 10**100)
-    temp = type_range['char']
-    type_range['char'] = (0, temp[1] - temp[0])
+    type_range['pointer']     = (0, 10**100)
+    temp                      = type_range['char']
+    type_range['char']        = (0, temp[1] - temp[0])
 
 
 # Get key tuple from variable name and scope
@@ -296,22 +296,22 @@ def toplevelreplace(var_str, orig, repl):
 def print1(*args):
     if(vLevel):
         for arg in args:
-            print arg,
-        print ''
+            print(arg,)
+        print('')
 
 
 def print2(*args):
     if(vLevel>1):
         for arg in args:
-            print arg,
-        print ''
+            print(arg,)
+        print('')
 
 
 def print3(*args):
     if(vLevel>2):
         for arg in args:
-            print arg,
-        print ''
+            print(arg,)
+        print('')
 
 
 def is_num(s):

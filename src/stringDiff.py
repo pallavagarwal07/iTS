@@ -43,16 +43,16 @@ def Dif(str1, str2):
 
 
 def print_arr(str2, str1, arr):
-    print "\t0\t",
+    print("\t0\t",)
     for a in range(1, len(arr[0])):
-        print str1[a-1]+"\t",
-    print ''
+        print(str1[a-1]+"\t",)
+    print('')
     for i, a in enumerate(arr):
-        print str2[i-1] if i>0 else '0', "\t",
+        print(str2[i-1] if i>0 else '0', "\t",)
         for b in a:
-            print str(b) + "\t",
-        print ''
-    print '\n\n'
+            print(str(b) + "\t",)
+        print('')
+    print('\n\n')
 
 stack = {}
 

@@ -135,7 +135,7 @@ def extract(regex_arr, type_arr):
 
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
-    statement = statement.decode('string_escape')
+    statement = bytes(statement, 'UTF-8').decode('unicode_escape')
 
     # sep = [('%d %c\n%lld', ' &a, &b,', ' &c')]
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)

@@ -24,7 +24,7 @@ def pre_post_handle(tokens):
 # Separate out the tokens from an expression. i.e something like
 # '5 + 4' would become ['5', '+', '4']
 def sep(expr):
-    print expr
+    print(expr)
     i, token, sep_tokens = 0, [], []
 
     while i < len(expr) and expr[i] != ';' :
@@ -142,19 +142,15 @@ def add(arr, token, ctr, scope):
 # Convert separated token list to postfix token list.
 # Example: ['4', '+', '5'] to ['4', '5', '+']
 def to_postfix(tokens, scope):
-    print "to_postfix", tokens
-
     stack, postfix, ctr, i = [], [], 0, 0
 
     while i < len(tokens):
         tk = tokens[i]
-        print stack, tokens, "Current:", tk
         if tk in globals.ops:
             if tk == '(':
                 add(stack, tk, ctr, scope)
 
             elif tk == ')':
-                print stack, tokens
                 tmptypes = []
                 if stack[-1][0] == '#type#':
                     while stack[-1][0] != '(':
@@ -202,7 +198,6 @@ def to_postfix(tokens, scope):
         i += 1
     while len(stack) > 0:
         add(postfix, stack.pop(), ctr, scope)
-    print "Returning", postfix
     return postfix
 
 

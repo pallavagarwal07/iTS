@@ -7,22 +7,22 @@ import globals
 import re
 
 func = {
-        'default': ['sizeof', 'malloc'],
+    'default': ['sizeof', 'malloc'],
 
-        'math': ['sqrt', 'pow', 'cbrt', 'hypot', 'ceil', 'floor',
-            'fmod', 'fabs', 'abs', 'round', 'exp', 'frexp', 'ldexp', 'log', 'log10',
-            'log2', 'modf', 'exp2', 'expm1', 'sin', 'asin', 'sinh', 'asinh', 'cos',
-            'acos', 'cosh', 'acosh', 'tan', 'atan', 'tanh', 'atanh', 'atan2'],
+    'math': ['sqrt', 'pow', 'cbrt', 'hypot', 'ceil', 'floor',
+        'fmod', 'fabs', 'abs', 'round', 'exp', 'frexp', 'ldexp', 'log', 'log10',
+        'log2', 'modf', 'exp2', 'expm1', 'sin', 'asin', 'sinh', 'asinh', 'cos',
+        'acos', 'cosh', 'acosh', 'tan', 'atan', 'tanh', 'atanh', 'atan2'],
 
-        'string': ['memchr', 'memcmp', 'memcpy', 'memmove', 'memset', 'strcat',
-            'strcat', 'strncat', 'strchr', 'strcmp', 'strncmp', 'strcoll', 'strcpy',
-            'strncpy', 'strcspn', 'strerror', 'strlen', 'strpbrk', 'strrchr', 'strspn',
-            'strstr', 'strtok', 'strxfrm'],
+    'string': ['memchr', 'memcmp', 'memcpy', 'memmove', 'memset', 'strcat',
+        'strcat', 'strncat', 'strchr', 'strcmp', 'strncmp', 'strcoll', 'strcpy',
+        'strncpy', 'strcspn', 'strerror', 'strlen', 'strpbrk', 'strrchr', 'strspn',
+        'strstr', 'strtok', 'strxfrm'],
 
-        'stdio': ['printf', 'scanf', 'getchar', 'gets', 'sprintf', 'sscanf',
-            'puts', 'putchar'],
+    'stdio': ['printf', 'scanf', 'getchar', 'gets', 'sprintf', 'sscanf',
+        'puts', 'putchar'],
 
-        'user': globals.functions
+    'user': globals.functions
 }
 unique_id = 1
 
@@ -81,7 +81,7 @@ def pass_to_func(detail, scope):
                     pause = True
                     break
         if pause:
-	    globals.gui += "\npause_simulation();"
+            globals.gui += "\npause_simulation();"
         return 0
 
     for lib in func:

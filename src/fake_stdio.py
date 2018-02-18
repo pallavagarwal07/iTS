@@ -16,7 +16,7 @@ def printf(params, scope):
         else:
             while format_vars[j] == '':
                 j += 1
-            
+
             v = format_vars[j]
             if ch[0] is 'char':
                 format_string +=  chr(v)
@@ -37,7 +37,7 @@ def printf(params, scope):
     globals.out.write(format_string)
 
     import base64
-    gui_out = base64.b64encode(format_string)
+    gui_out = base64.b64encode(bytes(format_string, "UTF-8")).decode("UTF-8")
     globals.gui += "\nstdout_print('"+gui_out+"');"
 
     return True

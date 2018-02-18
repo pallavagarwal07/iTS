@@ -11,8 +11,7 @@ while [ -h "$SOURCE" ]; do
 done
 BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-# Python >=2.6 <3.0 needs to be used.
-PYTHONCMD="python2 -B"
+PYTHONCMD="python3 -B"
 
 abspath(){
     cd "$(dirname "$1")"

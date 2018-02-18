@@ -39,14 +39,14 @@ def malloc(num, step, level, val, scope, cast):
     return ret
 
 
-def str_to_mem(str, scope):
-    str_size = len(str)+1
+def str_to_mem(str1, scope):
+    str_size = len(str1)+1
     mem = globals.curr_mem
     globals.curr_mem += globals._size_of('pointer')
     globals.memory[( mem, )] = [ globals.Value(type=('char', 1)), globals._size_of('pointer'), 2]
     ret_mem = globals.curr_mem
     makeMemory(mem, [str_size], 0, 'char',
-            ["'"+ch.encode('string_escape')+"'" for ch in str] + ["'\000'"], scope)
+            ["'"+ch.encode('unicode_escape').decode("UTF-8")+"'" for ch in str1] + ["'\000'"], scope)
     return ( mem, )
 
 
@@ -154,7 +154,7 @@ def get_key(var, scope):
         key = globals.in_var_table(name, scope)
         return resolve(key, indices, scope)
     else:
-        name = name.decode('string_escape')
+        name = bytes(name, "UTF-8").decode('unicode_escape')
         if re.match(r"^(?s)'.'$", name):
             ret = ord(name[1:-1])
             return ret
@@ -176,7 +176,7 @@ def get_key_first(var, scope):
         key = globals.in_var_table(name, scope)
         return resolve(key, indices, scope)
     else:
-        name = name.decode('string_escape')
+        name = bytes(name, 'UTF-8').decode('unicode_escape')
         if re.match(r"'.'", name):
             return ord(name[1:-1])
         return globals.in_var_table(name, scope)
@@ -232,7 +232,7 @@ def is_updation(exp):
 def garbage_collector(scope):
     globals.gui += "\ndelete_scope(\'"+'-'.join(scope.split())+"\');"
     keys = globals.var_table.keys()
-    for key in keys:
+    for key in list(keys):
         if key[1] == scope:
             del globals.var_table[key]
             del globals.memory[(key[2],)]
@@ -343,7 +343,7 @@ def traverse(code, scope):
             continue
         if def_func(line, code, i):
             continue
-        print "Unrecognized something", line
+        print("Unrecognized something", line)
         exit(0)
 
 

@@ -2,5 +2,5 @@ with import <nixpkgs> {};
 
 stdenv.mkDerivation rec {
     name = "Coms";
-    buildInputs = [python2 python2Packages.scipy];
+    buildInputs = [python3 python3Packages.scipy];
 }
