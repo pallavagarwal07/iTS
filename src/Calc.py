@@ -103,6 +103,7 @@ def sep(expr):
     if token != []:
         sep_tokens.append(''.join(token))
 
+    print("Returning", sep_tokens)
     return sep_tokens
 
 
