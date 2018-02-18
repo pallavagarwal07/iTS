@@ -1,7 +1,7 @@
 import re
 
-global var_table
-global inp
+# global var_table
+# global inp
 
 inp = ''
 gui = ""
@@ -369,6 +369,18 @@ def separate_def(input): # input is like "int a" or "int b[]" or "long long ** g
 
     return type, var
 
+def escape(text):
+    l = list(text)
+    for i in range(0, len(l)):
+        ch = l[i]
+        if ch == "'": l[i] = "\\'"
+        elif ch == '"': l[i] = '\\"'
+        elif ch == "\\": l[i] = "\\\\"
+        elif ch == "\f": l[i] = "\\f"
+        elif ch == "\n": l[i] = "\\n"
+        elif ch == "\r": l[i] = "\\r"
+        elif ch == "\t": l[i] = "\\t"
+    return "".join(l)
 
 def get_str(mem):
     chr_arr, chr_str, key = [], '', (mem, )

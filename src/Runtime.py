@@ -46,7 +46,7 @@ def str_to_mem(str1, scope):
     globals.memory[( mem, )] = [ globals.Value(type=('char', 1)), globals._size_of('pointer'), 2]
     ret_mem = globals.curr_mem
     makeMemory(mem, [str_size], 0, 'char',
-            ["'"+ch.encode('unicode_escape').decode("UTF-8")+"'" for ch in str1] + ["'\000'"], scope)
+            ["'"+globals.escape(ch)+"'" for ch in str1] + ["'\000'"], scope)
     return ( mem, )
 
 
