@@ -1,8 +1,8 @@
-from Globals import print1, print2, print3
-import Globals
-import PreProcessing
-import Gui
-import Runtime
+from .Globals import print1, print2, print3
+from . import Globals
+from . import PreProcessing
+from . import Gui
+from . import Runtime
 
 def test(code, input, propOut, output):
     file = open("autoTest.c", 'w')

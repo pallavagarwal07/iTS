@@ -1,7 +1,7 @@
 import re
 
-import Globals
-import Exceptions
+from . import Globals
+from . import Exceptions
 
 def invoke(name, params, scope):
     if name == 'sizeof':

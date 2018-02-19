@@ -1,11 +1,11 @@
 import re
 
-from Globals import print1, print2, print3
-import Globals
-import Exceptions
-import Calc
-import Vars
-import Runtime
+from .Globals import print1, print2, print3
+from . import Globals
+from . import Exceptions
+from . import Calc
+from . import Vars
+from . import Runtime
 
 
 def get_input_value(val, cast):

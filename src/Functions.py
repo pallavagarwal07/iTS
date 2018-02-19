@@ -1,11 +1,11 @@
 import re
 
-from Globals import is_num, print1, print2, print3, toplevelsplit
-import FakeDefault
-import Exceptions
-import FakeMath
-import FakeStdio
-import Globals
+from .Globals import is_num, print1, print2, print3, toplevelsplit
+from . import FakeDefault
+from . import Exceptions
+from . import FakeMath
+from . import FakeStdio
+from . import Globals
 
 func = {
     'default': ['sizeof', 'malloc'],
@@ -29,8 +29,8 @@ unique_id = 1
 
 
 def eval_user_function(name, params, scope):
-    import Runtime
-    import Calc
+    from . import Runtime
+    from . import Calc
     global unique_id
 
     target = Globals.functions[name]
@@ -62,7 +62,7 @@ def eval_user_function(name, params, scope):
 
 
 def pass_to_func(detail, scope):
-    import Calc
+    from . import Calc
 
     # detail is like ('pow', 'a, b')
     name = detail[0]

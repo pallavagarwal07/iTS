@@ -325,7 +325,7 @@ def is_num(s):
 
 def separate_def(input): # input is like "int a" or "int b[]" or "long long ** g[56]" or "int"
     # Target is to return ('int', 'a'), ('int[]', 'b'), ('long long**[56]', g), ('int', '')
-    import Exceptions
+    from . import Exceptions
 
     keyword = input
     if input == '': return ('')

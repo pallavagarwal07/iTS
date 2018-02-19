@@ -1,9 +1,9 @@
 import os
 import base64
 import codecs
-
 import MySQLdb
-import UnitTest
+
+from . import UnitTest
 
 # Possible Categories are:
 # LAB-0 (INTRO), LAB-1 (IO), LAB-2 (CONDITIONALS), LAB-3 (SERIES), LAB-4 (PATTERN), LAB-5 (ARRAYS), LAB-6 (ARRAY/STRINGS)

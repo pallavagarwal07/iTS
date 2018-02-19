@@ -1,7 +1,7 @@
 from math import *
 
-from Globals import print1, print2, print3
-import Calc
+from .Globals import print1, print2, print3
+from . import Calc
 
 #Power Functions
 

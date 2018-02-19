@@ -2,13 +2,13 @@ from __future__ import print_function
 import signal
 import sys
 
-from Globals import print1, print2, print3
-from Globals import b64encode as b64
-import Globals
-import PreProcessing
-import Runtime
-import Exceptions
-import StringDiff
+from .Globals import print1, print2, print3
+from .Globals import b64encode as b64
+from . import Globals
+from . import PreProcessing
+from . import Runtime
+from . import Exceptions
+from . import StringDiff
 
 
 def timeout(signum, frame):

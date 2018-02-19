@@ -1,10 +1,10 @@
 import re
 
-from Globals import print1, print2, print3, is_num
-import Globals
-import Calc
-import Runtime
-import Exceptions
+from .Globals import print1, print2, print3, is_num
+from . import Globals
+from . import Calc
+from . import Runtime
+from . import Exceptions
 
 def get_type(key, scope):
     if type(key) is not tuple:

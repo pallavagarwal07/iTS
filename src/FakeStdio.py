@@ -1,9 +1,9 @@
 import re
 
-import IO
-import Calc
-import Globals
-import Exceptions
+from . import IO
+from . import Calc
+from . import Globals
+from . import Exceptions
 
 def printf(params, scope):
     params = [Calc.calculate(k, scope) for k in params]

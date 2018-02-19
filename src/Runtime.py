@@ -1,13 +1,13 @@
 import re
 
-from Globals import print1, print2, print3
-from Globals import Value
-import Globals
-import Calc
-import IO
-import Groups
-import Vars
-import Exceptions
+from .Globals import print1, print2, print3
+from .Globals import Value
+from . import Globals
+from . import Calc
+from . import IO
+from . import Groups
+from . import Vars
+from . import Exceptions
 
 
 def makeMemory(mem, indices, l, type, val, scope):
@@ -398,7 +398,7 @@ def execute(code, scope):
 
         code[i-1] = "__ITS_FLAG__"+code[i-1]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from StringDiff import getIndex
+        from .StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[i-1] = code[i-1].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)
