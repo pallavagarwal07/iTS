@@ -1,5 +1,5 @@
 from Globals import print1, print2, print3
-from subprocess import PIPE, Popen
+import Globals
 import re
 import os
 import Pre
@@ -33,12 +33,19 @@ def get_code(code_file):
 
 
 def use_c_preprocessor(filename):
-    content = open(filename).read()
-    content = os.popen('gcc -E ' + filename)
-    content = content.readlines()
+    content = re.sub(r"#include.*", "", Globals.raw_code)
+
+    import pcpp
+    from io import StringIO
+    preproc = pcpp.Preprocessor()
+    preproc.parse(content)
+    output = StringIO()
+    preproc.write(output)
+    output.seek(0)
+    content = output.readlines()
     content = list(content)
     code = []
-    flag = False
+    flag = True
     for line in content:
         if flag and not line.startswith('#'):
             code.append(line)

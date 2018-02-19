@@ -60,7 +60,7 @@ echo Input file is : $input
 echo Output file is : $output
 echo Command file is : $cmd
 
-
+export PYTHONPATH="$PYTHONPATH:$BASEDIR/external/ply:$BASEDIR/external/pcpp"
 # Now the python script would be run with the given arguments
 EXECUTE_SCRIPT=$PYTHONCMD" ""$BASEDIR""/src/Main.py "
 EXECUTE_SCRIPT=$EXECUTE_SCRIPT"$code $vLevel $input $output $cmd"
