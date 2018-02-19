@@ -2,6 +2,9 @@ language: python
 
 python:
     - "2.7"
+    - "3.4"
+    - "3.5"
+    - "3.6"
 
 notifications:
     email: false
@@ -14,4 +17,6 @@ virtualenv:
 install:
     - pip install weave
 
-script: test_suite/test_all
+script:
+    - python --version
+    - PYTHON=python test_suite/test_all

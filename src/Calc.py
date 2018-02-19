@@ -1,13 +1,12 @@
 import Globals
 import re
-import functions
-from functions import pass_to_func
+from Functions import pass_to_func
 from Globals import is_num, print1, print2, print3
 from Vars import get_val, set_val, get_type
 import random
 import Runtime
 import Exceptions
-import fake_math
+import FakeMath
 
 # Differentate between postfix and prefix increment operators.
 def pre_post_handle(tokens):

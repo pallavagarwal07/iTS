@@ -3,8 +3,8 @@ from Globals import Value
 import re
 import Globals
 import Calc
-import i_o
-import groups
+import IO
+import Groups
 import Vars
 import sys
 import Exceptions
@@ -364,23 +364,23 @@ def execute(code, scope):
             return r
     i = 0
 
-    r = groups.if_conditionals(code, scope)
+    r = Groups.if_conditionals(code, scope)
     if r is not "NO":
         return r
 
-    r = groups.if_for(code, scope)
+    r = Groups.if_for(code, scope)
     if r is not "NO":
         return r
 
-    r = groups.if_while(code, scope)
+    r = Groups.if_while(code, scope)
     if r is not "NO":
         return r
 
-    r = groups.if_do_while(code, scope)
+    r = Groups.if_do_while(code, scope)
     if r is not "NO":
         return r
 
-    r = groups.if_switch(code, scope)
+    r = Groups.if_switch(code, scope)
     if r is not "NO":
         return r
 
@@ -398,12 +398,12 @@ def execute(code, scope):
 
         code[i-1] = "__ITS_FLAG__"+code[i-1]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from stringDiff import getIndex
+        from StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[i-1] = code[i-1].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)
         Globals.gui += "\nhighlight_line("+str(line_number)+")"
-        inp = i_o.handle_input(line, scope)
+        inp = IO.handle_input(line, scope)
         if inp:
             Globals.gui+="\nstdin_write("+str(inp)+")"
             continue

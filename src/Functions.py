@@ -1,8 +1,8 @@
 from Globals import is_num, print1, print2, print3, toplevelsplit
-import fake_default
+import FakeDefault
 import Exceptions
-import fake_math
-import fake_stdio
+import FakeMath
+import FakeStdio
 import Globals
 import re
 
@@ -88,13 +88,13 @@ def pass_to_func(detail, scope):
         arr = func[lib]
         if name in arr:
             if lib == 'default':
-                return fake_default.invoke(name, params, scope)
+                return FakeDefault.invoke(name, params, scope)
             if lib == 'math':
-                return fake_math.invoke(name, params, scope)
+                return FakeMath.invoke(name, params, scope)
             if lib == 'string':
-                return fake_string.invoke(name, params, scope)
+                return FakeString.invoke(name, params, scope)
             if lib == 'stdio':
-                return fake_stdio.invoke(name, params, scope)
+                return FakeStdio.invoke(name, params, scope)
             if lib == 'user':
                 return eval_user_function(name, params, scope)
 

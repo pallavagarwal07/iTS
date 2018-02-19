@@ -14,7 +14,7 @@ import Globals
 import PreProcessing
 import Runtime
 import Exceptions
-import stringDiff
+import StringDiff
 
 Globals.vLevel = 0
 Globals.inp = "56\n"
@@ -41,7 +41,7 @@ Globals.code = code
 
 # String difference found in the beginning is used to find the current
 # executing line during execution.
-stringDiff.init(str(Globals.code), str(Globals.raw_code))
+StringDiff.init(str(Globals.code), str(Globals.raw_code))
 
 #Gui.make_ui(code)
 

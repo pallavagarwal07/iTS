@@ -1,5 +1,5 @@
 import re
-import i_o
+import IO
 import Calc
 import Globals
 import Exceptions
@@ -7,7 +7,7 @@ import Exceptions
 def printf(params, scope):
     params = [Calc.calculate(k, scope) for k in params]
     fmt = Globals.get_str(params[0])
-    type_arr, regex_arr = i_o.var_types(fmt)
+    type_arr, regex_arr = IO.var_types(fmt)
     format_vars, format_string = params[1:], ''
     j = 0
     for i, ch in enumerate(regex_arr):

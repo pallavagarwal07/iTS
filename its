@@ -11,7 +11,7 @@ while [ -h "$SOURCE" ]; do
 done
 BASEDIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-PYTHONCMD="python3 -B"
+PYTHONCMD="${PYTHON:-python} -B"
 
 abspath(){
     cd "$(dirname "$1")"

@@ -18,7 +18,7 @@ def if_conditionals(code, scope):
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from stringDiff import getIndex
+        from StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)
@@ -49,7 +49,7 @@ def if_for(code, scope):
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from stringDiff import getIndex
+        from StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)
@@ -87,7 +87,7 @@ def if_switch(code, scope):
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from stringDiff import getIndex
+        from StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)
@@ -142,7 +142,7 @@ def if_while(code, scope):
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from stringDiff import getIndex
+        from StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)
@@ -177,7 +177,7 @@ def if_do_while(code, scope):
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from stringDiff import getIndex
+        from StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)

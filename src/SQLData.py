@@ -2,7 +2,7 @@ import MySQLdb
 import os
 import base64
 import codecs
-import unitTest
+import UnitTest
 
 # Possible Categories are:
 # LAB-0 (INTRO), LAB-1 (IO), LAB-2 (CONDITIONALS), LAB-3 (SERIES), LAB-4 (PATTERN), LAB-5 (ARRAYS), LAB-6 (ARRAY/STRINGS)
@@ -25,5 +25,5 @@ k = cursor.fetchall()
 for table in k:
     #table = k[3]
     print table[0], '\n', table[1], '\n',  table[2], '\n', table[3]
-    unitTest.test(table[0], table[1], table[2], table[3])
+    UnitTest.test(table[0], table[1], table[2], table[3])
     print "\n"
