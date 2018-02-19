@@ -52,7 +52,7 @@ Globals.raw_code = CodeFile.read()
 
 # Preprocessor does some work here like resolve define statements
 # and removing include statements and comments.
-code = PreProcessing.use_c_preprocessor(filename)
+code = PreProcessing.use_c_preprocessor()
 
 # Change all scope brackets and content into nested lists
 code = PreProcessing.nest(code)

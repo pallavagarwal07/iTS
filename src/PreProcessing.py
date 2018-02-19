@@ -4,7 +4,6 @@ import re
 import os
 import Pre
 
-
 def get_code(code_file):
     code_list = []
     code_buffer = []
@@ -32,11 +31,14 @@ def get_code(code_file):
     return code_buffer
 
 
-def use_c_preprocessor(filename):
+def use_c_preprocessor():
     content = re.sub(r"#include.*", "", Globals.raw_code)
 
     import pcpp
-    from io import StringIO
+    try:
+        from StringIO import StringIO
+    except Exception as e:
+        from io import StringIO
     preproc = pcpp.Preprocessor()
     preproc.parse(content)
     output = StringIO()

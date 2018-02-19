@@ -3,6 +3,11 @@
 from __future__ import print_function
 from Globals import print1, print2, print3
 from Globals import b64encode as b64
+
+try:
+    from StringIO import StringIO
+except Exception as e:
+    from io import StringIO
 import signal
 import sys
 import Globals
@@ -11,40 +16,20 @@ import Runtime
 import Exceptions
 import stringDiff
 
+Globals.vLevel = 0
+Globals.inp = "56\n"
 
-print1("ARGS", sys.argv)
+Globals.out = StringIO()
+cmd = StringIO()
 
-filename = sys.argv[1]
-
-Globals.vLevel = int(sys.argv[2]) # verbosity level
-
-# inp variable stores user input.
-if sys.argv[3] == 'stdin':
-    Globals.inp = sys.stdin.read()
-else:
-    Globals.inp = open(sys.argv[3]).read()
-
-# out variable is where c code's output is posted
-if sys.argv[4] == 'stdout':
-    Globals.out = sys.stderr
-else:
-    Globals.out = open(sys.argv[4], 'w')
-
-if sys.argv[5] == 'stderr':
-    cmd = sys.stderr
-else:
-    cmd = open(sys.argv[5], 'w')
-
-# priority variable is a dictionary of operators and their priorities.
-priority = Globals.priority
-
-# ops is a list of all operators.
-ops = Globals.ops
-
-# CodeFile stores a reference to the c file that has to be parsed.
-CodeFile = open(filename)
-
-Globals.raw_code = CodeFile.read()
+Globals.raw_code = r"""
+int main() {
+    int a;
+    scanf("%d", &a);
+    printf("%d\n", a);
+    return 0;
+}
+"""
 
 # Preprocessor does some work here like resolve define statements
 # and removing include statements and comments.
@@ -80,3 +65,7 @@ except Exceptions.timeout_error:
 except Exceptions.any_user_error as e:
     print("e is ", e, type(e))
     cmd.write(Globals.gui + "\nuser_error('{0}');".format(b64(' '.join(e.args))))
+finally:
+    Globals.out.seek(0)
+    print("------")
+    print(Globals.out.read())
