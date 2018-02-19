@@ -1,5 +1,4 @@
 from Globals import print1, print2, print3
-import sys
 import Globals
 import PreProcessing
 import Gui

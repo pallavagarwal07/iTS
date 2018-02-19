@@ -1,8 +1,9 @@
 from __future__ import print_function
-from Globals import print1, print2, print3
-from Globals import b64encode as b64
 import signal
 import sys
+
+from Globals import print1, print2, print3
+from Globals import b64encode as b64
 import Globals
 import PreProcessing
 import Runtime

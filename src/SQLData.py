@@ -1,7 +1,8 @@
-import MySQLdb
 import os
 import base64
 import codecs
+
+import MySQLdb
 import UnitTest
 
 # Possible Categories are:

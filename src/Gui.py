@@ -1,6 +1,7 @@
+import sys
+
 from Globals import print1, print2, print3
 from PyQt4 import QtGui
-import sys
 
 
 class Gui(QtGui.QWidget):

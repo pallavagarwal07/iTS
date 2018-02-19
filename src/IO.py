@@ -1,8 +1,8 @@
+import re
+
 from Globals import print1, print2, print3
 import Globals
 import Exceptions
-import re
-import sys
 import Calc
 import Vars
 import Runtime

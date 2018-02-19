@@ -1,10 +1,11 @@
+import re
+
 from Globals import is_num, print1, print2, print3, toplevelsplit
 import FakeDefault
 import Exceptions
 import FakeMath
 import FakeStdio
 import Globals
-import re
 
 func = {
     'default': ['sizeof', 'malloc'],

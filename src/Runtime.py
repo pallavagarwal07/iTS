@@ -1,12 +1,12 @@
+import re
+
 from Globals import print1, print2, print3
 from Globals import Value
-import re
 import Globals
 import Calc
 import IO
 import Groups
 import Vars
-import sys
 import Exceptions
 
 

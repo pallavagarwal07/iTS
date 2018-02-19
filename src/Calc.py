@@ -1,9 +1,10 @@
-import Globals
 import re
+import random
+
+import Globals
 from Functions import pass_to_func
 from Globals import is_num, print1, print2, print3
 from Vars import get_val, set_val, get_type
-import random
 import Runtime
 import Exceptions
 import FakeMath

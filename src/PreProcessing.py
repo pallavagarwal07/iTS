@@ -1,7 +1,7 @@
+import re
+
 from Globals import print1, print2, print3
 import Globals
-import re
-import os
 import Pre
 
 def get_code(code_file):

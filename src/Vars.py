@@ -1,8 +1,9 @@
+import re
+
 from Globals import print1, print2, print3, is_num
 import Globals
 import Calc
 import Runtime
-import re
 import Exceptions
 
 def get_type(key, scope):
