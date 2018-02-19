@@ -9,7 +9,7 @@ Access	Main.py	/^Access = 'global'$/;"	v
 CodeFile	Main.py	/^CodeFile = open(filename)$/;"	v
 Dif	stringDiff.py	/^def Dif(str1, str2):$/;"	f
 Gui	Gui.py	/^class Gui(QtGui.QWidget):$/;"	c
-Value	globals.py	/^class Value(object):$/;"	c
+Value	Globals.py	/^class Value(object):$/;"	c
 __abs__	fake_math.py	/^def __abs__(x):$/;"	f	file:
 __acos__	fake_math.py	/^def __acos__(x):$/;"	f	file:
 __acosh__	fake_math.py	/^def __acosh__(x):$/;"	f	file:
@@ -31,37 +31,37 @@ __fmod__	fake_math.py	/^def __fmod__(x, y):$/;"	f	file:
 __frexp__	fake_math.py	/^def __frexp__(x, y):$/;"	f	file:
 __hypot__	fake_math.py	/^def __hypot__(x, y):$/;"	f	file:
 __init__	Gui.py	/^    def __init__(self, code):$/;"	m	class:Gui
-__init__	globals.py	/^    def __init__(self, v=None, type=('void', 0), tags=None):$/;"	m	class:Value
+__init__	Globals.py	/^    def __init__(self, v=None, type=('void', 0), tags=None):$/;"	m	class:Value
 __ldexp__	fake_math.py	/^def __ldexp__(x, y):$/;"	f	file:
 __log10__	fake_math.py	/^def __log10__(x):$/;"	f	file:
 __log2__	fake_math.py	/^def __log2__(x):$/;"	f	file:
 __log__	fake_math.py	/^def __log__(x):$/;"	f	file:
 __modf__	fake_math.py	/^def __modf__(x, y):$/;"	f	file:
 __pow__	fake_math.py	/^def __pow__(x, y):$/;"	f	file:
-__repr__	globals.py	/^    def __repr__(self):$/;"	m	class:Value	file:
+__repr__	Globals.py	/^    def __repr__(self):$/;"	m	class:Value	file:
 __round__	fake_math.py	/^def __round__(x):$/;"	f	file:
 __sin__	fake_math.py	/^def __sin__(x):$/;"	f	file:
 __sinh__	fake_math.py	/^def __sinh__(x):$/;"	f	file:
 __sqrt__	fake_math.py	/^def __sqrt__(x):$/;"	f	file:
-__str__	globals.py	/^    def __str__(self):$/;"	m	class:Value	file:
+__str__	Globals.py	/^    def __str__(self):$/;"	m	class:Value	file:
 __tan__	fake_math.py	/^def __tan__(x):$/;"	f	file:
 __tanh__	fake_math.py	/^def __tanh__(x):$/;"	f	file:
-_size_of	globals.py	/^def _size_of(type):$/;"	f
+_size_of	Globals.py	/^def _size_of(type):$/;"	f
 add	Calc.py	/^def add(arr, token, ctr, scope):$/;"	f
 any_user_error	Exceptions.py	/^class any_user_error(Exception):$/;"	c
 arr	stringDiff.py	/^arr = []$/;"	v
-bin_ops	globals.py	/^bin_ops = ($/;"	v
-calculate	Calc.py	/^def calculate(expr, scope, vartable=globals.var_table):$/;"	f
+bin_ops	Globals.py	/^bin_ops = ($/;"	v
+calculate	Calc.py	/^def calculate(expr, scope, vartable=Globals.var_table):$/;"	f
 chk_decl	Runtime.py	/^def chk_decl(line, scope):$/;"	f
 cmd	Main.py	/^    cmd = open(sys.argv[5], 'w')$/;"	v
 code	Main.py	/^code = PreProcessing.nest(code)$/;"	v
 code	Main.py	/^code = PreProcessing.use_c_preprocessor(filename)$/;"	v
 coding_bug	Exceptions.py	/^class coding_bug(Exception):$/;"	c
-curr_mem	globals.py	/^curr_mem = 1000000000$/;"	v
+curr_mem	Globals.py	/^curr_mem = 1000000000$/;"	v
 cursor	sqlData.py	/^cursor = db.cursor()$/;"	v
 custom_break	Exceptions.py	/^class custom_break(Exception):$/;"	c
 custom_continue	Exceptions.py	/^class custom_continue(Exception):$/;"	c
-data_types	globals.py	/^data_types = [$/;"	v
+data_types	Globals.py	/^data_types = [$/;"	v
 db	sqlData.py	/^db = MySQLdb.connect('localhost', 'root', "l;'", 'its')$/;"	v
 decl	Runtime.py	/^def decl(var, val, cast, scope, tags):$/;"	f
 decl_func	Runtime.py	/^def decl_func(line):$/;"	f
@@ -72,22 +72,22 @@ eval_user_function	functions.py	/^def eval_user_function(name, params, scope):$/
 execute	Runtime.py	/^def execute(code, scope):$/;"	f
 extract	i_o.py	/^def extract(regex_arr, type_arr):$/;"	f
 filename	Main.py	/^filename = sys.argv[1]$/;"	v
-find_by_mem	globals.py	/^def find_by_mem(mem):$/;"	f
+find_by_mem	Globals.py	/^def find_by_mem(mem):$/;"	f
 func	functions.py	/^func = {$/;"	v
 funcs	fake_math.py	/^funcs = {'sqrt':__sqrt__, 'pow':__pow__, 'cbrt':__cbrt__, 'hypot':__hypot__, 'ceil':__ceil__,$/;"	v
 funcs	fake_math.py	/^funcs = {}$/;"	v
-functions	globals.py	/^functions = {}$/;"	v
+functions	Globals.py	/^functions = {}$/;"	v
 garbage_collector	Runtime.py	/^def garbage_collector(scope):$/;"	f
 getIndex	stringDiff.py	/^def getIndex(str2, str1, index):$/;"	f
 get_code	PreProcessing.py	/^def get_code(code_file):$/;"	f
-get_details	globals.py	/^def get_details(var):$/;"	f
+get_details	Globals.py	/^def get_details(var):$/;"	f
 get_input_value	i_o.py	/^def get_input_value(val, cast):$/;"	f
 get_key	Runtime.py	/^def get_key(var, scope):$/;"	f
 get_key_first	Runtime.py	/^def get_key_first(var, scope):$/;"	f
 get_matching_brace	Runtime.py	/^def get_matching_brace(val, i):$/;"	f
 get_type	Vars.py	/^def get_type(key, scope):$/;"	f
 get_val	Vars.py	/^def get_val(key, scope):$/;"	f
-gui	globals.py	/^gui = ""$/;"	v
+gui	Globals.py	/^gui = ""$/;"	v
 halter	Runtime.py	/^def halter(line):$/;"	f
 handle_input	i_o.py	/^def handle_input(statement, scope):$/;"	f
 handle_output	i_o.py	/^def handle_output(line, scope):$/;"	f
@@ -96,13 +96,13 @@ if_do_while	groups.py	/^def if_do_while(code, scope):$/;"	f
 if_for	groups.py	/^def if_for(code, scope):$/;"	f
 if_switch	groups.py	/^def if_switch(code, scope):$/;"	f
 if_while	groups.py	/^def if_while(code, scope):$/;"	f
-in_var_table	globals.py	/^def in_var_table(var, scope):$/;"	f
+in_var_table	Globals.py	/^def in_var_table(var, scope):$/;"	f
 init	stringDiff.py	/^def init(str2, str1):$/;"	f
 init_ui	Gui.py	/^    def init_ui(self, code):$/;"	m	class:Gui
-inp	globals.py	/^inp = ''$/;"	v
+inp	Globals.py	/^inp = ''$/;"	v
 invoke	fake_default.py	/^def invoke(name, params, scope):$/;"	f
 invoke	fake_math.py	/^def invoke(name, params, scope):$/;"	f
-is_num	globals.py	/^def is_num(s):$/;"	f
+is_num	Globals.py	/^def is_num(s):$/;"	f
 is_same	i_o.py	/^def is_same(str1, str2):$/;"	f
 is_updation	Runtime.py	/^def is_updation(exp):$/;"	f
 k	sqlData.py	/^k = cursor.fetchall()$/;"	v
@@ -113,52 +113,52 @@ makeMemory	Runtime.py	/^def makeMemory(mem, indices, l, type, val, scope):$/;"	f
 make_ui	Gui.py	/^def make_ui(code):$/;"	f
 malloc	Runtime.py	/^def malloc(num, step, level, val, scope, cast):$/;"	f
 max_type	Calc.py	/^def max_type(t1, t2='number', t3='number'):$/;"	f
-memory	globals.py	/^memory = {}$/;"	v
+memory	Globals.py	/^memory = {}$/;"	v
 nest	PreProcessing.py	/^def nest(code):$/;"	f
 nest_cases	PreProcessing.py	/^def nest_cases(code):$/;"	f
 nest_groups	PreProcessing.py	/^def nest_groups(code, i, make_list):$/;"	f
 on_click	Gui.py	/^    def on_click(self, code, vbox, l):$/;"	m	class:Gui
-ops	Main.py	/^ops = globals.ops$/;"	v
-ops	globals.py	/^ops = ($/;"	v
+ops	Main.py	/^ops = Globals.ops$/;"	v
+ops	Globals.py	/^ops = ($/;"	v
 pass_to_func	functions.py	/^def pass_to_func(detail, scope):$/;"	f
 pass_to_funcNO	Calc.py	/^def pass_to_funcNO(detail, scope):$/;"	f
 pre_post_handle	Calc.py	/^def pre_post_handle(tokens):$/;"	f
-predefined_funcs	globals.py	/^predefined_funcs = ['sqrt', 'pow', 'cbrt', 'hypot', 'ceil', 'floor',$/;"	v
-print1	globals.py	/^def print1(*args):$/;"	f
-print2	globals.py	/^def print2(*args):$/;"	f
-print3	globals.py	/^def print3(*args):$/;"	f
+predefined_funcs	Globals.py	/^predefined_funcs = ['sqrt', 'pow', 'cbrt', 'hypot', 'ceil', 'floor',$/;"	v
+print1	Globals.py	/^def print1(*args):$/;"	f
+print2	Globals.py	/^def print2(*args):$/;"	f
+print3	Globals.py	/^def print3(*args):$/;"	f
 print_arr	stringDiff.py	/^def print_arr(str2, str1, arr):$/;"	f
-priority	Main.py	/^priority = globals.priority$/;"	v
-priority	globals.py	/^priority = {$/;"	v
-priority_type	globals.py	/^priority_type = {$/;"	v
+priority	Main.py	/^priority = Globals.priority$/;"	v
+priority	Globals.py	/^priority = {$/;"	v
+priority_type	Globals.py	/^priority_type = {$/;"	v
 process	Pre.py	/^def process(code):$/;"	f
 remove_non_string_newlines	Pre.py	/^def remove_non_string_newlines(code):$/;"	f
 resolve	Runtime.py	/^def resolve(key, indices, scope):$/;"	f
 run_through	Runtime.py	/^def run_through(code, num):$/;"	f
 sep	Calc.py	/^def sep(expr):$/;"	f
-separate_def	globals.py	/^def separate_def(input): # input is like "int a" or "int b[]" or "long long ** g[56]" or "int"$/;"	f
+separate_def	Globals.py	/^def separate_def(input): # input is like "int a" or "int b[]" or "long long ** g[56]" or "int"$/;"	f
 set_val	Vars.py	/^def set_val(key, val, scope = '-none-'):$/;"	f
-setup	globals.py	/^def setup():$/;"	f
-size_of	globals.py	/^size_of = {}$/;"	v
+setup	Globals.py	/^def setup():$/;"	f
+size_of	Globals.py	/^size_of = {}$/;"	v
 split_array_initialization	Runtime.py	/^def split_array_initialization(val):$/;"	f
 stack	stringDiff.py	/^stack = {}$/;"	v
-startDict	globals.py	/^startDict = {$/;"	v
-ternary_ops	globals.py	/^ternary_ops = (':')$/;"	v
+startDict	Globals.py	/^startDict = {$/;"	v
+ternary_ops	Globals.py	/^ternary_ops = (':')$/;"	v
 test	unitTest.py	/^def test(code, input, propOut, output):$/;"	f
 timeout	Main.py	/^def timeout(signum, frame):$/;"	f
 timeout_error	Exceptions.py	/^class timeout_error(Exception):$/;"	c
 to_postfix	Calc.py	/^def to_postfix(tokens, scope):$/;"	f
-toplevelreplace	globals.py	/^def toplevelreplace(var_str, orig, repl):$/;"	f
-toplevelsplit	globals.py	/^def toplevelsplit(var_str, delimiter):$/;"	f
+toplevelreplace	Globals.py	/^def toplevelreplace(var_str, orig, repl):$/;"	f
+toplevelsplit	Globals.py	/^def toplevelsplit(var_str, delimiter):$/;"	f
 traverse	Runtime.py	/^def traverse(code, scope):$/;"	f
-type_range	globals.py	/^type_range = {}$/;"	v
-type_string	globals.py	/^def type_string():$/;"	f
-un_ops	globals.py	/^un_ops = ('`+`', '`-`', '`*`', '`&`', '++', '--', '+++', '---', '~', '#type#')$/;"	v
+type_range	Globals.py	/^type_range = {}$/;"	v
+type_string	Globals.py	/^def type_string():$/;"	f
+un_ops	Globals.py	/^un_ops = ('`+`', '`-`', '`*`', '`&`', '++', '--', '+++', '---', '~', '#type#')$/;"	v
 unary_handle	Calc.py	/^def unary_handle(separated_tokens):$/;"	f
-unary_ops	globals.py	/^unary_ops = {$/;"	v
+unary_ops	Globals.py	/^unary_ops = {$/;"	v
 unimplemented_error	Exceptions.py	/^class unimplemented_error(Exception):$/;"	c
 unique_id	functions.py	/^unique_id = 1$/;"	v
 use_c_preprocessor	PreProcessing.py	/^def use_c_preprocessor(filename):$/;"	f
-vLevel	globals.py	/^vLevel = 0$/;"	v
-var_table	globals.py	/^var_table = {}$/;"	v
+vLevel	Globals.py	/^vLevel = 0$/;"	v
+var_table	Globals.py	/^var_table = {}$/;"	v
 var_types	i_o.py	/^def var_types(s):$/;"	f

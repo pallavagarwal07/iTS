@@ -1,4 +1,5 @@
 import re
+import base64
 
 # global var_table
 # global inp
@@ -381,6 +382,18 @@ def escape(text):
         elif ch == "\r": l[i] = "\\r"
         elif ch == "\t": l[i] = "\\t"
     return "".join(l)
+
+try:
+    "abc".decode("string_escape")
+    def unescape(text):
+        return text.decode("string_escape")
+    def b64encode(text):
+        return base64.b64encode(text)
+except Exception as e:
+    def unescape(text):
+        return bytes(text, "UTF-8").decode("unicode_escape")
+    def b64encode(text):
+        return base64.b64encode(bytes(text, "UTF-8")).decode("UTF-8")
 
 def get_str(mem):
     chr_arr, chr_str, key = [], '', (mem, )

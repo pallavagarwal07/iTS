@@ -1,9 +1,9 @@
-from globals import is_num, print1, print2, print3, toplevelsplit
+from Globals import is_num, print1, print2, print3, toplevelsplit
 import fake_default
 import Exceptions
 import fake_math
 import fake_stdio
-import globals
+import Globals
 import re
 
 func = {
@@ -22,7 +22,7 @@ func = {
     'stdio': ['printf', 'scanf', 'getchar', 'gets', 'sprintf', 'sscanf',
         'puts', 'putchar'],
 
-    'user': globals.functions
+    'user': Globals.functions
 }
 unique_id = 1
 
@@ -32,7 +32,7 @@ def eval_user_function(name, params, scope):
     import Calc
     global unique_id
 
-    target = globals.functions[name]
+    target = Globals.functions[name]
 
     if len(params) != len(target[3]):
         raise Exceptions.any_user_error("Error! Incorrect number of parameters.")
@@ -47,8 +47,8 @@ def eval_user_function(name, params, scope):
     unique_id += 1
 
     # GUI string
-    globals.gui += "\ncreate_scope(\'global\',\'"+"global-"+name+"\');"
-    globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+\
+    Globals.gui += "\ncreate_scope(\'global\',\'"+"global-"+name+"\');"
+    Globals.gui += "\ncreate_scope(\'global-"+name+"\',\'"+\
             "global-"+name+"-"+hash+"\');"
 
 
@@ -56,7 +56,7 @@ def eval_user_function(name, params, scope):
         for i, d in enumerate(target[1]):
             Runtime.decl(d[1], params[i], d[0], "global " + name + " " + hash, None)
 
-    return Runtime.execute(globals.functions[name][2], \
+    return Runtime.execute(Globals.functions[name][2], \
             "global "+name+" "+hash)
 
 
@@ -81,7 +81,7 @@ def pass_to_func(detail, scope):
                     pause = True
                     break
         if pause:
-            globals.gui += "\npause_simulation();"
+            Globals.gui += "\npause_simulation();"
         return 0
 
     for lib in func:

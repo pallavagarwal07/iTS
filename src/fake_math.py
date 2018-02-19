@@ -1,5 +1,5 @@
 from math import *
-from globals import print1, print2, print3
+from Globals import print1, print2, print3
 import Calc
 
 #Power Functions

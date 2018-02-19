@@ -1,6 +1,6 @@
-from globals import print1, print2, print3
+from Globals import print1, print2, print3
 import sys
-import globals
+import Globals
 import PreProcessing
 import Gui
 import Runtime
@@ -13,13 +13,13 @@ def test(code, input, propOut, output):
     filename = 'autoTest.c'
 
     # inp variable stores user input.
-    globals.inp = input
+    Globals.inp = input
 
     # priority variable is a dictionary of operators and their priorities.
-    priority = globals.priority
+    priority = Globals.priority
 
     # ops is a list of all operators.
-    ops = globals.ops
+    ops = Globals.ops
 
     # CodeFile stores a reference to the c file that has to be parsed.
     CodeFile = open(filename)
@@ -32,6 +32,6 @@ def test(code, input, propOut, output):
     # Gui.make_ui(code)
     # Access is used to keep track of current scope
     Access = ['global']
-    globals.setup()
+    Globals.setup()
     # Build a dictionary of functions and run main
     Runtime.traverse(code, Access)

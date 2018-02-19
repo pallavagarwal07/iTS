@@ -1,5 +1,5 @@
-from globals import print1, print2, print3, is_num
-import globals
+from Globals import print1, print2, print3, is_num
+import Globals
 import Calc
 import Runtime
 import re
@@ -11,9 +11,9 @@ def get_type(key, scope):
         if 'Error' == n:
             k = re.findall('^\s*([a-zA-Z_]+[a-zA-Z0-9_]*)\s*\((.*)\)\s*$', key)
             if k:
-                if k[0][0] in globals.predefined_funcs:
+                if k[0][0] in Globals.predefined_funcs:
                     return 'double'
-               #return globals.functions[k[0][0]][0]
+               #return Globals.functions[k[0][0]][0]
                 return 'int'
             else:
                 key = Runtime.get_key_first(key, scope)
@@ -22,12 +22,12 @@ def get_type(key, scope):
         else:
             return 'number'
     if len(key) != 1:
-        t = globals.in_var_table(key[0], scope)
+        t = Globals.in_var_table(key[0], scope)
         if t:
-            return globals.var_table[t][1] if globals.var_table[t][2]==0 else 'pointer'
+            return Globals.var_table[t][1] if Globals.var_table[t][2]==0 else 'pointer'
     else:
-        if key in globals.memory:
-            return globals.memory[key][0].type[0]
+        if key in Globals.memory:
+            return Globals.memory[key][0].type[0]
         else:
             raise Exceptions.any_user_error("Invalid Memory location", key)
 
@@ -52,24 +52,24 @@ def get_val(key, scope, mul = 1):
         else:
             return eval(str(key))
     if len(key) != 1:
-        t = globals.in_var_table(key[0], scope)
+        t = Globals.in_var_table(key[0], scope)
         if t:
             if mul != 1:
-                if globals.var_table[t][0].type[1] != 0:
+                if Globals.var_table[t][0].type[1] != 0:
                     return 0
-            ret = globals.var_table[t][0].v
+            ret = Globals.var_table[t][0].v
             if ret == '':
                 raise Exceptions.any_user_error("Variable " + key[0] + " used "
                         "without initialisation in current line.")
-            return globals.var_table[t][0].v
+            return Globals.var_table[t][0].v
         else:
             raise Exceptions.any_user_error("Invalid variable used in current line.")
     else:
-        if key in globals.memory:
+        if key in Globals.memory:
             if mul != 1:
-                if globals.memory[key][0].type[1] != 0:
+                if Globals.memory[key][0].type[1] != 0:
                     return 0
-            return globals.memory[key][0].v
+            return Globals.memory[key][0].v
         else:
             raise Exceptions.any_user_error("Invalid Memory location", key)
 
@@ -85,16 +85,16 @@ def set_val(key, val, scope = '-none-'):
             raise Exceptions.any_user_error("Trying to assign value to a non-variable")
 
     if len(key) != 1:
-        globals.gui += "\nupdate_variable(\'"+'-'.join(key[1].split())+ \
+        Globals.gui += "\nupdate_variable(\'"+'-'.join(key[1].split())+ \
             "-"+key[0]+"\',\'"+str(val)+"\');"
 
-        t = globals.in_var_table(key[0], scope)
+        t = Globals.in_var_table(key[0], scope)
         if t:
-            globals.var_table[t][0].v = val
+            Globals.var_table[t][0].v = val
     else:
-        globals.gui += "\nupdate_variable(\'"+str(key[0])+"\',\'"+str(val)+"\');"
+        Globals.gui += "\nupdate_variable(\'"+str(key[0])+"\',\'"+str(val)+"\');"
 
-        if key in globals.memory:
-            globals.memory[key][0].v = val
+        if key in Globals.memory:
+            Globals.memory[key][0].v = val
         else:
             raise Exceptions.any_user_error("Invalid Memory location set_val", key)

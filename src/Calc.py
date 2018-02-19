@@ -1,8 +1,8 @@
-import globals
+import Globals
 import re
 import functions
 from functions import pass_to_func
-from globals import is_num, print1, print2, print3
+from Globals import is_num, print1, print2, print3
 from Vars import get_val, set_val, get_type
 import random
 import Runtime
@@ -13,10 +13,10 @@ import fake_math
 def pre_post_handle(tokens):
     for i, tk in enumerate(tokens):
         if tk == '--':
-            if i < len(tokens)-1 and tokens[i+1] not in globals.ops:
+            if i < len(tokens)-1 and tokens[i+1] not in Globals.ops:
                 tokens[i] = '---'
         if tk == '++':
-            if i < len(tokens)-1 and tokens[i+1] not in globals.ops:
+            if i < len(tokens)-1 and tokens[i+1] not in Globals.ops:
                 tokens[i] = '+++'
     return tokens
 
@@ -35,7 +35,7 @@ def sep(expr):
                 token = []
             i += 1
 
-        checkOps = globals.startDict
+        checkOps = Globals.startDict
 
         if expr[i] in checkOps:
             for ex in checkOps[expr[i]]:
@@ -113,11 +113,11 @@ def unary_handle(separated_tokens):
     flag = 1
     for i, token in enumerate(separated_tokens):
 
-        if token in globals.unary_ops and flag:
-            separated_tokens[i] = globals.unary_ops[token]
+        if token in Globals.unary_ops and flag:
+            separated_tokens[i] = Globals.unary_ops[token]
             continue
 
-        if token in globals.bin_ops or token == '(':
+        if token in Globals.bin_ops or token == '(':
             flag = 1
             continue
         flag = 0
@@ -134,7 +134,7 @@ def add(arr, token, ctr, scope):
     else:
         if token == '||' or token == '&&':
             arr.append((token, ctr))
-        elif token in globals.ops + ('&0', '|1'):
+        elif token in Globals.ops + ('&0', '|1'):
             arr.append((token,))
         else:
             arr.append((token, get_type(token, scope)))
@@ -147,7 +147,7 @@ def to_postfix(tokens, scope):
 
     while i < len(tokens):
         tk = tokens[i]
-        if tk in globals.ops:
+        if tk in Globals.ops:
             if tk == '(':
                 add(stack, tk, ctr, scope)
 
@@ -167,15 +167,15 @@ def to_postfix(tokens, scope):
                 add(stack, tk, ctr, scope)
 
             else:
-                if globals.priority[tk] < globals.priority[stack[-1][0]]:
+                if Globals.priority[tk] < Globals.priority[stack[-1][0]]:
                     add(postfix, stack.pop(), ctr, scope)
                     continue
 
-                if globals.priority[tk] > globals.priority[stack[-1][0]]:
+                if Globals.priority[tk] > Globals.priority[stack[-1][0]]:
                     add(stack, tk, ctr, scope)
 
-                elif globals.priority[tk] == globals.priority[stack[-1][0]]:
-                    if globals.priority[tk] % 2 == 0:
+                elif Globals.priority[tk] == Globals.priority[stack[-1][0]]:
+                    if Globals.priority[tk] % 2 == 0:
                         add(postfix, stack.pop(), ctr, scope)
                         add(stack, tk, ctr, scope)
                     else:
@@ -189,7 +189,7 @@ def to_postfix(tokens, scope):
                 ctr += 1
         else:
             tag = 0
-            for types in globals.data_types:
+            for types in Globals.data_types:
                 if tk.startswith(types):
                     add(stack, ('#type#', tk), ctr, scope)
                     tag = 1
@@ -207,7 +207,7 @@ def to_postfix(tokens, scope):
 # Eg. Lf>lf>f>lld>ld>d etc.
 def max_type(t1, t2='number', t3='number'):
 
-    p_t = globals.priority_type
+    p_t = Globals.priority_type
 
     if(p_t[t1] >= p_t[t2] and p_t[t1] >= p_t[t3]):
         return t1
@@ -234,7 +234,7 @@ def caller_name():
 # expression, assigns variables, looks up memory addresses,
 # everything. Can get input like '5+(a=4)+(a==4)?1:2'.
 
-def calculate(expr, scope, vartable=globals.var_table):
+def calculate(expr, scope, vartable=Globals.var_table):
 
     if re.match(r'^(?s)\s*$', expr):
         return 0
@@ -263,15 +263,15 @@ def calculate(expr, scope, vartable=globals.var_table):
         if idx and postfix[i-1] != idx:
             continue
         idx = 0
-        if token not in globals.ops + ('&0', '|1'):
+        if token not in Globals.ops + ('&0', '|1'):
             var_stack.append(tk)
         else:
-            if token in globals.bin_ops:
+            if token in Globals.bin_ops:
                 t1 = var_stack[l()][1]
                 var_stack[l()] = var_stack[l()][0]
                 t2 = var_stack[l()-1][1]
                 var_stack[l()-1] = var_stack[l()-1][0]
-            elif token in globals.un_ops + ('&0', '|1'):
+            elif token in Globals.un_ops + ('&0', '|1'):
                 t1 = var_stack[l()][1]
                 var_stack[l()] = var_stack[l()][0]
             elif token == '?':
@@ -511,8 +511,8 @@ def calculate(expr, scope, vartable=globals.var_table):
         temp = var_stack[l()]
         if temp[1] not in ['number', 'void']:
             type_check = temp[1]
-            m1 = globals.type_range[temp[1]][0]
-            m2 = globals.type_range[temp[1]][1]
+            m1 = Globals.type_range[temp[1]][0]
+            m2 = Globals.type_range[temp[1]][1]
             if type(temp[0]) is int:
                 temp = temp[0]
             else:
@@ -523,5 +523,5 @@ def calculate(expr, scope, vartable=globals.var_table):
     if var_stack:
         raise Exceptions.any_user_error("I don't think the expression in current line makes any sense.")
     r = get_val(ret[0], scope)
-    globals.calc_type = ret[1]
+    Globals.calc_type = ret[1]
     return r

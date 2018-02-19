@@ -1,5 +1,5 @@
-from globals import print1, print2, print3
-import globals
+from Globals import print1, print2, print3
+import Globals
 import Calc
 import re
 import Runtime
@@ -17,20 +17,20 @@ def if_conditionals(code, scope):
 
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
-        diff_index = str(globals.code).find("__ITS_FLAG__")
+        diff_index = str(Globals.code).find("__ITS_FLAG__")
         from stringDiff import getIndex
-        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
-        line_number = globals.raw_code.count("\n", 0, diff_index)
-        globals.gui += "\nhighlight_line("+str(line_number)+")"
+        line_number = Globals.raw_code.count("\n", 0, diff_index)
+        Globals.gui += "\nhighlight_line("+str(line_number)+")"
 
-        flag = Calc.calculate(expr[0], scope, globals.var_table)
+        flag = Calc.calculate(expr[0], scope, Globals.var_table)
         ret = None
         if flag:
-            globals.gui += "\ncustom_highlight("+str(line_number)+", green)"
+            Globals.gui += "\ncustom_highlight("+str(line_number)+", green)"
             ret = Runtime.execute(code[1], scope + ' 1')
         else:
-            globals.gui += "\ncustom_highlight("+str(line_number)+", red)"
+            Globals.gui += "\ncustom_highlight("+str(line_number)+", red)"
             if len(code) > 2:
                 ret = Runtime.execute(code[3], scope + ' 3')
         return ret
@@ -48,15 +48,15 @@ def if_for(code, scope):
 
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
-        diff_index = str(globals.code).find("__ITS_FLAG__")
+        diff_index = str(Globals.code).find("__ITS_FLAG__")
         from stringDiff import getIndex
-        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
-        line_number = globals.raw_code.count("\n", 0, diff_index)
-        globals.gui += "\nhighlight_line("+str(line_number)+")"
+        line_number = Globals.raw_code.count("\n", 0, diff_index)
+        Globals.gui += "\nhighlight_line("+str(line_number)+")"
 
-        Calc.calculate(expr[0][0], scope, globals.var_table)
-        flag = Calc.calculate(expr[0][1], scope, globals.var_table)
+        Calc.calculate(expr[0][0], scope, Globals.var_table)
+        flag = Calc.calculate(expr[0][1], scope, Globals.var_table)
         ret = None
         while flag:
             try:
@@ -68,8 +68,8 @@ def if_for(code, scope):
                 Runtime.garbage_collector(scope + ' 1')
             if ret is not None:
                 return ret
-            Calc.calculate(expr[0][2], scope, globals.var_table)
-            flag = Calc.calculate(expr[0][1], scope, globals.var_table)
+            Calc.calculate(expr[0][2], scope, Globals.var_table)
+            flag = Calc.calculate(expr[0][1], scope, Globals.var_table)
         return ret
     else:
         return "NO"
@@ -86,12 +86,12 @@ def if_switch(code, scope):
 
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
-        diff_index = str(globals.code).find("__ITS_FLAG__")
+        diff_index = str(Globals.code).find("__ITS_FLAG__")
         from stringDiff import getIndex
-        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
-        line_number = globals.raw_code.count("\n", 0, diff_index)
-        globals.gui += "\nhighlight_line("+str(line_number)+")"
+        line_number = Globals.raw_code.count("\n", 0, diff_index)
+        Globals.gui += "\nhighlight_line("+str(line_number)+")"
 
         print2("if_switch got: ", code[0], scope, expr[0])
         switch_val = Calc.calculate(expr[0], scope)
@@ -141,15 +141,15 @@ def if_while(code, scope):
 
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
-        diff_index = str(globals.code).find("__ITS_FLAG__")
+        diff_index = str(Globals.code).find("__ITS_FLAG__")
         from stringDiff import getIndex
-        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
-        line_number = globals.raw_code.count("\n", 0, diff_index)
-        globals.gui += "\nhighlight_line("+str(line_number)+")"
+        line_number = Globals.raw_code.count("\n", 0, diff_index)
+        Globals.gui += "\nhighlight_line("+str(line_number)+")"
 
         ret = None
-        flag = Calc.calculate(expr[0], scope, globals.var_table)
+        flag = Calc.calculate(expr[0], scope, Globals.var_table)
         while flag:
             try:
                 ret = Runtime.execute(code[1], scope + ' 1')
@@ -160,7 +160,7 @@ def if_while(code, scope):
                 Runtime.garbage_collector(scope + ' 1')
             if ret is not None:
                 return ret
-            flag = Calc.calculate(expr[0], scope, globals.var_table)
+            flag = Calc.calculate(expr[0], scope, Globals.var_table)
         return ret
     else:
         return "NO"
@@ -176,12 +176,12 @@ def if_do_while(code, scope):
 
         # Try to get line number
         code[0] = "__ITS_FLAG__"+code[0]
-        diff_index = str(globals.code).find("__ITS_FLAG__")
+        diff_index = str(Globals.code).find("__ITS_FLAG__")
         from stringDiff import getIndex
-        diff_index = getIndex(str(globals.code), globals.raw_code, diff_index)
+        diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[0] = code[0].replace("__ITS_FLAG__", '')
-        line_number = globals.raw_code.count("\n", 0, diff_index)
-        globals.gui += "\nhighlight_line("+str(line_number)+")"
+        line_number = Globals.raw_code.count("\n", 0, diff_index)
+        Globals.gui += "\nhighlight_line("+str(line_number)+")"
 
         condition = re.findall(r'^(?s)while\s*\((.*)\)\s*;', code[2]);
         if len(condition) == 0:
@@ -199,7 +199,7 @@ def if_do_while(code, scope):
                     Runtime.garbage_collector(scope + ' 1')
                 if ret is not None:
                     return ret
-                flag = Calc.calculate(condition[0], scope, globals.var_table)
+                flag = Calc.calculate(condition[0], scope, Globals.var_table)
             return ret
     else:
         return "NO"

@@ -1,5 +1,5 @@
-from globals import print1, print2, print3
-import globals
+from Globals import print1, print2, print3
+import Globals
 import Exceptions
 import re
 import sys
@@ -118,24 +118,24 @@ def extract(regex_arr, type_arr):
     for tup in regex_arr:
         reg = '^' + tup[1]
         num = tup[2] if tup[2] else 999999
-        k = re.findall(reg, globals.inp[:num])
+        k = re.findall(reg, Globals.inp[:num])
         if not k:
-            raise Exceptions.any_user_error("Incorrect Input (probably)", reg, globals.inp[:num], num)
+            raise Exceptions.any_user_error("Incorrect Input (probably)", reg, Globals.inp[:num], num)
 
-        l1 = len(globals.inp)
+        l1 = len(Globals.inp)
         if tup not in type_arr:
-            k = re.sub(reg, '', globals.inp[:num])
-            globals.inp = k + globals.inp[num:]
+            k = re.sub(reg, '', Globals.inp[:num])
+            Globals.inp = k + Globals.inp[num:]
         else:
-            globals.inp = re.sub(reg, '', globals.inp[:num]) + globals.inp[num:]
+            Globals.inp = re.sub(reg, '', Globals.inp[:num]) + Globals.inp[num:]
             values.append(k[0])
-        l +=  (l1 - len(globals.inp))
+        l +=  (l1 - len(Globals.inp))
     return values, l
 
 
 def handle_input(statement, scope):
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
-    statement = bytes(statement, 'UTF-8').decode('unicode_escape')
+    statement = Globals.unescape(statement)
 
     # sep = [('%d %c\n%lld', ' &a, &b,', ' &c')]
     sep = re.findall(r'(?s)scanf\s*\(\s*\"(.*)\"\s*,(.*,)*(.*)\)', statement)
@@ -148,7 +148,7 @@ def handle_input(statement, scope):
     type_arr, regex_arr = var_types(sep[0][0])
 
 
-    variables = globals.toplevelsplit(sep[0][1], ',')
+    variables = Globals.toplevelsplit(sep[0][1], ',')
     variables = variables[:-1]
     variables.append(sep[0][2])
     # now, variables = ['&a', '&b', '&c']
@@ -163,8 +163,8 @@ def handle_input(statement, scope):
 
         for i in range(0, len(variables)):
             v = (Calc.calculate(variables[i], scope),)
-            dst_type = globals.memory[v][0].type[0] \
-                    if globals.memory[v][0].type[1] == 0 else 'pointer'
+            dst_type = Globals.memory[v][0].type[0] \
+                    if Globals.memory[v][0].type[1] == 0 else 'pointer'
             src_type = type_arr[i][0]
 
             if not is_same(dst_type, src_type):
@@ -174,8 +174,8 @@ def handle_input(statement, scope):
 
             if src_type == 'string':
                 for i in range(0, len(vals)):
-                    Vars.set_val((v[0]+i*globals.memory[v][1],), ord(vals[i]))
-                Vars.set_val((v[0]+len(vals)*globals.memory[v][1],), 0)
+                    Vars.set_val((v[0]+i*Globals.memory[v][1],), ord(vals[i]))
+                Vars.set_val((v[0]+len(vals)*Globals.memory[v][1],), 0)
             else:
                 Vars.set_val(v, vals)
 
