@@ -1,11 +1,13 @@
+from __future__ import print_function, absolute_import
 import re
 
-import IO
-import Calc
-import Globals
-import Exceptions
+from . import IO
+from . import Globals
+from . import Exceptions
 
 def printf(params, scope):
+    from . import Calc
+
     params = [Calc.calculate(k, scope) for k in params]
     fmt = Globals.get_str(params[0])
     type_arr, regex_arr = IO.var_types(fmt)

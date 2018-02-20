@@ -1,8 +1,9 @@
+from __future__ import print_function, absolute_import
 import re
 
-from Globals import print1, print2, print3
-import Globals
-import Pre
+from .Globals import print1, print2, print3
+from . import Globals
+from . import Pre
 
 def get_code(code_file):
     code_list = []

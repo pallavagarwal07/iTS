@@ -1,11 +1,10 @@
+from __future__ import print_function, absolute_import
+from six.moves import range
 import re
 
-from Globals import print1, print2, print3
-import Globals
-import Exceptions
-import Calc
-import Vars
-import Runtime
+from .Globals import print1, print2, print3
+from . import Globals
+from . import Exceptions
 
 
 def get_input_value(val, cast):
@@ -134,6 +133,8 @@ def extract(regex_arr, type_arr):
 
 
 def handle_input(statement, scope):
+    from . import Calc, Vars
+
     # statement is something like scanf("%d %c\n%lld", &a, &b, &c)
     statement = Globals.unescape(statement)
 

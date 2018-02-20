@@ -1,12 +1,11 @@
+from __future__ import print_function, absolute_import
 import re
 
-import Globals
-from Functions import pass_to_func
-from Globals import is_num, print1, print2, print3
-from Vars import get_val, set_val, get_type
-import Runtime
-import Exceptions
-import FakeMath
+from .Functions import pass_to_func
+from .Globals import is_num, print1, print2, print3
+from . import Globals
+from . import Exceptions
+from . import FakeMath
 
 # Differentate between postfix and prefix increment operators.
 def pre_post_handle(tokens):
@@ -128,6 +127,8 @@ def unary_handle(separated_tokens):
 # operators. (Using &0 , counter substitution). Also appends type
 # information wherever known.
 def add(arr, token, ctr, scope):
+    from .Vars import get_val, set_val, get_type
+
     if type(token) is tuple:
         arr.append(token)
     else:
@@ -234,6 +235,8 @@ def caller_name():
 # everything. Can get input like '5+(a=4)+(a==4)?1:2'.
 
 def calculate(expr, scope, vartable=Globals.var_table):
+    from .Vars import get_val, set_val, get_type
+    from . import Runtime
 
     if re.match(r'^(?s)\s*$', expr):
         return 0

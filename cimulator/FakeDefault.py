@@ -1,7 +1,8 @@
+from __future__ import print_function, absolute_import
 import re
 
-import Globals
-import Exceptions
+from . import Globals
+from . import Exceptions
 
 def invoke(name, params, scope):
     if name == 'sizeof':

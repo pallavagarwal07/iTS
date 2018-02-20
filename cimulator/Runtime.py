@@ -1,13 +1,13 @@
+from __future__ import print_function, absolute_import
 import re
 
-from Globals import print1, print2, print3
-from Globals import Value
-import Globals
-import Calc
-import IO
-import Groups
-import Vars
-import Exceptions
+from .Globals import print1, print2, print3
+from .Globals import Value
+from . import Globals
+from . import Calc
+from . import IO
+from . import Exceptions
+from six.moves import range
 
 
 def makeMemory(mem, indices, l, type, val, scope):
@@ -183,6 +183,8 @@ def get_key_first(var, scope):
 
 
 def resolve(key, indices, scope):
+    from . import Vars
+
     k = key
     while indices:
         k = (Vars.get_val(k, scope),)
@@ -231,7 +233,7 @@ def is_updation(exp):
 
 def garbage_collector(scope):
     Globals.gui += "\ndelete_scope(\'"+'-'.join(scope.split())+"\');"
-    keys = Globals.var_table.keys()
+    keys = list(Globals.var_table.keys())
     for key in list(keys):
         if key[1] == scope:
             del Globals.var_table[key]
@@ -348,6 +350,8 @@ def traverse(code, scope):
 
 
 def execute(code, scope):
+    from . import Groups
+
     if code == []:
         return
 
@@ -398,7 +402,7 @@ def execute(code, scope):
 
         code[i-1] = "__ITS_FLAG__"+code[i-1]
         diff_index = str(Globals.code).find("__ITS_FLAG__")
-        from StringDiff import getIndex
+        from .StringDiff import getIndex
         diff_index = getIndex(str(Globals.code), Globals.raw_code, diff_index)
         code[i-1] = code[i-1].replace("__ITS_FLAG__", '')
         line_number = Globals.raw_code.count("\n", 0, diff_index)

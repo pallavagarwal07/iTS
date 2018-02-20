@@ -1,14 +1,14 @@
 # Behaves like Main, but doesn't invoke the filesystem. Written to
 # test with pypyjs.
-from __future__ import print_function
+from __future__ import print_function, absolute_import
 
-from Globals import print1, print2, print3
-from Globals import b64encode as b64
-import Globals
-import PreProcessing
-import Runtime
-import Exceptions
-import StringDiff
+from .Globals import print1, print2, print3
+from .Globals import b64encode as b64
+from . import Globals
+from . import PreProcessing
+from . import Runtime
+from . import Exceptions
+from . import StringDiff
 try:
     from StringIO import StringIO
 except Exception as e:

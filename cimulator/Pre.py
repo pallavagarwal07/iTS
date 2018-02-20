@@ -1,5 +1,7 @@
-from Globals import print1, print2, print3
-import Globals
+from __future__ import print_function, absolute_import
+
+from .Globals import print1, print2, print3
+from . import Globals
 
 
 def remove_non_string_newlines(code):

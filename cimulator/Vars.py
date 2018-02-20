@@ -1,10 +1,10 @@
+from __future__ import print_function, absolute_import
 import re
 
-from Globals import print1, print2, print3, is_num
-import Globals
-import Calc
-import Runtime
-import Exceptions
+from .Globals import print1, print2, print3, is_num
+from . import Globals
+from . import Runtime
+from . import Exceptions
 
 def get_type(key, scope):
     if type(key) is not tuple:
@@ -34,6 +34,8 @@ def get_type(key, scope):
 
 
 def get_val(key, scope, mul = 1):
+    from . import Calc
+
     if type(key) is not tuple:
         n = is_num(key)
         if 'Error' == n:

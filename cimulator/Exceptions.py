@@ -1,4 +1,6 @@
-from Globals import print1, print2, print3
+from __future__ import print_function, absolute_import
+
+from .Globals import print1, print2, print3
 
 class custom_break(Exception):
     pass

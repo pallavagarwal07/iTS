@@ -1,6 +1,7 @@
+from __future__ import print_function, absolute_import
 import sys
 
-from Globals import print1, print2, print3
+from .Globals import print1, print2, print3
 from PyQt4 import QtGui
 
 
