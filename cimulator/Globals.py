@@ -299,22 +299,22 @@ def toplevelreplace(var_str, orig, repl):
 def print1(*args):
     if(vLevel):
         for arg in args:
-            print(arg,)
-        print('')
+            Globals.debug.write(str(arg))
+        Globals.debug.write('')
 
 
 def print2(*args):
     if(vLevel>1):
         for arg in args:
-            print(arg,)
-        print('')
+            Globals.debug.write(str(arg))
+        Globals.debug.write('')
 
 
 def print3(*args):
     if(vLevel>2):
         for arg in args:
-            print(arg,)
-        print('')
+            Globals.debug.write(str(arg))
+        Globals.debug.write('')
 
 
 def is_num(s):

@@ -8,18 +8,20 @@ except Exception as e:
 
 from .Globals import print1, print2, print3
 from .Globals import b64encode as b64
+from .DevNull import DevNull
 from . import Globals
 from . import PreProcessing
 from . import Runtime
 from . import Exceptions
 from . import StringDiff
 
-def start(stdin, stdout, cmdout, code, verbosity=0):
+def start(stdin, stdout, cmdout, code, debug=DevNull(), verbosity=0):
     Globals.inp      = stdin.read()
     Globals.out      = stdout
     Globals.vLevel   = verbosity
     Globals.cmd      = cmdout
     Globals.raw_code = code.read()
+    Globals.debug    = debug
 
     # Preprocessor does some work here like resolve define
     # statements and removing include statements and comments.
@@ -45,7 +47,7 @@ def start(stdin, stdout, cmdout, code, verbosity=0):
         Globals.cmd.write(str(e) + "\ndelete_scope('global');")
 
     except Exceptions.any_user_error as e:
-        print("e is ", e, type(e))
+        print1("e is ", e, type(e))
         Globals.cmd.write(Globals.gui + \
                 "\nuser_error('{0}');".format(b64(' '.join(e.args))))
 

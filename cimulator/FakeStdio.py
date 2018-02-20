@@ -48,8 +48,9 @@ def scanf(params, scope):
     return True
 
 fnx = {
-    'scanf': scanf, 'printf': printf
-    }
+    'scanf' : scanf,
+    'printf': printf,
+}
 
 def invoke(name, params, scope):
     if name == 'sizeof':

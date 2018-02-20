@@ -152,5 +152,5 @@ def process(code):
                 sing_q = 1
         i += 1
     tokens += cur_tk
-    print(tokens)
+    print1(tokens)
     return tokens

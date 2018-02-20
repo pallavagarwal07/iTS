@@ -345,7 +345,7 @@ def traverse(code, scope):
             continue
         if def_func(line, code, i):
             continue
-        print("Unrecognized something", line)
+        print1("Unrecognized something", line)
         exit(0)
 
 

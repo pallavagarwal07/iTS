@@ -22,7 +22,7 @@ def pre_post_handle(tokens):
 # Separate out the tokens from an expression. i.e something like
 # '5 + 4' would become ['5', '+', '4']
 def sep(expr):
-    print(expr)
+    print1(expr)
     i, token, sep_tokens = 0, [], []
 
     while i < len(expr) and expr[i] != ';' :
@@ -101,7 +101,7 @@ def sep(expr):
     if token != []:
         sep_tokens.append(''.join(token))
 
-    print("Returning", sep_tokens)
+    print1("Returning", sep_tokens)
     return sep_tokens
 
 
