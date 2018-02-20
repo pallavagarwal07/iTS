@@ -1,5 +1,4 @@
 import re
-import random
 
 import Globals
 from Functions import pass_to_func

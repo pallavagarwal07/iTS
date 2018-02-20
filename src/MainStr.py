@@ -1,7 +1,6 @@
 # Behaves like Main, but doesn't invoke the filesystem. Written to
 # test with pypyjs.
 from __future__ import print_function
-import signal
 
 from Globals import print1, print2, print3
 from Globals import b64encode as b64
@@ -14,6 +13,7 @@ try:
     from StringIO import StringIO
 except Exception as e:
     from io import StringIO
+
 
 Globals.vLevel = 0
 Globals.inp = "56\n"
