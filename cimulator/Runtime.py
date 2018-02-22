@@ -1,4 +1,5 @@
 from __future__ import print_function, absolute_import
+from six.moves import range
 import re
 
 from .Globals import print1, print2, print3
@@ -7,7 +8,6 @@ from . import Globals
 from . import Calc
 from . import IO
 from . import Exceptions
-from six.moves import range
 
 
 def makeMemory(mem, indices, l, type, val, scope):
