@@ -2,39 +2,20 @@
 var clearAll, cmd, cmd_number, compile, createAlert, create_scope, curRunning, custom_highlight, define_variable, delete_scope, getQuery, green, highlight_line, input_processed, marker, pause_simulation, prev_out, prev_scale, red, reportbug, reset, scale, setCodeFromURL, simulate, speed, start_sim, stdin_write, stdout_print, step_forward, stop, time, update_variable, user_error;
 
 this.resize_list = [];
-
 stop = 0;
-
 cmd_number = 0;
-
 cmd = [];
-
 prev_out = "";
-
 marker = null;
-
 curRunning = null;
-
 time = 1000;
-
 scale = 1;
-
 input_processed = 0;
-
 prev_scale = 1;
 
 speed = {
-  0: 5000,
-  1: 10,
-  2: 7,
-  3: 4,
-  4: 2,
-  5: 1,
-  6: 0.5,
-  7: 0.25,
-  8: 0.14,
-  9: 0.1,
-  10: 0
+  0: 5000, 1: 10 , 2: 7   , 3: 4   , 4:   2,
+  5: 1   , 6: 0.5, 7: 0.25, 8: 0.14, 9: 0.1, 10: 0,
 };
 
 $(function() {
@@ -171,7 +152,6 @@ highlight_line = function(line_num) {
 };
 
 red = "red";
-
 green = "green";
 
 custom_highlight = function(line_num, color) {
@@ -223,7 +203,11 @@ update_variable = function(id, val) {
 create_scope = function(scp, id) {
   var l, panel;
   l = $('.var').length;
-  panel = '<div class="panel panel-warning" id="' + id + '" style="display:none;"> <div class="panel-heading"><h3 class="panel-title">' + id + '</h3></div> <div class="panel-body" id="' + id + '-body"></div></div>';
+  panel = '<div class="panel panel-warning" id="' + id +
+          '" style="display:none;"> <div class="panel-heading">' +
+          '<h3 class="panel-title">' + id +
+          '</h3></div> <div class="panel-body" id="' + id +
+          '-body"></div></div>';
   $('#' + scp + '-body').append(panel);
   $('#' + id).show(400);
   return time = 1000;
@@ -371,11 +355,14 @@ compile = function() {
   if ($('#submit-btn').text().trim() === 'Step forward >>') {
     step_forward();
   }
+
   if ($('#submit-btn').text().trim() === 'Submit') {
     clearAll();
+
     $('#submit-btn').text('Loading...');
     $('#submit-btn').addClass('active');
     $('#stdin').prop('disabled', true);
+
     editor.setReadOnly(true);
     code = editor.getValue();
     input = $('#stdin').val();
@@ -383,13 +370,9 @@ compile = function() {
     $('#stdin_highlight').show();
     $('#stdin_highlight').height($('#stdout').height());
     $('#stdin_highlight').html("<samp>" + input + "</samp>");
-    code = window.btoa(code);
-    input = window.btoa(input);
     $('#sbt_row .btn').button('toggle');
-    return $.get("/compile_req", {
-      "code": code,
-      "input": input
-    }, function(json_text) {
+
+    return CodeExec(code, input, function(json_text) {
       var obj;
       $('#submit-btn').text('Submit');
       $('#submit-btn').removeClass('active');
@@ -399,6 +382,45 @@ compile = function() {
       return start_sim(obj);
     });
   }
+};
+
+CodeExec = function(code, input, callback) {
+  var vm = new pypyjs();
+  vm.ready().then(function(){
+    return vm.set('mycode', code);
+  }).then(function() {
+    return vm.set('myinput', input);
+  }).then(function() {
+    return vm.exec(`
+import cimulator
+from StringIO import StringIO
+
+cmd = StringIO()
+out = StringIO()
+inp = cimulator.make_file(myinput)
+src = cimulator.make_file(mycode)
+
+cimulator.start(inp, out, cmd, src)
+
+cmd.seek(0)
+mycmd = cmd.read()
+
+out.seek(0)
+myout = out.read()
+`);
+  }).then(function() {
+    vm.get("mycmd").then(function(mycmd) {
+      vm.get("myout").then(function(myout) {
+        callback({
+          "gcc_out"    : myout,
+          "gcc_warning": "",
+          "gcc_ret"    : 0,
+          "its_out"    : myout,
+          "its_cmd"    : mycmd,
+        });
+      })
+    });
+  });
 };
 
 $(function() {

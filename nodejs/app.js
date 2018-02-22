@@ -24,8 +24,8 @@ app.use(express.static( __dirname + '/../' ));
 
 app.get('/compile_req', function (req, res) {
     // Decode base64 strings
-    code = new Buffer(req.query.code, 'base64').toString('ascii');
-    input = new Buffer(req.query.input, 'base64').toString('ascii');
+    code  = new Buffer(req.query.code, 'base64').toString('ascii');
+    input = new Buffer(req.query.input,'base64').toString('ascii');
 
     // Write code, input to files
     rand = __dirname + '/' + makeid();
