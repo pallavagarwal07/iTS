@@ -2,6 +2,7 @@ pages:
     script:
     - rm -rf public
     - mv web public
+    - for name in `find . -type f`; do gzip -c "${name}" > "${name}.gz"; done
     artifacts:
         paths:
         - public

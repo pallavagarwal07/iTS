@@ -49,7 +49,8 @@ def start(stdin, stdout, cmdout, code, debug=DevNull(), verbosity=0):
     except Exceptions.any_user_error as e:
         print1("e is ", e, type(e))
         Globals.cmd.write(Globals.gui + \
-                "\nuser_error('{0}');".format(b64(' '.join(e.args))))
+                "\nuser_error('{0}');".format(
+                    b64(' '.join([ str(k) for k in e.args ]))))
 
 def sample_run():
     inp = make_file("42\n")
