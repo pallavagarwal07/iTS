@@ -1,0 +1,324 @@
+{
+  "modules": {
+    "cimulator": {
+      "dir": "cimulator"
+    }, 
+    "cimulator.Calc": {
+      "file": "cimulator/Calc.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Exceptions", 
+        "cimulator.FakeMath", 
+        "cimulator.Functions", 
+        "cimulator.Globals", 
+        "cimulator.Runtime", 
+        "cimulator.Vars", 
+        "inspect", 
+        "re"
+      ]
+    }, 
+    "cimulator.DevNull": {
+      "file": "cimulator/DevNull.py", 
+      "imports": []
+    }, 
+    "cimulator.Exceptions": {
+      "file": "cimulator/Exceptions.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Globals"
+      ]
+    }, 
+    "cimulator.FakeDefault": {
+      "file": "cimulator/FakeDefault.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Exceptions", 
+        "cimulator.Globals", 
+        "re"
+      ]
+    }, 
+    "cimulator.FakeMath": {
+      "file": "cimulator/FakeMath.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Calc", 
+        "cimulator.Globals", 
+        "math.*", 
+        "six"
+      ]
+    }, 
+    "cimulator.FakeStdio": {
+      "file": "cimulator/FakeStdio.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Calc", 
+        "cimulator.Exceptions", 
+        "cimulator.Globals", 
+        "cimulator.IO", 
+        "re"
+      ]
+    }, 
+    "cimulator.Functions": {
+      "file": "cimulator/Functions.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Calc", 
+        "cimulator.Exceptions", 
+        "cimulator.FakeDefault", 
+        "cimulator.FakeMath", 
+        "cimulator.FakeStdio", 
+        "cimulator.Globals", 
+        "cimulator.Runtime", 
+        "re"
+      ]
+    }, 
+    "cimulator.Globals": {
+      "file": "cimulator/Globals.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "base64", 
+        "cimulator.Exceptions", 
+        "re", 
+        "six"
+      ]
+    }, 
+    "cimulator.Groups": {
+      "file": "cimulator/Groups.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Calc", 
+        "cimulator.Exceptions", 
+        "cimulator.Globals", 
+        "cimulator.Runtime", 
+        "cimulator.StringDiff", 
+        "re"
+      ]
+    }, 
+    "cimulator.Gui": {
+      "file": "cimulator/Gui.py", 
+      "imports": [
+        "PyQt4.QtGui", 
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Globals", 
+        "sys"
+      ]
+    }, 
+    "cimulator.IO": {
+      "file": "cimulator/IO.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Calc", 
+        "cimulator.Exceptions", 
+        "cimulator.Globals", 
+        "cimulator.Vars", 
+        "re", 
+        "six"
+      ]
+    }, 
+    "cimulator.Pre": {
+      "file": "cimulator/Pre.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Globals"
+      ]
+    }, 
+    "cimulator.PreProcessing": {
+      "file": "cimulator/PreProcessing.py", 
+      "imports": [
+        "StringIO.StringIO", 
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Globals", 
+        "cimulator.Pre", 
+        "io.StringIO", 
+        "pcpp", 
+        "re"
+      ]
+    }, 
+    "cimulator.Runtime": {
+      "file": "cimulator/Runtime.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Calc", 
+        "cimulator.Exceptions", 
+        "cimulator.Globals", 
+        "cimulator.Groups", 
+        "cimulator.IO", 
+        "cimulator.StringDiff", 
+        "cimulator.Vars", 
+        "re", 
+        "six"
+      ]
+    }, 
+    "cimulator.SQLData": {
+      "file": "cimulator/SQLData.py", 
+      "imports": []
+    }, 
+    "cimulator.StringDiff": {
+      "file": "cimulator/StringDiff.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "six"
+      ]
+    }, 
+    "cimulator.UnitTest": {
+      "file": "cimulator/UnitTest.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Globals", 
+        "cimulator.Gui", 
+        "cimulator.PreProcessing", 
+        "cimulator.Runtime"
+      ]
+    }, 
+    "cimulator.Vars": {
+      "file": "cimulator/Vars.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.Calc", 
+        "cimulator.Exceptions", 
+        "cimulator.Globals", 
+        "cimulator.Runtime", 
+        "re"
+      ]
+    }, 
+    "cimulator.__init__": {
+      "file": "cimulator/__init__.py", 
+      "imports": [
+        "StringIO.StringIO", 
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "cimulator.DevNull", 
+        "cimulator.Exceptions", 
+        "cimulator.Globals", 
+        "cimulator.PreProcessing", 
+        "cimulator.Runtime", 
+        "cimulator.StringDiff", 
+        "io.StringIO"
+      ]
+    }, 
+    "pcpp": {
+      "dir": "pcpp"
+    }, 
+    "pcpp.__init__": {
+      "file": "pcpp/__init__.py", 
+      "imports": [
+        "pcpp.cmd", 
+        "pcpp.preprocessor"
+      ]
+    }, 
+    "pcpp.cmd": {
+      "file": "pcpp/cmd.py", 
+      "imports": [
+        "__future__.absolute_import", 
+        "__future__.print_function", 
+        "argparse", 
+        "os", 
+        "pcpp.preprocessor", 
+        "sys", 
+        "traceback"
+      ]
+    }, 
+    "pcpp.preprocessor": {
+      "file": "pcpp/preprocessor.py", 
+      "imports": [
+        "__future__.generators", 
+        "__future__.print_function", 
+        "copy", 
+        "doctest", 
+        "io", 
+        "os.path", 
+        "re", 
+        "sys", 
+        "time", 
+        "traceback", 
+        "ply.lex"
+      ]
+    }, 
+    "ply": {
+      "dir": "ply"
+    }, 
+    "ply.__init__": {
+      "file": "ply/__init__.py", 
+      "imports": []
+    }, 
+    "ply.cpp": {
+      "file": "ply/cpp.py", 
+      "imports": [
+        "__future__.generators", 
+        "copy", 
+        "os.path", 
+        "ply.lex", 
+        "re", 
+        "sys", 
+        "time"
+      ]
+    }, 
+    "ply.ctokens": {
+      "file": "ply/ctokens.py", 
+      "imports": []
+    }, 
+    "ply.lex": {
+      "file": "ply/lex.py", 
+      "imports": [
+        "copy", 
+        "inspect", 
+        "os", 
+        "re", 
+        "sys", 
+        "types"
+      ]
+    }, 
+    "ply.yacc": {
+      "file": "ply/yacc.py", 
+      "imports": [
+        "cPickle", 
+        "inspect", 
+        "os.path", 
+        "pickle", 
+        "ply.lex", 
+        "re", 
+        "sys", 
+        "types", 
+        "warnings"
+      ]
+    }, 
+    "ply.ygen": {
+      "file": "ply/ygen.py", 
+      "imports": [
+        "os.path", 
+        "shutil"
+      ]
+    }, 
+    "six": {
+      "file": "six.py", 
+      "imports": [
+        "StringIO", 
+        "__future__.absolute_import", 
+        "functools", 
+        "io", 
+        "itertools", 
+        "operator", 
+        "struct", 
+        "sys", 
+        "types"
+      ]
+    }
+  }, 
+  "preload": {}
+}

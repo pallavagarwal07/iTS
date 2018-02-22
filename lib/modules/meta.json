@@ -1,0 +1,198 @@
+{
+  "exclude": [
+    "readline", 
+    "ntpath", 
+    "macpath", 
+    "os2emxpath", 
+    "ctypes", 
+    "ctypes_support", 
+    "ctypes_configure", 
+    "ctypes_configure_cache", 
+    "_ctypes", 
+    "cffi", 
+    "_ffi", 
+    "_rawffi", 
+    "subprocess", 
+    "_subprocess", 
+    "threading", 
+    "thread", 
+    "multiprocessing", 
+    "_multiprocessing", 
+    "audiodev", 
+    "audioop", 
+    "Carbon", 
+    "MacOS", 
+    "_osx_supportsmtpd", 
+    "idlelib", 
+    "Tkinter", 
+    "Tkconstants", 
+    "_tkinter", 
+    "ttk", 
+    "__main__", 
+    "bsddb", 
+    "ssl", 
+    "_ssl", 
+    "_winreg", 
+    "cpyext", 
+    "symtable", 
+    "java", 
+    "msilib", 
+    "dos", 
+    "nt", 
+    "os2", 
+    "org.python", 
+    "riscos", 
+    "riscosenviron", 
+    "vmslib", 
+    "win32api", 
+    "win32con", 
+    "win32pipe", 
+    "win32wnet", 
+    "win32evtlog", 
+    "msvcrt", 
+    "hotshot", 
+    "sunau", 
+    "sunaudio", 
+    "wave", 
+    "sqlite3", 
+    "curses"
+  ], 
+  "missing": {
+    "PyQt4.QtGui": [
+      "cimulator.Gui"
+    ], 
+    "StringIO": [
+      "six"
+    ], 
+    "StringIO.StringIO": [
+      "cimulator.__init__", 
+      "cimulator.PreProcessing"
+    ], 
+    "__future__.absolute_import": [
+      "pcpp.cmd", 
+      "six", 
+      "cimulator.__init__", 
+      "cimulator.Vars", 
+      "cimulator.UnitTest", 
+      "cimulator.StringDiff", 
+      "cimulator.Runtime", 
+      "cimulator.PreProcessing", 
+      "cimulator.Pre", 
+      "cimulator.IO", 
+      "cimulator.Gui", 
+      "cimulator.Groups", 
+      "cimulator.Globals", 
+      "cimulator.Functions", 
+      "cimulator.FakeStdio", 
+      "cimulator.FakeMath", 
+      "cimulator.FakeDefault", 
+      "cimulator.Exceptions", 
+      "cimulator.Calc"
+    ], 
+    "__future__.generators": [
+      "pcpp.preprocessor", 
+      "ply.cpp"
+    ], 
+    "__future__.print_function": [
+      "pcpp.preprocessor", 
+      "pcpp.cmd", 
+      "cimulator.__init__", 
+      "cimulator.Vars", 
+      "cimulator.UnitTest", 
+      "cimulator.StringDiff", 
+      "cimulator.Runtime", 
+      "cimulator.PreProcessing", 
+      "cimulator.Pre", 
+      "cimulator.IO", 
+      "cimulator.Gui", 
+      "cimulator.Groups", 
+      "cimulator.Globals", 
+      "cimulator.Functions", 
+      "cimulator.FakeStdio", 
+      "cimulator.FakeMath", 
+      "cimulator.FakeDefault", 
+      "cimulator.Exceptions", 
+      "cimulator.Calc"
+    ], 
+    "argparse": [
+      "pcpp.cmd"
+    ], 
+    "base64": [
+      "cimulator.Globals"
+    ], 
+    "cPickle": [
+      "ply.yacc"
+    ], 
+    "copy": [
+      "pcpp.preprocessor", 
+      "ply.lex", 
+      "ply.cpp"
+    ], 
+    "doctest": [
+      "pcpp.preprocessor"
+    ], 
+    "functools": [
+      "six"
+    ], 
+    "inspect": [
+      "ply.yacc", 
+      "ply.lex", 
+      "cimulator.Calc"
+    ], 
+    "io": [
+      "pcpp.preprocessor", 
+      "six"
+    ], 
+    "io.StringIO": [
+      "cimulator.__init__", 
+      "cimulator.PreProcessing"
+    ], 
+    "os": [
+      "pcpp.cmd", 
+      "ply.lex"
+    ], 
+    "os.path": [
+      "pcpp.preprocessor", 
+      "ply.ygen", 
+      "ply.yacc", 
+      "ply.cpp"
+    ], 
+    "pickle": [
+      "ply.yacc"
+    ], 
+    "re": [
+      "pcpp.preprocessor", 
+      "ply.yacc", 
+      "ply.lex", 
+      "ply.cpp", 
+      "cimulator.Vars", 
+      "cimulator.Runtime", 
+      "cimulator.PreProcessing", 
+      "cimulator.IO", 
+      "cimulator.Groups", 
+      "cimulator.Globals", 
+      "cimulator.Functions", 
+      "cimulator.FakeStdio", 
+      "cimulator.FakeDefault", 
+      "cimulator.Calc"
+    ], 
+    "shutil": [
+      "ply.ygen"
+    ], 
+    "struct": [
+      "six"
+    ], 
+    "traceback": [
+      "pcpp.preprocessor", 
+      "pcpp.cmd"
+    ], 
+    "types": [
+      "ply.yacc", 
+      "ply.lex", 
+      "six"
+    ], 
+    "warnings": [
+      "ply.yacc"
+    ]
+  }
+}
