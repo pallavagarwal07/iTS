@@ -1,0 +1,8 @@
+pages:
+    script:
+    - rm -rf public
+    - mv web public
+    artifacts:
+        paths:
+        - public
+
