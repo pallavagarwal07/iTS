@@ -1,48 +1,49 @@
 language: python
 
 python:
-    - "2.7"
-    #- "3.4"
-    #- "3.5"
-    #- "3.6"
+  - "2.7"
+  - "3.4"
+  - "3.5"
+  - "3.6"
 
 notifications:
-    email: true
+  email: true
 
 sudo: false
 
 script:
-    - python --version
-    - PYTHON=python test_suite/test_all
+  - python --version
+  - PYTHON=python test_suite/test_all
 
 jobs:
-    include:
-        - stage: deploy
-          python: "2.7"
-          script:
-              - wget https://github.com/pypyjs/pypyjs/releases/download/v0.4.0/pypyjs-0.4.0.tar.gz
-              - tar -xf pypyjs-0.4.0.tar.gz
-              - pushd pypyjs-0.4.0
-              - python2 ./tools/module_bundler.py add ./lib/modules ../external/pcpp/pcpp
-              - python2 ./tools/module_bundler.py add ./lib/modules ../external/ply/ply
-              - python2 ./tools/module_bundler.py add ./lib/modules ../external/six/six.py
-              - python2 ./tools/module_bundler.py add ./lib/modules ../cimulator
-              - cp -r lib ../web/lib
-              - popd
-              - touch web/.nojekyll
-              - mydir="$(mktemp -d)"
-              - srcdir="$(pwd -P)"
-              - mkdir -p ~/.ssh
-              - echo "${GITLAB_PRIVKEY}" | base64 -d > ~/.ssh/id_rsa
-              - cp -r "${srcdir}/web" "${mydir}/web"
-              - mv "${mydir}/web/.gitlab-ci.yml" "${mydir}/.gitlab-ci.yml"
-              - pushd "${mydir}"
-              - git init
-              - git remote add origin "git@gitlab.com:pallavagarwal07/Cimulator.git"
-              - git config --local user.name "Deployment Bot"
-              - git config --local user.email "admin@cimulator.org"
-              - git add .
-              - git commit -m "Deploy init"
-              - echo -e "Host gitlab.com\n\tHostname altssh.gitlab.com\n\tUser git\n\tPort 443\n\tStrictHostKeyChecking no" >> ~/.ssh/config
-              - chmod 0600 ~/.ssh/id_rsa
-              - git push --force --set-upstream origin master
+  include:
+    - stage: deploy
+      python: "2.7"
+      script:
+        - python -m compileall .
+        - wget https://github.com/pypyjs/pypyjs/releases/download/v0.4.0/pypyjs-0.4.0.tar.gz
+        - tar -xf pypyjs-0.4.0.tar.gz
+        - pushd pypyjs-0.4.0
+        - python2 ./tools/module_bundler.py add ./lib/modules ../external/pcpp/pcpp
+        - python2 ./tools/module_bundler.py add ./lib/modules ../external/ply/ply
+        - python2 ./tools/module_bundler.py add ./lib/modules ../external/six/six.py
+        - python2 ./tools/module_bundler.py add ./lib/modules ../cimulator
+        - cp -r lib ../web/lib
+        - popd
+        - touch web/.nojekyll
+        - mydir="$(mktemp -d)"
+        - srcdir="$(pwd -P)"
+        - mkdir -p ~/.ssh
+        - echo "${GITLAB_PRIVKEY}" | base64 -d > ~/.ssh/id_rsa
+        - cp -r "${srcdir}/web" "${mydir}/web"
+        - mv "${mydir}/web/.gitlab-ci.yml" "${mydir}/.gitlab-ci.yml"
+        - pushd "${mydir}"
+        - git init
+        - git remote add origin "git@gitlab.com:pallavagarwal07/Cimulator.git"
+        - git config --local user.name "Deployment Bot"
+        - git config --local user.email "admin@cimulator.org"
+        - git add .
+        - git commit -m "Deploy init"
+        - echo -e "Host gitlab.com\n\tHostname altssh.gitlab.com\n\tUser git\n\tPort 443\n\tStrictHostKeyChecking no" >> ~/.ssh/config
+        - chmod 0600 ~/.ssh/id_rsa
+        - git push --force --set-upstream origin master
