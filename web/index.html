@@ -9,7 +9,85 @@
   <link rel="stylesheet" type="text/css" href="./css/style.css">
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+  <link rel="prefetch" href="lib/pypyjs.js">
   <link rel="prefetch" href="lib/pypyjs.vm.js">
+  <link rel="prefetch" href="lib/pypyjs.vm.js.zmem">
+  <link rel="prefetch" href="lib/modules/StringIO.py">
+  <link rel="prefetch" href="lib/modules/_functools.py">
+  <link rel="prefetch" href="lib/modules/_marshal.py">
+  <link rel="prefetch" href="lib/modules/_md5.py">
+  <link rel="prefetch" href="lib/modules/_sha.py">
+  <link rel="prefetch" href="lib/modules/_sha256.py">
+  <link rel="prefetch" href="lib/modules/_sha512.py">
+  <link rel="prefetch" href="lib/modules/argparse.py">
+  <link rel="prefetch" href="lib/modules/atexit.py">
+  <link rel="prefetch" href="lib/modules/bdb.py">
+  <link rel="prefetch" href="lib/modules/cPickle.py">
+  <link rel="prefetch" href="lib/modules/cStringIO.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Calc.py">
+  <link rel="prefetch" href="lib/modules/cimulator/DevNull.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Exceptions.py">
+  <link rel="prefetch" href="lib/modules/cimulator/FakeDefault.py">
+  <link rel="prefetch" href="lib/modules/cimulator/FakeMath.py">
+  <link rel="prefetch" href="lib/modules/cimulator/FakeStdio.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Functions.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Globals.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Groups.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Gui.py">
+  <link rel="prefetch" href="lib/modules/cimulator/IO.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Pre.py">
+  <link rel="prefetch" href="lib/modules/cimulator/PreProcessing.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Runtime.py">
+  <link rel="prefetch" href="lib/modules/cimulator/SQLData.py">
+  <link rel="prefetch" href="lib/modules/cimulator/StringDiff.py">
+  <link rel="prefetch" href="lib/modules/cimulator/UnitTest.py">
+  <link rel="prefetch" href="lib/modules/cimulator/Vars.py">
+  <link rel="prefetch" href="lib/modules/cimulator/__init__.py">
+  <link rel="prefetch" href="lib/modules/cmd.py">
+  <link rel="prefetch" href="lib/modules/collections.py">
+  <link rel="prefetch" href="lib/modules/difflib.py">
+  <link rel="prefetch" href="lib/modules/dis.py">
+  <link rel="prefetch" href="lib/modules/doctest.py">
+  <link rel="prefetch" href="lib/modules/dummy_thread.py">
+  <link rel="prefetch" href="lib/modules/fnmatch.py">
+  <link rel="prefetch" href="lib/modules/functools.py">
+  <link rel="prefetch" href="lib/modules/gettext.py">
+  <link rel="prefetch" href="lib/modules/hashlib.py">
+  <link rel="prefetch" href="lib/modules/heapq.py">
+  <link rel="prefetch" href="lib/modules/index.json">
+  <link rel="prefetch" href="lib/modules/inspect.py">
+  <link rel="prefetch" href="lib/modules/io.py">
+  <link rel="prefetch" href="lib/modules/keyword.py">
+  <link rel="prefetch" href="lib/modules/locale.py">
+  <link rel="prefetch" href="lib/modules/logging/__init__.py">
+  <link rel="prefetch" href="lib/modules/marshal.py">
+  <link rel="prefetch" href="lib/modules/opcode.py">
+  <link rel="prefetch" href="lib/modules/optparse.py">
+  <link rel="prefetch" href="lib/modules/pcpp/__init__.py">
+  <link rel="prefetch" href="lib/modules/pcpp/cmd.py">
+  <link rel="prefetch" href="lib/modules/pcpp/preprocessor.py">
+  <link rel="prefetch" href="lib/modules/pdb.py">
+  <link rel="prefetch" href="lib/modules/pickle.py">
+  <link rel="prefetch" href="lib/modules/ply/__init__.py">
+  <link rel="prefetch" href="lib/modules/ply/lex.py">
+  <link rel="prefetch" href="lib/modules/pprint.py">
+  <link rel="prefetch" href="lib/modules/random.py">
+  <link rel="prefetch" href="lib/modules/shlex.py">
+  <link rel="prefetch" href="lib/modules/six.py">
+  <link rel="prefetch" href="lib/modules/string.py">
+  <link rel="prefetch" href="lib/modules/tempfile.py">
+  <link rel="prefetch" href="lib/modules/textwrap.py">
+  <link rel="prefetch" href="lib/modules/token.py">
+  <link rel="prefetch" href="lib/modules/tokenize.py">
+  <link rel="prefetch" href="lib/modules/unittest/__init__.py">
+  <link rel="prefetch" href="lib/modules/unittest/case.py">
+  <link rel="prefetch" href="lib/modules/unittest/loader.py">
+  <link rel="prefetch" href="lib/modules/unittest/main.py">
+  <link rel="prefetch" href="lib/modules/unittest/result.py">
+  <link rel="prefetch" href="lib/modules/unittest/runner.py">
+  <link rel="prefetch" href="lib/modules/unittest/signals.py">
+  <link rel="prefetch" href="lib/modules/unittest/suite.py">
+  <link rel="prefetch" href="lib/modules/unittest/util.py">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.0/ace.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -89,9 +167,9 @@
       <div class="col-md-12">
        <div class="progress">
         <button class="progress-btn progress-bar progress-bar-striped"
-                role="progressbar" aria-valuenow="100" aria-valuemin="0"
-                aria-valuemax="100" onclick="compile()" style="width: 100%"
-                id="submit-btn">
+         role="progressbar" aria-valuenow="100" aria-valuemin="0"
+         aria-valuemax="100" onclick="compile()" style="width: 100%"
+         id="submit-btn">
          Submit
         </button>
        </div>

@@ -20,7 +20,7 @@ jobs:
     - stage: deploy
       python: "2.7"
       script:
-        - python -m compileall .
+        - python -m compileall . || true
         - wget https://github.com/pypyjs/pypyjs/releases/download/v0.4.0/pypyjs-0.4.0.tar.gz
         - tar -xf pypyjs-0.4.0.tar.gz
         - pushd pypyjs-0.4.0
