@@ -2,6 +2,10 @@
 
 [![Build Status](https://travis-ci.org/pallavagarwal07/iTS.svg?branch=master)](https://travis-ci.org/pallavagarwal07/iTS)
 
+
+## Note
+The README is a bit out of date. Please go to [http://cimulator.org](http://cimulator.org) to see a live demo.
+
 ## Installation :
 
 First do a shallow clone of the repository :
