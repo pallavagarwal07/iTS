@@ -18,6 +18,7 @@ script:
 jobs:
   include:
     - stage: deploy
+      if: branch = master
       python: "2.7"
       script:
         - python -m compileall . || true

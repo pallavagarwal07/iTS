@@ -143,8 +143,6 @@ def get_matching_brace(val, i):
             brack -= 1
     return i
 
-
-
 def get_key(var, scope):
     var = Globals.get_details(var)
     name = var[0]

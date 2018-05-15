@@ -188,7 +188,11 @@ class Float_T(Point_T):
 class Double_T(Point_T):
     STR = 'double'
 
+class LongDouble_T(Point_T):
+    STR = 'long double'
+
 class Num_T(Numeric):
+    STR = "number"
     MAX =  2**127 - 1
     MIN = -2**127
     typeclass = "num"
@@ -252,12 +256,36 @@ class Num_T(Numeric):
         return type(self)(val)
 
 
+class Char_T(Num_T):
+    STR = "char"
+    MAX =  2**7 - 1
+    MIN = -2**7
+
 class Int_T(Num_T):
+    STR = "int"
     MAX =  2**31 - 1
     MIN = -2**31
-    STR = "int"
 
 class Long_T(Num_T):
+    STR = "long"
     MAX =  2**63 - 1
     MIN = -2**63
-    STR = "long"
+
+class LongLong_T(Num_T):
+    STR = "long long"
+    MAX =  2**63 - 1
+    MIN = -2**63
+
+type_map = {
+        "number"        : Num_T,
+        "char"          : Char_T,
+        "int"           : Int_T,
+        "long"          : Long_T,
+        "long int"      : Long_T,
+        "long long"     : LongLong_T,
+        "long long int" : LongLong_T,
+
+        "float"         : Float_T,
+        "double"        : Double_T,
+        "long double"   : LongDouble_T,
+}

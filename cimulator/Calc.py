@@ -141,7 +141,7 @@ def add(arr, token, ctr, scope):
 
 
 # Convert separated token list to postfix token list.
-# Example: ['4', '+', '5'] to ['4', '5', '+']
+# Example: ['4', '/', 'y'] to  [('4', 'number'), ('y', 'int'), ('/',)]
 def to_postfix(tokens, scope):
     stack, postfix, ctr, i = [], [], 0, 0
 
@@ -199,6 +199,8 @@ def to_postfix(tokens, scope):
         i += 1
     while len(stack) > 0:
         add(postfix, stack.pop(), ctr, scope)
+
+    print("Returning", postfix)
     return postfix
 
 
